@@ -26,7 +26,8 @@ func init(bnfn :Callable, r :float, count :int, t:int, pos :Vector3) -> BallTrai
 	return self
 
 func make_mat_multi(mesh :Mesh,count :int, pos:Vector3):
-	var mat = Global3d.get_color_mat(Color.WHITE)
+	var mat = StandardMaterial3D.new()
+	mat.albedo_color = Color.WHITE
 	mat.vertex_color_use_as_albedo = true
 	mesh.material = mat
 	multimesh = MultiMesh.new()
