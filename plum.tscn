@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://cxxcrdsi8cssr"]
+
+[ext_resource type="Script" uid="uid://jhaourn2k7qe" path="res://plum.gd" id="1_3dh1o"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3dh1o"]
+albedo_color = Color(0.855315, 0.00064707, 0.866748, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_3dh1o"]
+material = SubResource("StandardMaterial3D_3dh1o")
+
+[node name="Plum" type="Node3D"]
+script = ExtResource("1_3dh1o")
+
+[node name="모양" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_3dh1o")
