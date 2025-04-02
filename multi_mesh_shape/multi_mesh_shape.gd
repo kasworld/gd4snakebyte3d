@@ -1,7 +1,6 @@
-extends Node3D
+extends MultiMeshInstance3D
 class_name MultiMeshShape
 
-var mm_inst :MultiMeshInstance3D
 var m_mesh :MultiMesh
 
 func init(mesh :Mesh, co :Color, count :int, pos :Vector3) -> MultiMeshShape:
@@ -16,15 +15,12 @@ func init(mesh :Mesh, co :Color, count :int, pos :Vector3) -> MultiMeshShape:
 	# Then resize (otherwise, changing the format is not allowed).
 	m_mesh.instance_count = count
 	m_mesh.visible_instance_count = count
-	mm_inst = MultiMeshInstance3D.new()
-	mm_inst.m_mesh = m_mesh
-	add_child(mm_inst)
-	return self
-
+	$".".multimesh = m_mesh
 	for i in m_mesh.visible_instance_count:
 		m_mesh.set_instance_color(i,co)
 		var t = Transform3D(Basis(), pos)
 		m_mesh.set_instance_transform(i,t)
+	return self
 
 func set_visible_count(i :int) -> void:
 	m_mesh.visible_instance_count = i

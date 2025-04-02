@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://dr7etomru4cuy"]
+[gd_scene load_steps=3 format=3 uid="uid://dr7etomru4cuy"]
 
 [ext_resource type="Script" uid="uid://d1n788x5yrjt7" path="res://walls.gd" id="1_xxkwp"]
+[ext_resource type="PackedScene" uid="uid://cfnbpemvoy1i6" path="res://multi_mesh_shape/multi_mesh_shape.tscn" id="2_jt0p1"]
 
 [node name="Walls" type="Node3D"]
 script = ExtResource("1_xxkwp")
+
+[node name="MultiMeshShape" parent="." instance=ExtResource("2_jt0p1")]
