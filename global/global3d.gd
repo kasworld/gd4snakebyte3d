@@ -2,7 +2,6 @@ extends Node
 
 var font = preload("res://HakgyoansimBareondotumR.ttf")
 
-
 func get_color_mat(co: Color)->Material:
 	var mat = StandardMaterial3D.new()
 	mat.albedo_color = co

@@ -22,6 +22,12 @@ func init(size :Vector2i) -> PlacedThings:
 		y.resize(size.x)
 	return self
 
+func get_width() -> int:
+	return data[0].size()
+
+func get_height() -> int:
+	return data.size()
+
 func get_at(pos :Vector2i) :
 	return data[pos.y][pos.x]
 
