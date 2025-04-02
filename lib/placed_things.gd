@@ -33,23 +33,24 @@ func set_at(pos :Vector2i, v):
 	return old
 
 # include x2
-func draw_hline(x1 :int, x2 :int, y :int , v) -> Array:
-	var rtn = []
+func draw_hline(x1 :int, x2 :int, y :int , v) -> Dictionary:
+	var rtn := {}
 	for x in range(x1,x2+1):
-		var old = set_at(Vector2i(x,y), v)
+		var pos := Vector2i(x,y)
+		var old = set_at(pos, v)
 		if old != null:
-			rtn.append(old)
+			rtn[pos] = old
 	return rtn
 
 # include y2
-func draw_vline(x :int, y1 :int, y2 :int , v) -> Array:
-	var rtn = []
+func draw_vline(x :int, y1 :int, y2 :int , v) -> Dictionary:
+	var rtn := {}
 	for y in range(y1,y2+1):
-		var old = set_at(Vector2i(x,y), v)
+		var pos := Vector2i(x,y)
+		var old = set_at(pos, v)
 		if old != null:
-			rtn.append(old)
+			rtn[pos] = old
 	return rtn
-
 
 func del_at(pos :Vector2i):
 	var old = data[pos.y][pos.x]
