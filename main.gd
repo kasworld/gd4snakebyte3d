@@ -4,6 +4,8 @@ extends Node3D
 
 func _ready() -> void:
 	var vp_size = get_viewport().get_visible_rect().size
-	$Camera3D.position = Vector3(Settings.FieldWidth/2,Settings.FieldHeight/2,Settings.FieldWidth)
-	$Camera3D.look_at(Vector3(Settings.FieldWidth/2,Settings.FieldHeight/2,0))
-	$OmniLight3D.position = Vector3(Settings.FieldWidth/2,Settings.FieldHeight/2,Settings.FieldWidth)
+	var centerx = Settings.FieldWidth as float /2
+	var centery = Settings.FieldHeight as float /2
+	$Camera3D.position = Vector3(centerx, centery, Settings.FieldWidth)
+	$Camera3D.look_at(Vector3(centerx, centery, 0))
+	$OmniLight3D.position = Vector3(centerx, centery, Settings.FieldWidth)
