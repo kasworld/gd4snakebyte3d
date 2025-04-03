@@ -34,6 +34,17 @@ const Dir2Vt = {
 	Dir.EastNorth : Vector2i(1,-1),
 }
 
+const Vt2Dir = {
+	 Vector2i( 0,-1) : Dir.North,
+	 Vector2i(-1,-1) : Dir.NorthWest,
+	 Vector2i(-1, 0) : Dir.West,
+	 Vector2i(-1, 1) : Dir.WestSouth,
+	 Vector2i( 0, 1) : Dir.South,
+	 Vector2i( 1, 1) : Dir.SouthEast,
+	 Vector2i( 1, 0) : Dir.East,
+	 Vector2i( 1,-1) : Dir.EastNorth,
+}
+
 static func dir2rad(d:Dir) -> float:
 	return deg_to_rad(d *45.0)
 

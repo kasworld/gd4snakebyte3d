@@ -19,18 +19,17 @@ func field_get3(pos :Vector2i, d :Dir8Lib.Dir) -> Dictionary:
 		"left" : field_get(pos, Dir8Lib.DirTurnLeft(d, 1)),
 		}
 
-func move_in_field() -> void:
-	var 기존방향3 = field_get3(pos2d, move_dir)
-	var new_dir = move_dir
+func find_new_dir(old_dir :Dir8Lib.Dir) -> Dir8Lib.Dir:
+	var 기존방향3 = field_get3(pos2d, old_dir)
+	var new_dir = old_dir
 	if 기존방향3.center == null: # 진행방향이 비어 있어 통과
-		new_dir = move_dir
+		new_dir = old_dir
 	elif 기존방향3.right == null and 기존방향3.left == null: # 진행 방향이 막혀 있어 뒤로 반사
-		new_dir = Dir8Lib.DirOpppsite(move_dir)
+		new_dir = Dir8Lib.DirOpppsite(old_dir)
 	elif 기존방향3.right != null and 기존방향3.left != null: # 진행 방향이 막혀 있어 뒤로 반사
-		new_dir = Dir8Lib.DirOpppsite(move_dir)
+		new_dir = Dir8Lib.DirOpppsite(old_dir)
 	elif 기존방향3.right == null and 기존방향3.left != null: # 오른쪽이 비어 있어 오른쪽으로 반사
-		new_dir = Dir8Lib.DirTurnRight(move_dir)
+		new_dir = Dir8Lib.DirTurnRight(old_dir)
 	elif 기존방향3.right != null and 기존방향3.left == null: # 왼쪽이 비어 있어 왼쪽으로 반사
-		new_dir = Dir8Lib.DirTurnLeft(move_dir)
-
-	var 새방향3 = field_get3(pos2d, new_dir)
+		new_dir = Dir8Lib.DirTurnLeft(old_dir)
+	return new_dir
