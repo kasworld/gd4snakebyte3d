@@ -17,11 +17,11 @@ static func Dir2Str(d :Dir) -> String:
 static func DirOpppsite(d :Dir) -> Dir:
 	return (d + Dir.size()/2) % Dir.size()
 
-static func DirTurnLeft(d :Dir) -> Dir:
-	return (d + 2 ) % Dir.size()
+static func DirTurnLeft(d :Dir, i :int=2) -> Dir:
+	return (d + i ) % Dir.size()
 
-static func DirTurnRight(d :Dir) -> Dir:
-	return (d - 2 + Dir.size()) % Dir.size()
+static func DirTurnRight(d :Dir, i :int=2) -> Dir:
+	return (d - i + Dir.size()) % Dir.size()
 
 const Dir2Vt = {
 	Dir.North : Vector2i(0,-1),
@@ -75,11 +75,11 @@ static func Flag2Str(d :Flag) -> String:
 static func FlagOpppsite(f :Flag) -> Flag:
 	return Dir2Flag[ DirOpppsite(Flag2Dir[f]) ]
 
-static func FlagTurnLeft(f :Flag) -> Flag:
-	return Dir2Flag[ DirTurnLeft(Flag2Dir[f]) ]
+static func FlagTurnLeft(f :Flag, i :int=2) -> Flag:
+	return Dir2Flag[ DirTurnLeft(Flag2Dir[f],i) ]
 
-static func FlagTurnRight(f :Flag) -> Flag:
-	return Dir2Flag[ DirTurnRight(Flag2Dir[f]) ]
+static func FlagTurnRight(f :Flag, i :int=2) -> Flag:
+	return Dir2Flag[ DirTurnRight(Flag2Dir[f],i) ]
 
 static func Flag2Vt(f :Flag) -> Vector2i:
 	return Dir2Vt[Flag2Dir[f]]

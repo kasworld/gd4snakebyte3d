@@ -1,9 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://dcp4trrnspr0q"]
+[gd_scene load_steps=4 format=3 uid="uid://dcp4trrnspr0q"]
 
 [ext_resource type="Script" uid="uid://bl0ir0l2ndush" path="res://stage.gd" id="1_6eo5e"]
 [ext_resource type="PackedScene" uid="uid://dr7etomru4cuy" path="res://walls.tscn" id="2_aees8"]
+[ext_resource type="PackedScene" uid="uid://cxxcrdsi8cssr" path="res://plum.tscn" id="3_rnkuw"]
 
 [node name="Stage" type="Node3D"]
 script = ExtResource("1_6eo5e")
 
 [node name="Walls" parent="." instance=ExtResource("2_aees8")]
+
+[node name="Plum" parent="." instance=ExtResource("3_rnkuw")]
