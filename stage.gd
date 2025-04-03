@@ -1,19 +1,38 @@
 extends Node3D
 class_name Stage
 
+var plum_scene = preload("res://plum.tscn")
+
 var field :PlacedThings
+var plum_list :Array
 
 func _ready() -> void:
 	field = PlacedThings.new(Settings.FieldSize)
+	draw_border()
+	draw_rand_wall(100)
+	field.set_at( Vector2i(Settings.FieldWidth/2, Settings.FieldHeight-1), Things.Start)
+	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Things.Goal)
+	$Walls.field2wall(field)
+	for i in 10:
+		var pl = plum_scene.instantiate().init(field, rand2dpos() , Dir8Lib.DiagonalList.pick_random())
+		add_child(pl)
+		plum_list.append(pl)
+
+func _process(delta: float) -> void:
+	for p in plum_list:
+		p.move2d()
+		p.position = p.get_pos3d()
+
+func draw_border() -> void:
 	field.draw_hline(0, Settings.FieldWidth-1, 0, Things.Wall)
 	field.draw_hline(0,Settings.FieldWidth-1, Settings.FieldHeight-1, Things.Wall)
 	field.draw_vline(0,0, Settings.FieldHeight-1, Things.Wall)
 	field.draw_vline(Settings.FieldWidth-1, 0, Settings.FieldHeight-1, Things.Wall)
-	field.set_at( Vector2i(Settings.FieldWidth/2, Settings.FieldHeight-1), Things.Start)
-	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Things.Goal)
-	$Walls.field2wall(field)
-	$Plum.init(field, Vector2i(3,7) , Dir8Lib.Dir.NorthWest)
 
-func _process(delta: float) -> void:
-	$Plum.move2d()
-	$Plum.position = $Plum.get_pos3d()
+func draw_rand_wall(n :int) -> void:
+	for i in n:
+		var pos2d = rand2dpos()
+		field.set_at(pos2d, Things.Wall)
+
+func rand2dpos() -> Vector2i:
+	return Vector2i( randi_range(1,Settings.FieldWidth-2), randi_range(1,Settings.FieldHeight-2) )

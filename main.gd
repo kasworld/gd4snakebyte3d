@@ -8,4 +8,4 @@ func _ready() -> void:
 	var centery = Settings.FieldHeight as float /2
 	$Camera3D.position = Vector3(centerx, centery, Settings.FieldWidth)
 	$Camera3D.look_at(Vector3(centerx, centery, 0))
-	$OmniLight3D.position = Vector3(centerx, centery, Settings.FieldWidth)
+	$OmniLight3D.position = Vector3(0, 0, Settings.FieldWidth)

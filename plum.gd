@@ -8,10 +8,11 @@ var field :PlacedThings
 func _to_string() -> String:
 	return "Plum (%d,%d) %s" % [pos2d.x,pos2d.y, move_dir]
 
-func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir) -> void:
+func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir) -> Plum:
 	field = f
 	pos2d = p2d
 	move_dir = d
+	return self
 
 func get_pos3d() -> Vector3:
 	return Settings.vector2i_to_vector3(pos2d)
@@ -48,3 +49,4 @@ func move2d() -> void:
 		pos2d = pos2d + Dir8Lib.Dir2Vt[move_dir]
 	else:
 		print_debug(self)
+		move_dir = Dir8Lib.DiagonalList.pick_random()

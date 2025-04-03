@@ -11,6 +11,8 @@ enum Dir {
 	EastNorth,
 }
 
+static var DiagonalList = [Dir.NorthWest,Dir.WestSouth,Dir.SouthEast,Dir.EastNorth]
+
 static func Dir2Str(d :Dir) -> String:
 	return Dir.keys()[d]
 
