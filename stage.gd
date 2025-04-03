@@ -13,7 +13,7 @@ func _ready() -> void:
 	field.set_at( Vector2i(Settings.FieldWidth/2, Settings.FieldHeight-1), Things.Start)
 	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Things.Goal)
 	$Walls.field2wall(field)
-	for i in 10:
+	for i in 100:
 		var pl = plum_scene.instantiate().init(field, rand2dpos() , Dir8Lib.DiagonalList.pick_random(), i)
 		add_child(pl)
 		plum_list.append(pl)

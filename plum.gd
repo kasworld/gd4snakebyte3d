@@ -11,9 +11,11 @@ func _to_string() -> String:
 
 func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> Plum:
 	number = n
+	$"번호".text = "%d" % number
 	field = f
 	pos2d = p2d
 	move_dir = d
+	$"모양".mesh.material.albedo_color = NamedColorList.color_list.pick_random()[0]
 	return self
 
 func get_pos3d() -> Vector3:

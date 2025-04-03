@@ -3,9 +3,11 @@
 [ext_resource type="Script" uid="uid://jhaourn2k7qe" path="res://plum.gd" id="1_3dh1o"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3dh1o"]
+resource_local_to_scene = true
 albedo_color = Color(1, 0.643137, 1, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_3dh1o"]
+resource_local_to_scene = true
 material = SubResource("StandardMaterial3D_3dh1o")
 
 [node name="Plum" type="Node3D"]
@@ -13,3 +15,7 @@ script = ExtResource("1_3dh1o")
 
 [node name="모양" type="MeshInstance3D" parent="."]
 mesh = SubResource("SphereMesh_3dh1o")
+
+[node name="번호" type="Label3D" parent="."]
+pixel_size = 0.02
+no_depth_test = true

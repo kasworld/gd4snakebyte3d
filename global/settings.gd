@@ -1,7 +1,7 @@
 extends Node
 
-const FieldWidth :int = 32
-const FieldHeight :int = 32
+const FieldWidth :int = 64
+const FieldHeight :int = 36
 const FieldSize := Vector2i(FieldWidth,FieldHeight)
 
 func vector2i_to_vector3(from :Vector2i) -> Vector3:
