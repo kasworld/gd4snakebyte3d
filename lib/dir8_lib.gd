@@ -16,6 +16,10 @@ static var DiagonalList = [Dir.NorthWest,Dir.WestSouth,Dir.SouthEast,Dir.EastNor
 static func Dir2Str(d :Dir) -> String:
 	return Dir.keys()[d]
 
+static func IsDiagonal(d :Dir) -> bool:
+	var vt = Dir2Vt[d]
+	return vt.x != 0 and vt.y != 0
+
 static func DirOpppsite(d :Dir) -> Dir:
 	return (d + Dir.size()/2) % Dir.size()
 

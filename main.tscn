@@ -13,6 +13,9 @@ sky_material = SubResource("PanoramaSkyMaterial_h2yge")
 [sub_resource type="Environment" id="Environment_lquwl"]
 background_mode = 2
 sky = SubResource("Sky_1bvp3")
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_sky_contribution = 0.9
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_ig7tw")

@@ -14,11 +14,11 @@ func _ready() -> void:
 	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Things.Goal)
 	$Walls.field2wall(field)
 	for i in 10:
-		var pl = plum_scene.instantiate().init(field, rand2dpos() , Dir8Lib.DiagonalList.pick_random())
+		var pl = plum_scene.instantiate().init(field, rand2dpos() , Dir8Lib.DiagonalList.pick_random(), i)
 		add_child(pl)
 		plum_list.append(pl)
 
-func _process(delta: float) -> void:
+func process_frame() -> void:
 	for p in plum_list:
 		p.move2d()
 		p.position = p.get_pos3d()
@@ -36,3 +36,7 @@ func draw_rand_wall(n :int) -> void:
 
 func rand2dpos() -> Vector2i:
 	return Vector2i( randi_range(1,Settings.FieldWidth-2), randi_range(1,Settings.FieldHeight-2) )
+
+
+func _on_timer_timeout() -> void:
+	process_frame()

@@ -1,14 +1,16 @@
 extends Node3D
 class_name Plum
 
+var number :int
 var pos2d :Vector2i
 var move_dir :Dir8Lib.Dir
 var field :PlacedThings
 
 func _to_string() -> String:
-	return "Plum (%d,%d) %s" % [pos2d.x,pos2d.y, move_dir]
+	return "Plum%d (%d,%d) %s" % [number, pos2d.x,pos2d.y, move_dir]
 
-func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir) -> Plum:
+func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> Plum:
+	number = n
 	field = f
 	pos2d = p2d
 	move_dir = d
@@ -45,8 +47,12 @@ func find_new_dir(old_pos2d :Vector2i, old_dir :Dir8Lib.Dir) -> Dir8Lib.Dir:
 func move2d() -> void:
 	var new_dir = find_new_dir(pos2d, move_dir)
 	if field_get(pos2d, new_dir) == null : # 이동 가능
-		move_dir = new_dir
-		pos2d = pos2d + Dir8Lib.Dir2Vt[move_dir]
+		pos2d = pos2d + Dir8Lib.Dir2Vt[new_dir]
+		if move_dir != new_dir:
+			if not Dir8Lib.IsDiagonal(move_dir):
+				move_dir = Dir8Lib.DiagonalList.pick_random()
+			else:
+				move_dir = new_dir
 	else:
 		print_debug(self)
-		move_dir = Dir8Lib.DiagonalList.pick_random()
+		move_dir = Dir8Lib.Dir.values().pick_random()
