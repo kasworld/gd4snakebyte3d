@@ -12,3 +12,8 @@ func _ready() -> void:
 	field.set_at( Vector2i(Settings.FieldWidth/2, Settings.FieldHeight-1), Things.Start)
 	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Things.Goal)
 	$Walls.field2wall(field)
+	$Plum.init(field, Vector2i(3,7) , Dir8Lib.Dir.NorthWest)
+
+func _process(delta: float) -> void:
+	$Plum.move2d()
+	$Plum.position = $Plum.get_pos3d()
