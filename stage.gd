@@ -23,15 +23,13 @@ func _ready() -> void:
 		add_child(pl)
 		plum_list.append(pl)
 
-	for i in 10:
+	for i in 100:
 		var pos := rand2dpos()
 		if field.get_at(pos) != null:
 			continue
-		field.set_at(pos, Things.Apple)
-		var ap = apple_scene.instantiate().init(field, pos , i)
+		var ap = apple_scene.instantiate().init(field, pos, i)
 		add_child(ap)
 		apple_list.append(ap)
-		ap.position = ap.get_pos3d()
 
 func process_frame() -> void:
 	for p in plum_list:

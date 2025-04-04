@@ -17,6 +17,9 @@ func init(f :PlacedThings, p2d :Vector2i, n :int) -> Apple:
 	$"모양".mesh.material.albedo_color = NamedColorList.color_list.pick_random()[0]
 	$"모양".rotation.z = randf_range(-PI,PI)
 	rotate_v = randf_range(-5,5)
+	var old = field.set_at(p2d, Things.Apple)
+	assert(old == null, "apple pos %s not empty %s" % [self, old])
+	position = get_pos3d()
 	return self
 
 func get_pos3d() -> Vector3:
