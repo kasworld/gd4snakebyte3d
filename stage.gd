@@ -14,13 +14,21 @@ func _ready() -> void:
 	field.set_at( Vector2i(Settings.FieldWidth/2, Settings.FieldHeight-1), Things.Start)
 	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Things.Goal)
 	$Walls.field2wall(field)
-	for i in 100:
-		var pl = plum_scene.instantiate().init(field, rand2dpos() , Dir8Lib.DiagonalList.pick_random(), i)
+	for i in 10:
+		var pos := rand2dpos()
+		if field.get_at(pos) != null:
+			continue
+		#field.set_at(pos, Things.Plum)
+		var pl = plum_scene.instantiate().init(field, pos  , Dir8Lib.DiagonalList.pick_random(), i)
 		add_child(pl)
 		plum_list.append(pl)
 
-	for i in 100:
-		var ap = apple_scene.instantiate().init(field, rand2dpos() , i)
+	for i in 10:
+		var pos := rand2dpos()
+		if field.get_at(pos) != null:
+			continue
+		field.set_at(pos, Things.Apple)
+		var ap = apple_scene.instantiate().init(field, pos , i)
 		add_child(ap)
 		apple_list.append(ap)
 		ap.position = ap.get_pos3d()
