@@ -14,16 +14,15 @@ func _ready() -> void:
 	field.set_at( Vector2i(Settings.FieldWidth/2, Settings.FieldHeight-1), Things.Start)
 	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Things.Goal)
 	$Walls.field2wall(field)
-	for i in 10:
+	for i in 100:
 		var pos := rand2dpos()
 		if field.get_at(pos) != null:
 			continue
-		#field.set_at(pos, Things.Plum)
 		var pl = plum_scene.instantiate().init(field, pos  , Dir8Lib.DiagonalList.pick_random(), i)
 		add_child(pl)
 		plum_list.append(pl)
 
-	for i in 100:
+	for i in 10:
 		var pos := rand2dpos()
 		if field.get_at(pos) != null:
 			continue
@@ -34,7 +33,6 @@ func _ready() -> void:
 func process_frame() -> void:
 	for p in plum_list:
 		p.move2d()
-		p.position = p.get_pos3d()
 
 func draw_border() -> void:
 	field.draw_hline(0, Settings.FieldWidth-1, 0, Things.Wall)

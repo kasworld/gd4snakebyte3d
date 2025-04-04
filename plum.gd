@@ -19,6 +19,10 @@ func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> Plum:
 	$"모양".mesh.material.albedo_color = NamedColorList.color_list.pick_random()[0]
 	$"모양".rotation.x = randf_range(-PI,PI)
 	rotate_v = randf_range(-5,5)
+
+	var old = field.set_at(p2d, Things.Plum)
+	assert(old == null, "%s pos not empty %s" % [self, old])
+	position = get_pos3d()
 	return self
 
 func _process(delta: float) -> void:
@@ -53,6 +57,7 @@ func find_new_dir(old_pos2d :Vector2i, old_dir :Dir8Lib.Dir) -> Dir8Lib.Dir:
 	return new_dir
 
 func move2d() -> void:
+	var old_pos = pos2d
 	var new_dir = find_new_dir(pos2d, move_dir)
 	if field_get(pos2d, new_dir) == null : # 이동 가능
 		pos2d = pos2d + Dir8Lib.Dir2Vt[new_dir]
@@ -64,3 +69,5 @@ func move2d() -> void:
 	else:
 		print_debug(self)
 		move_dir = Dir8Lib.Dir.values().pick_random()
+	field.move(old_pos,pos2d)
+	position = get_pos3d()
