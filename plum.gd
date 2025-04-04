@@ -58,15 +58,21 @@ func find_new_dir(old_pos2d :Vector2i, old_dir :Dir8Lib.Dir) -> Dictionary:
 	elif 기존방향3.right == null and 기존방향3.left == null: # 진행 방향이 막혀 있어 뒤로 반사
 		new_dir = Dir8Lib.DirOpppsite(old_dir)
 		move_dir = new_dir
+		rotate_v = randf_range(-5,5)
 	elif 기존방향3.right != null and 기존방향3.left != null: # 진행 방향이 막혀 있어 뒤로 반사
 		new_dir = Dir8Lib.DirOpppsite(old_dir)
 		move_dir = new_dir
+		rotate_v = randf_range(-5,5)
 	elif 기존방향3.right == null and 기존방향3.left != null: # 오른쪽이 비어 있어 오른쪽으로 반사
 		new_dir = Dir8Lib.DirTurnRight(old_dir)
 		move_dir = Dir8Lib.DirTurnRight(old_dir, 1)
+		rotate_v = randf_range(-5,5)
 	elif 기존방향3.right != null and 기존방향3.left == null: # 왼쪽이 비어 있어 왼쪽으로 반사
 		new_dir = Dir8Lib.DirTurnLeft(old_dir)
 		move_dir = Dir8Lib.DirTurnLeft(old_dir, 1)
+		rotate_v = randf_range(-5,5)
+	else :
+		assert(false, "find_new_dir")
 	return { "dir":new_dir, "move":move_dir }
 
 func move2d() -> void:

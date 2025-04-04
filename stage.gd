@@ -48,24 +48,24 @@ func draw_rand_wall(n :int) -> void:
 	for i in n:
 		match i % 3:
 			0:
-				field.set_at(rand2dpos(), Things.Wall)
+				field.set_at(rand2dpos(2), Things.Wall)
 			1:
-				var x1 = rand_x()
-				var x2 = rand_x()
-				var y = rand_y()
+				var x1 = rand_x(2)
+				var x2 = rand_x(2)
+				var y = rand_y(2)
 				field.draw_hline(x1,x2,y,Things.Wall)
 			2:
-				var x = rand_x()
-				var y1 = rand_y()
-				var y2 = rand_y()
+				var x = rand_x(2)
+				var y1 = rand_y(2)
+				var y2 = rand_y(2)
 				field.draw_vline(x,y1,y2,Things.Wall)
 
-func rand_x() -> int:
-	return randi_range(1,Settings.FieldWidth-2)
-func rand_y() -> int:
-	return randi_range(1,Settings.FieldHeight-2)
-func rand2dpos() -> Vector2i:
-	return Vector2i( rand_x(), rand_y() )
+func rand_x(margin :int=1) -> int:
+	return randi_range(margin,Settings.FieldWidth-1-margin)
+func rand_y(margin :int=1) -> int:
+	return randi_range(margin,Settings.FieldHeight-1-margin)
+func rand2dpos(margin :int=1) -> Vector2i:
+	return Vector2i( rand_x(margin), rand_y(margin) )
 func find_empty_pos(trycount :int) -> Vector2i:
 	for i in trycount:
 		var pos := rand2dpos()
