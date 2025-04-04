@@ -32,7 +32,7 @@ func _process(delta: float) -> void:
 	position = lerp(
 		Settings.vector2i_to_vector3(old_pos2d),
 		Settings.vector2i_to_vector3(pos2d),
-		(Time.get_unix_time_from_system() - old_pos_time)*5,
+		(Time.get_unix_time_from_system() - old_pos_time)/Settings.FrameTime,
 		)
 
 func get_pos3d() -> Vector3:
