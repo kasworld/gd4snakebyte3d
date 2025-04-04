@@ -28,16 +28,6 @@ func get_width() -> int:
 func get_height() -> int:
 	return data.size()
 
-func get_at(pos :Vector2i) :
-	return data[pos.y][pos.x]
-
-func set_at(pos :Vector2i, v):
-	var old = data[pos.y][pos.x]
-	data[pos.y][pos.x] = v
-	if old == null:
-		count +=1
-	return old
-
 # include x2
 func draw_hline(x1 :int, x2 :int, y :int , v) -> Dictionary:
 	var rtn := {}
@@ -57,6 +47,30 @@ func draw_vline(x :int, y1 :int, y2 :int , v) -> Dictionary:
 		if old != null:
 			rtn[pos] = old
 	return rtn
+
+func get_at(pos :Vector2i) :
+	return data[pos.y][pos.x]
+
+func set_at(pos :Vector2i, v):
+	var old = data[pos.y][pos.x]
+	data[pos.y][pos.x] = v
+	if old == null:
+		count +=1
+	return old
+
+func move(from :Vector2i, to :Vector2i) :
+	var from_data = del_at(from)
+	assert(from_data != null, "empty move from %s -> %s" %[from, to] )
+	var to_data = set_at(to, from_data)
+	return to_data
+
+func swap(pos1 :Vector2i, pos2 :Vector2i) :
+	var p1data = del_at(pos1)
+	assert(p1data != null, "empty swap pos1 %s -> %s" %[pos1, pos2] )
+	var p2data = set_at(pos2, p1data)
+	assert(p2data != null, "empty swap pos2 %s -> %s" %[pos1, pos2] )
+	set_at(pos1,p2data)
+	# no return
 
 func del_at(pos :Vector2i):
 	var old = data[pos.y][pos.x]
