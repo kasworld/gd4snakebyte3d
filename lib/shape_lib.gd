@@ -8,7 +8,7 @@ static func new_mesh_by_type(t :Shape, r :float) -> Mesh:
 		0:
 			mesh = SphereMesh.new()
 			mesh.radius = r
-			mesh.height = r
+			mesh.height = r*2
 		1:
 			mesh = BoxMesh.new()
 			mesh.size = Vector3(r,r,r)*2
