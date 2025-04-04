@@ -15,21 +15,24 @@ func _ready() -> void:
 	field.set_at( Vector2i(Settings.FieldWidth/2, Settings.FieldHeight-1), Things.Start)
 	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Things.Goal)
 	$Walls.field2wall(field)
-	for i in 100:
-		var pos := rand2dpos()
-		if field.get_at(pos) != null:
-			continue
-		var pl = plum_scene.instantiate().init(field, pos  , Dir8Lib.DiagonalList.pick_random(), i)
-		add_child(pl)
-		plum_list.append(pl)
-
 	for i in 10:
-		var pos := rand2dpos()
-		if field.get_at(pos) != null:
-			continue
-		var ap = apple_scene.instantiate().init(field, pos, i)
-		add_child(ap)
-		apple_list.append(ap)
+		add_plum(i)
+	for i in 10:
+		add_apple(i)
+
+func add_plum(i:int) -> void:
+	var pos := find_empty_pos(10)
+	assert(pos!=Vector2i(-1,-1), "fail to find empty pos in field")
+	var pl = plum_scene.instantiate().init(field, pos  , Dir8Lib.DiagonalList.pick_random(), i)
+	add_child(pl)
+	plum_list.append(pl)
+
+func add_apple(i:int) -> void:
+	var pos := find_empty_pos(10)
+	assert(pos!=Vector2i(-1,-1), "fail to find empty pos in field")
+	var ap = apple_scene.instantiate().init(field, pos, i)
+	add_child(ap)
+	apple_list.append(ap)
 
 func process_frame() -> void:
 	for p in plum_list:
@@ -43,7 +46,7 @@ func draw_border() -> void:
 
 func draw_rand_wall(n :int) -> void:
 	for i in n:
-		match randi_range(0,2):
+		match i % 3:
 			0:
 				field.set_at(rand2dpos(), Things.Wall)
 			1:
@@ -63,6 +66,12 @@ func rand_y() -> int:
 	return randi_range(1,Settings.FieldHeight-2)
 func rand2dpos() -> Vector2i:
 	return Vector2i( rand_x(), rand_y() )
+func find_empty_pos(trycount :int) -> Vector2i:
+	for i in trycount:
+		var pos := rand2dpos()
+		if field.get_at(pos) == null:
+			return pos
+	return Vector2i(-1,-1)
 
 func _on_timer_timeout() -> void:
 	process_frame()
