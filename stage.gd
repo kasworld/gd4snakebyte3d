@@ -2,9 +2,10 @@ extends Node3D
 class_name Stage
 
 var plum_scene = preload("res://plum.tscn")
-
+var apple_scene = preload("res://apple.tscn")
 var field :PlacedThings
 var plum_list :Array
+var apple_list :Array
 
 func _ready() -> void:
 	field = PlacedThings.new(Settings.FieldSize)
@@ -17,6 +18,12 @@ func _ready() -> void:
 		var pl = plum_scene.instantiate().init(field, rand2dpos() , Dir8Lib.DiagonalList.pick_random(), i)
 		add_child(pl)
 		plum_list.append(pl)
+
+	for i in 100:
+		var ap = apple_scene.instantiate().init(field, rand2dpos() , i)
+		add_child(ap)
+		apple_list.append(ap)
+		ap.position = ap.get_pos3d()
 
 func process_frame() -> void:
 	for p in plum_list:
@@ -36,7 +43,6 @@ func draw_rand_wall(n :int) -> void:
 
 func rand2dpos() -> Vector2i:
 	return Vector2i( randi_range(1,Settings.FieldWidth-2), randi_range(1,Settings.FieldHeight-2) )
-
 
 func _on_timer_timeout() -> void:
 	process_frame()

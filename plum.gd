@@ -5,6 +5,7 @@ var number :int
 var pos2d :Vector2i
 var move_dir :Dir8Lib.Dir
 var field :PlacedThings
+var rotate_v :float
 
 func _to_string() -> String:
 	return "Plum%d (%d,%d) %s" % [number, pos2d.x,pos2d.y, move_dir]
@@ -16,7 +17,12 @@ func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> Plum:
 	pos2d = p2d
 	move_dir = d
 	$"모양".mesh.material.albedo_color = NamedColorList.color_list.pick_random()[0]
+	$"모양".rotation.z = randf_range(-PI,PI)
+	rotate_v = randf_range(-5,5)
 	return self
+
+func _process(delta: float) -> void:
+	$"모양".rotate_z(delta*rotate_v)
 
 func get_pos3d() -> Vector3:
 	return Settings.vector2i_to_vector3(pos2d)
