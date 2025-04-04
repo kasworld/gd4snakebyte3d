@@ -75,13 +75,6 @@ func move2d() -> void:
 	var new_dict = find_new_dir(pos2d, move_dir)
 	if field_get(pos2d, new_dict.move) == null : # 이동 가능
 		pos2d = pos2d + Dir8Lib.Dir2Vt[new_dict.move]
-		if move_dir != new_dict.dir:
-			if not Dir8Lib.IsDiagonal(move_dir):
-				move_dir = Dir8Lib.DiagonalList.pick_random()
-			else:
-				move_dir = new_dict.dir
-	else:
-		print_debug(self)
-		move_dir = Dir8Lib.Dir.values().pick_random()
+	move_dir = new_dict.dir
 	field.move(old_pos2d,pos2d)
 	position = get_pos3d()
