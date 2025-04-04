@@ -3,6 +3,8 @@ class_name Plum
 
 var number :int
 var pos2d :Vector2i
+var old_pos2d :Vector2i
+var old_pos_time :float
 var move_dir :Dir8Lib.Dir
 var field :PlacedThings
 var rotate_v :float
@@ -27,6 +29,11 @@ func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> Plum:
 
 func _process(delta: float) -> void:
 	$"모양".rotate_z(delta*rotate_v)
+	position = lerp(
+		Settings.vector2i_to_vector3(old_pos2d),
+		Settings.vector2i_to_vector3(pos2d),
+		(Time.get_unix_time_from_system() - old_pos_time)*5,
+		)
 
 func get_pos3d() -> Vector3:
 	return Settings.vector2i_to_vector3(pos2d)
@@ -57,7 +64,8 @@ func find_new_dir(old_pos2d :Vector2i, old_dir :Dir8Lib.Dir) -> Dir8Lib.Dir:
 	return new_dir
 
 func move2d() -> void:
-	var old_pos = pos2d
+	old_pos2d = pos2d
+	old_pos_time = Time.get_unix_time_from_system()
 	var new_dir = find_new_dir(pos2d, move_dir)
 	if field_get(pos2d, new_dir) == null : # 이동 가능
 		pos2d = pos2d + Dir8Lib.Dir2Vt[new_dir]
@@ -69,5 +77,5 @@ func move2d() -> void:
 	else:
 		print_debug(self)
 		move_dir = Dir8Lib.Dir.values().pick_random()
-	field.move(old_pos,pos2d)
+	field.move(old_pos2d,pos2d)
 	position = get_pos3d()
