@@ -1,10 +1,14 @@
 extends Node3D
 class_name Snake
 
+signal snake_dead()
+signal eat_apple(pos :Vector2i)
+
 var field :PlacedThings
 var pos2d_list :Array[Vector2i]
 var move_dir :Dir8Lib.Dir
 var dest_body_len :int
+var is_alive : bool
 
 func init(f :PlacedThings, pos :Vector2i) -> Snake:
 	field = f
@@ -12,13 +16,29 @@ func init(f :PlacedThings, pos :Vector2i) -> Snake:
 	$Body.init(mesh, Color.WHITE, Settings.FieldWidth*Settings.FieldHeight/2, Vector3.ZERO)
 	dest_body_len = Settings.SnakeLenStart
 	pos2d_list.append(pos)
+	is_alive = true
 	return self
 
 func process_frame() -> void:
+	if not is_alive:
+		return
 	if pos2d_list.size() >= dest_body_len:
-		pos2d_list.pop_back()
-	var head = pos2d_list[0] + Dir8Lib.Dir2Vt[move_dir]
-	pos2d_list.push_front(head)
+		var tailpos = pos2d_list.pop_back()
+		var old = field.get_at(tailpos)
+		if old is not Stage.Start:
+			field.del_at(tailpos)
+			assert( old is Snake, "invalid tailpos %s %s" %[tailpos, old] )
+	var headpos = get_next_head_pos()
+	var headthings = field.get_at(headpos)
+	if headthings is Apple:
+		dest_body_len += Settings.SankeLenInc
+		eat_apple.emit(headpos)
+	elif headthings != null:
+		snake_dead.emit()
+		is_alive = false
+		return
+	pos2d_list.push_front(headpos)
+	field.set_at(headpos, self)
 	$Body.set_visible_count(pos2d_list.size())
 	for i in pos2d_list.size():
 		var rate = (i as float) / pos2d_list.size()

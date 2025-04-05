@@ -23,7 +23,7 @@ func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> Plum:
 	$"이동모양".mesh = $"모양".mesh
 	rotate_v = randf_range(-5,5)
 
-	var old = field.set_at(p2d, Things.Plum)
+	var old = field.set_at(p2d, self)
 	assert(old == null, "%s pos not empty %s" % [self, old])
 	position = get_pos3d()
 	return self

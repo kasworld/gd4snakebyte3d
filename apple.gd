@@ -20,7 +20,7 @@ func init(f :PlacedThings, n :int) -> Apple:
 	var pos := field.find_empty_pos(10)
 	pos2d = pos
 	assert(pos!=Vector2i(-1,-1), "fail to find empty pos in field")
-	var old = field.set_at(pos, Things.Apple)
+	var old = field.set_at(pos, self)
 	assert(old == null, "%s pos not empty %s" % [self, old])
 	position = get_pos3d()
 	return self
@@ -33,7 +33,7 @@ func get_pos3d() -> Vector3:
 
 func delete() -> void:
 	var old = field.del_at(pos2d)
-	assert( old == Things.Apple, "not %s at %s %s" % [self, pos2d , old] )
+	assert( old is Apple, "not %s at %s %s" % [self, pos2d , old] )
 
 func _process(delta: float) -> void:
 	$"모양".rotate_x(delta*rotate_v)

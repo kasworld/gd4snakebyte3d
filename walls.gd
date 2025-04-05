@@ -12,14 +12,14 @@ func init(f :PlacedThings, add_walls :Array) -> void:
 	exec_script(Settings.BounderyWalls)
 	exec_script(add_walls)
 	#draw_rand_wall(10)
-	field2wall(field)
+	field2wall()
 
-func field2wall(f :PlacedThings) -> void:
+func field2wall() -> void:
 	var wall_count := 0
 	for l in wall_list:
 		var co = Settings.LightColorList.pick_random()[0]
 		for pos in l:
-			f.set_at(pos, Things.Wall)
+			field.set_at(pos, self)
 			var pos3d = Settings.vector2i_to_vector3(pos)
 			$MultiMeshShape.set_inst_pos(wall_count, pos3d)
 			$MultiMeshShape.set_inst_color(wall_count, co)
