@@ -20,3 +20,5 @@ mesh = SubResource("CapsuleMesh_yjcpj")
 [node name="번호" type="Label3D" parent="."]
 pixel_size = 0.01
 no_depth_test = true
+
+[node name="이동모양" type="MeshInstance3D" parent="."]

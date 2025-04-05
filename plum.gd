@@ -20,6 +20,7 @@ func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> Plum:
 	move_dir = d
 	$"모양".mesh.material.albedo_color = NamedColorList.color_list.pick_random()[0]
 	$"모양".rotation.x = randf_range(-PI,PI)
+	$"이동모양".mesh = $"모양".mesh
 	rotate_v = randf_range(-5,5)
 
 	var old = field.set_at(p2d, Things.Plum)
@@ -29,9 +30,11 @@ func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> Plum:
 
 func _process(delta: float) -> void:
 	$"모양".rotate_z(delta*rotate_v)
-	position = lerp(
-		Settings.vector2i_to_vector3(old_pos2d),
-		Settings.vector2i_to_vector3(pos2d),
+	$"이동모양".rotation = $"모양".rotation
+	var vt2 = pos2d - old_pos2d
+	$"이동모양".position = lerp(
+		Vector3(-vt2.x, vt2.y, 0),
+		Vector3.ZERO,
 		(Time.get_unix_time_from_system() - old_pos_time)/Settings.FrameTime,
 		)
 
