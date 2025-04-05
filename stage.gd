@@ -15,7 +15,7 @@ func init(n :int) -> Stage:
 func _ready() -> void:
 	$Timer.wait_time = Settings.FrameTime
 	field = PlacedThings.new(Settings.FieldSize)
-	draw_border()
+	field.exec_wall_script(Settings.BounderyWalls)
 	draw_rand_wall(10)
 	field.set_at( Vector2i(Settings.FieldWidth/2, Settings.FieldHeight-1), Things.Start)
 	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Things.Goal)
@@ -42,12 +42,6 @@ func add_apple(i:int) -> void:
 func process_frame() -> void:
 	for p in plum_list:
 		p.move2d()
-
-func draw_border() -> void:
-	field.draw_hline(0, Settings.FieldWidth-1, 0, Things.Wall)
-	field.draw_hline(0,Settings.FieldWidth-1, Settings.FieldHeight-1, Things.Wall)
-	field.draw_vline(0,0, Settings.FieldHeight-1, Things.Wall)
-	field.draw_vline(Settings.FieldWidth-1, 0, Settings.FieldHeight-1, Things.Wall)
 
 func draw_rand_wall(n :int) -> void:
 	for i in n:

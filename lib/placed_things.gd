@@ -86,3 +86,13 @@ func del_at(pos :Vector2i):
 	if old != null:
 		count -=1
 	return old
+
+func exec_wall_script(sc :Array) -> void:
+	for l in sc:
+		match l[0]:
+			"set" :
+				set_at(Vector2i(l[1],l[2]), l[3])
+			"hline":
+				draw_hline(l[1],l[2],l[3], l[4])
+			"vline":
+				draw_vline(l[1],l[2],l[3], l[4])
