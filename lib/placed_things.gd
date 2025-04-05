@@ -87,20 +87,24 @@ func del_at(pos :Vector2i):
 		count -=1
 	return old
 
-func exec_wall_script(sc :Array) -> void:
+func exec_script(sc :Array) -> Array:
+	var rtn := []
 	for l in sc:
-		exec_wall_script_line(l)
+		rtn.append(exec_script_line(l))
+	return rtn
 
-func exec_wall_script_line(l:Array) ->void:
+func exec_script_line(l:Array):
+	var rtn
 	match l[0]:
 		"set" :
-			set_at(Vector2i(l[1],l[2]), l[3])
+			rtn = set_at(Vector2i(l[1],l[2]), l[3])
 		"hline":
-			draw_hline(l[1],l[2],l[3], l[4])
+			rtn = draw_hline(l[1],l[2],l[3], l[4])
 		"vline":
-			draw_vline(l[1],l[2],l[3], l[4])
+			rtn = draw_vline(l[1],l[2],l[3], l[4])
 		_:
 			assert(false, "invalid script line %s" %[l])
+	return rtn
 
 func rand_x(margin :int=1) -> int:
 	return randi_range(margin,data[0].size()-1-margin)

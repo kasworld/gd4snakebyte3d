@@ -7,7 +7,7 @@ func init(f :PlacedThings) -> void:
 	field = f
 	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Sphere, 0.5)
 	$MultiMeshShape.init(mesh, Color.WHITE, Settings.FieldWidth*Settings.FieldHeight/2, Vector3.ZERO)
-	field.exec_wall_script(Settings.BounderyWalls)
+	field.exec_script(Settings.BounderyWalls)
 	draw_rand_wall(10)
 	field2wall(field)
 
