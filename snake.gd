@@ -21,7 +21,11 @@ func process_frame() -> void:
 		$Body.set_inst_color(i, lerp(Color.RED, Color.BLUE, rate))
 
 func change_move_dir(dir :Dir8Lib.Dir) -> void:
-	assert(Dir8Lib.IsDiagonal(dir), "invalid dir %s" %[dir])
+	assert(not Dir8Lib.IsDiagonal(dir), "invalid dir %s" %[dir])
+	if Dir8Lib.DirOpppsite(dir) == move_dir:
+		print_debug("cannot change dir %s %s" % [dir, move_dir])
+		return
+	move_dir = dir
 
 var key2dir = {
 	KEY_UP:Dir8Lib.Dir.North,
@@ -33,7 +37,4 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
 		var dir = key2dir.get(event.keycode)
 		if dir != null:
-			if Dir8Lib.DirOpppsite(dir) == move_dir:
-				print_debug("cannot change dir %s %s" % [dir, move_dir])
-				return
-			move_dir = dir
+			change_move_dir(dir)
