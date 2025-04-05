@@ -89,10 +89,28 @@ func del_at(pos :Vector2i):
 
 func exec_wall_script(sc :Array) -> void:
 	for l in sc:
-		match l[0]:
-			"set" :
-				set_at(Vector2i(l[1],l[2]), l[3])
-			"hline":
-				draw_hline(l[1],l[2],l[3], l[4])
-			"vline":
-				draw_vline(l[1],l[2],l[3], l[4])
+		exec_wall_script_line(l)
+
+func exec_wall_script_line(l:Array) ->void:
+	match l[0]:
+		"set" :
+			set_at(Vector2i(l[1],l[2]), l[3])
+		"hline":
+			draw_hline(l[1],l[2],l[3], l[4])
+		"vline":
+			draw_vline(l[1],l[2],l[3], l[4])
+		_:
+			assert(false, "invalid script line %s" %[l])
+
+func rand_x(margin :int=1) -> int:
+	return randi_range(margin,data[0].size()-1-margin)
+func rand_y(margin :int=1) -> int:
+	return randi_range(margin,data.size()-1-margin)
+func rand2dpos(margin :int=1) -> Vector2i:
+	return Vector2i( rand_x(margin), rand_y(margin) )
+func find_empty_pos(trycount :int) -> Vector2i:
+	for i in trycount:
+		var pos := rand2dpos()
+		if get_at(pos) == null:
+			return pos
+	return Vector2i(-1,-1)
