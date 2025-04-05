@@ -15,6 +15,7 @@ var plum_list :Array
 var number :int
 var apple_make_count :int
 var apple_eat_count :int
+var apple_end_count :int
 
 func init(n :int) -> Stage:
 	number = n
@@ -26,11 +27,11 @@ func init(n :int) -> Stage:
 	field = PlacedThings.new(Settings.FieldSize)
 	$Walls.init(field, Settings.Stage1Walls)
 	field.set_at( Settings.StartPos, Start.new())
-	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Goal.new())
 	for i in Settings.PlumCount:
 		add_plum(i)
 	for i in 1:
 		add_apple()
+	apple_end_count = Settings.AppleCountPerStage
 	$Snake.init(field, Settings.StartPos)
 	$Snake.connect("eat_apple", snake_eat_apple)
 	$Snake.connect("snake_dead", snake_die)
@@ -45,6 +46,9 @@ func snake_eat_apple(pos :Vector2i) -> void:
 	ap.delete()
 	ap.queue_free()
 	apple_eat_count += 1
+	if apple_eat_count >= apple_end_count:
+		field.set_at( Vector2i(Settings.FieldWidth/2, 0), Goal.new())
+		return
 	add_apple()
 
 func add_plum(i:int) -> void:
