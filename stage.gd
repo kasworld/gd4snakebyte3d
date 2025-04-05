@@ -6,6 +6,11 @@ var apple_scene = preload("res://apple.tscn")
 var field :PlacedThings
 var plum_list :Array
 var apple_list :Array
+var number :int
+
+func init(n :int) -> Stage:
+	number = n
+	return self
 
 func _ready() -> void:
 	$Timer.wait_time = Settings.FrameTime
@@ -15,7 +20,7 @@ func _ready() -> void:
 	field.set_at( Vector2i(Settings.FieldWidth/2, Settings.FieldHeight-1), Things.Start)
 	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Things.Goal)
 	$Walls.field2wall(field)
-	for i in 10:
+	for i in 100:
 		add_plum(i)
 	for i in 10:
 		add_apple(i)
