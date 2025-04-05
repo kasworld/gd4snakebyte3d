@@ -14,7 +14,7 @@ func init(f :PlacedThings, p2d :Vector2i, n :int) -> Apple:
 	$"번호".text = "%d" % number
 	field = f
 	pos2d = p2d
-	$"모양".mesh.material.albedo_color = NamedColorList.color_list.pick_random()[0]
+	$"모양".mesh.material.albedo_color = Settings.LightColorList.pick_random()[0]
 	$"모양".rotation.z = randf_range(-PI,PI)
 	rotate_v = randf_range(-5,5)
 

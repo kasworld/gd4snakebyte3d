@@ -15,3 +15,5 @@ var BounderyWalls = [
 	["vline", 0, 0, Settings.FieldHeight-1, Things.Wall ],
 	["vline", Settings.FieldWidth-1, 0, Settings.FieldHeight-1, Things.Wall ],
 ]
+
+var LightColorList = NamedColorList.make_light_color_list()

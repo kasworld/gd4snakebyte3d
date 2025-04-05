@@ -18,7 +18,7 @@ func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> Plum:
 	field = f
 	pos2d = p2d
 	move_dir = d
-	$"모양".mesh.material.albedo_color = NamedColorList.color_list.pick_random()[0]
+	$"모양".mesh.material.albedo_color = Settings.LightColorList.pick_random()[0]
 	$"모양".rotation.x = randf_range(-PI,PI)
 	$"이동모양".mesh = $"모양".mesh
 	rotate_v = randf_range(-5,5)

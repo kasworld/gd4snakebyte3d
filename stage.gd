@@ -10,6 +10,7 @@ var number :int
 
 func init(n :int) -> Stage:
 	number = n
+	$Label3D.text = "stage %d" % number
 	return self
 
 func _ready() -> void:
@@ -20,9 +21,9 @@ func _ready() -> void:
 	field.set_at( Vector2i(Settings.FieldWidth/2, Settings.FieldHeight-1), Things.Start)
 	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Things.Goal)
 	$Walls.field2wall(field)
-	for i in 100:
+	for i in 2:
 		add_plum(i)
-	for i in 10:
+	for i in 1:
 		add_apple(i)
 
 func add_plum(i:int) -> void:

@@ -7,6 +7,7 @@ func _ready() -> void:
 	$Camera3D.position = Vector3(centerx, centery, Settings.FieldHeight)
 	$Camera3D.look_at(Vector3(centerx, centery, 0))
 	$OmniLight3D.position = Vector3(centerx, centery, Settings.FieldHeight/4)
+	$Stage.init(0)
 
 var key2fn = {
 	KEY_ESCAPE:_on_button_esc_pressed,
