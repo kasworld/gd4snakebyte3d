@@ -13,9 +13,12 @@ script = ExtResource("1_6eo5e")
 wait_time = 0.2
 autostart = true
 
-[node name="Label3D" type="Label3D" parent="."]
+[node name="StageNumber" type="Label3D" parent="."]
 pixel_size = 0.05
 
 [node name="Snake" parent="." instance=ExtResource("3_rnkuw")]
+
+[node name="AppleNumber" type="Label3D" parent="."]
+pixel_size = 0.05
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

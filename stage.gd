@@ -10,7 +10,10 @@ var number :int
 
 func init(n :int) -> Stage:
 	number = n
-	$Label3D.text = "stage %d" % number
+	$StageNumber.text = "stage %d" % number
+	$AppleNumber.text = "apple %d" % Settings.AppleCountPerStage
+	$StageNumber.position.x = 2
+	$AppleNumber.position.x = Settings.FieldWidth - 3
 	$Timer.wait_time = Settings.FrameTime
 	field = PlacedThings.new(Settings.FieldSize)
 	$Walls.init(field, Settings.Stage1Walls)
