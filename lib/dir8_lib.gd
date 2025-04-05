@@ -21,13 +21,13 @@ static func IsDiagonal(d :Dir) -> bool:
 	return vt.x != 0 and vt.y != 0
 
 static func DirOpppsite(d :Dir) -> Dir:
-	return (d + Dir.size()/2) % Dir.size()
+	return ((d + Dir.size()/2) % Dir.size()) as Dir
 
 static func DirTurnLeft(d :Dir, i :int=2) -> Dir:
-	return (d + i ) % Dir.size()
+	return ((d + i ) % Dir.size()) as Dir
 
 static func DirTurnRight(d :Dir, i :int=2) -> Dir:
-	return (d - i + Dir.size()) % Dir.size()
+	return ((d - i + Dir.size()) % Dir.size()) as Dir
 
 const Dir2Vt = {
 	Dir.North : Vector2i(0,-1),

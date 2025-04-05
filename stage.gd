@@ -20,7 +20,7 @@ func init(n :int) -> Stage:
 		add_plum(i)
 	for i in 1:
 		add_apple(i)
-	$Snake.init(Settings.StartPos)
+	$Snake.init(field, Settings.StartPos)
 	return self
 
 func add_plum(i:int) -> void:

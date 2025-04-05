@@ -14,12 +14,12 @@ func init(f :PlacedThings, add_walls :Array) -> void:
 	#draw_rand_wall(10)
 	field2wall(field)
 
-func field2wall(field :PlacedThings) -> void:
+func field2wall(f :PlacedThings) -> void:
 	var wall_count := 0
 	for l in wall_list:
 		var co = Settings.LightColorList.pick_random()[0]
 		for pos in l:
-			field.set_at(pos, Things.Wall)
+			f.set_at(pos, Things.Wall)
 			var pos3d = Settings.vector2i_to_vector3(pos)
 			$MultiMeshShape.set_inst_pos(wall_count, pos3d)
 			$MultiMeshShape.set_inst_color(wall_count, co)
@@ -60,14 +60,11 @@ func draw_vline(x :int, y1 :int, y2 :int):
 		rtn.append( Vector2i(x,y) )
 	wall_list.append(rtn)
 
-func exec_script(sc :Array) -> Array:
-	var rtn := []
+func exec_script(sc :Array):
 	for l in sc:
-		rtn.append(exec_script_line(l))
-	return rtn
+		exec_script_line(l)
 
 func exec_script_line(l:Array):
-	var rtn
 	match l[0]:
 		"set" :
 			set_at(Vector2i(l[1],l[2]))
@@ -77,4 +74,3 @@ func exec_script_line(l:Array):
 			draw_vline(l[1],l[2],l[3])
 		_:
 			assert(false, "invalid script line %s" %[l])
-	return rtn

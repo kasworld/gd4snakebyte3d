@@ -51,32 +51,32 @@ func field_get3(pos :Vector2i, d :Dir8Lib.Dir) -> Dictionary:
 		"left" : field_get(pos, Dir8Lib.DirTurnLeft(d, 1)),
 		}
 
-func find_new_dir(old_pos2d :Vector2i, old_dir :Dir8Lib.Dir) -> Dictionary:
-	var 기존방향3 = field_get3(old_pos2d, old_dir)
-	var new_dir = old_dir
-	var move_dir = old_dir
+func find_new_dir(oldpos2d :Vector2i, olddir :Dir8Lib.Dir) -> Dictionary:
+	var 기존방향3 = field_get3(oldpos2d, olddir)
+	var newdir = olddir
+	var movedir = olddir
 	if 기존방향3.center == null: # 진행방향이 비어 있어 통과
-		new_dir = old_dir
-		move_dir = new_dir
+		newdir = olddir
+		movedir = newdir
 	elif 기존방향3.right == null and 기존방향3.left == null: # 진행 방향이 막혀 있어 뒤로 반사
-		new_dir = Dir8Lib.DirOpppsite(old_dir)
-		move_dir = new_dir
+		newdir = Dir8Lib.DirOpppsite(olddir)
+		movedir = newdir
 		rotate_v = randf_range(-5,5)
 	elif 기존방향3.right != null and 기존방향3.left != null: # 진행 방향이 막혀 있어 뒤로 반사
-		new_dir = Dir8Lib.DirOpppsite(old_dir)
-		move_dir = new_dir
+		newdir = Dir8Lib.DirOpppsite(olddir)
+		movedir = newdir
 		rotate_v = randf_range(-5,5)
 	elif 기존방향3.right == null and 기존방향3.left != null: # 오른쪽이 비어 있어 오른쪽으로 반사
-		new_dir = Dir8Lib.DirTurnRight(old_dir)
-		move_dir = Dir8Lib.DirTurnRight(old_dir, 1)
+		newdir = Dir8Lib.DirTurnRight(olddir)
+		movedir = Dir8Lib.DirTurnRight(olddir, 1)
 		rotate_v = randf_range(-5,5)
 	elif 기존방향3.right != null and 기존방향3.left == null: # 왼쪽이 비어 있어 왼쪽으로 반사
-		new_dir = Dir8Lib.DirTurnLeft(old_dir)
-		move_dir = Dir8Lib.DirTurnLeft(old_dir, 1)
+		newdir = Dir8Lib.DirTurnLeft(olddir)
+		movedir = Dir8Lib.DirTurnLeft(olddir, 1)
 		rotate_v = randf_range(-5,5)
 	else :
 		assert(false, "find_new_dir")
-	return { "dir":new_dir, "move":move_dir }
+	return { "dir":newdir, "move":movedir }
 
 func move2d() -> void:
 	old_pos2d = pos2d

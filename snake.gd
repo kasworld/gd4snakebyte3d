@@ -1,11 +1,13 @@
 extends Node3D
 class_name Snake
 
+var field :PlacedThings
 var pos2d_list :Array[Vector2i]
 var move_dir :Dir8Lib.Dir
 var dest_body_len :int
 
-func init(pos :Vector2i) -> Snake:
+func init(f :PlacedThings, pos :Vector2i) -> Snake:
+	field = f
 	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Sphere, 0.4)
 	$Body.init(mesh, Color.WHITE, Settings.FieldWidth*Settings.FieldHeight/2, Vector3.ZERO)
 	dest_body_len = Settings.SnakeLenStart
