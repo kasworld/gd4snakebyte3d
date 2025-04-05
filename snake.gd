@@ -23,26 +23,17 @@ func process_frame() -> void:
 func change_move_dir(dir :Dir8Lib.Dir) -> void:
 	assert(Dir8Lib.IsDiagonal(dir), "invalid dir %s" %[dir])
 
-var key2fn = {
-	KEY_UP:_on_button_up_pressed,
-	KEY_DOWN:_on_button_down_pressed,
-	KEY_LEFT:_on_button_left_pressed,
-	KEY_RIGHT:_on_button_right_pressed,
+var key2dir = {
+	KEY_UP:Dir8Lib.Dir.North,
+	KEY_DOWN:Dir8Lib.Dir.South,
+	KEY_LEFT:Dir8Lib.Dir.West,
+	KEY_RIGHT:Dir8Lib.Dir.East,
 }
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
-		var fn = key2fn.get(event.keycode)
-		if fn != null:
-			fn.call()
-
-func _on_button_up_pressed() -> void:
-	move_dir = Dir8Lib.Dir.North
-
-func _on_button_down_pressed() -> void:
-	move_dir = Dir8Lib.Dir.South
-
-func _on_button_left_pressed() -> void:
-	move_dir = Dir8Lib.Dir.West
-
-func _on_button_right_pressed() -> void:
-	move_dir = Dir8Lib.Dir.East
+		var dir = key2dir.get(event.keycode)
+		if dir != null:
+			if Dir8Lib.DirOpppsite(dir) == move_dir:
+				print_debug("cannot change dir %s %s" % [dir, move_dir])
+				return
+			move_dir = dir
