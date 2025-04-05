@@ -7,7 +7,7 @@ const FieldSize := Vector2i(FieldWidth,FieldHeight)
 func vector2i_to_vector3(from :Vector2i) -> Vector3:
 	return Vector3(from.x,Settings.FieldHeight - from.y, 0)
 
-const FrameTime := 0.5 # second
+const FrameTime := 0.1 # second
 
 var BounderyWalls = [
 	["hline", 0, Settings.FieldWidth-1, 0, Things.Wall ],

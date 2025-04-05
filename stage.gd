@@ -11,20 +11,16 @@ var number :int
 func init(n :int) -> Stage:
 	number = n
 	$Label3D.text = "stage %d" % number
-	return self
-
-func _ready() -> void:
 	$Timer.wait_time = Settings.FrameTime
 	field = PlacedThings.new(Settings.FieldSize)
-	field.exec_wall_script(Settings.BounderyWalls)
-	draw_rand_wall(10)
+	$Walls.init(field)
 	field.set_at( Vector2i(Settings.FieldWidth/2, Settings.FieldHeight-1), Things.Start)
 	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Things.Goal)
-	$Walls.field2wall(field)
 	for i in 2:
 		add_plum(i)
 	for i in 1:
 		add_apple(i)
+	return self
 
 func add_plum(i:int) -> void:
 	var pos := field.find_empty_pos(10)
@@ -43,16 +39,6 @@ func add_apple(i:int) -> void:
 func process_frame() -> void:
 	for p in plum_list:
 		p.move2d()
-
-func draw_rand_wall(n :int) -> void:
-	for i in n:
-		match i % 3:
-			0:
-				field.set_at(field.rand2dpos(2), Things.Wall)
-			1:
-				field.draw_hline(field.rand_x(2),field.rand_x(2),field.rand_y(2),Things.Wall)
-			2:
-				field.draw_vline(field.rand_x(2),field.rand_y(2),field.rand_y(2),Things.Wall)
 
 func _on_timer_timeout() -> void:
 	process_frame()
