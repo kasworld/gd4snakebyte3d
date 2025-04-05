@@ -9,19 +9,24 @@ var rotate_v :float
 func _to_string() -> String:
 	return "Apple%d (%d,%d)" % [number, pos2d.x,pos2d.y]
 
-func init(f :PlacedThings, p2d :Vector2i, n :int) -> Apple:
+func init(f :PlacedThings, n :int) -> Apple:
 	number = n
 	$"번호".text = "%d" % number
 	field = f
-	pos2d = p2d
 	$"모양".mesh.material.albedo_color = Settings.LightColorList.pick_random()[0]
 	$"모양".rotation.z = randf_range(-PI,PI)
 	rotate_v = randf_range(-5,5)
 
-	var old = field.set_at(p2d, Things.Apple)
+	var pos := field.find_empty_pos(10)
+	pos2d = pos
+	assert(pos!=Vector2i(-1,-1), "fail to find empty pos in field")
+	var old = field.set_at(pos, Things.Apple)
 	assert(old == null, "%s pos not empty %s" % [self, old])
 	position = get_pos3d()
 	return self
+
+func get_pos2d() -> Vector2i:
+	return pos2d
 
 func get_pos3d() -> Vector3:
 	return Settings.vector2i_to_vector3(pos2d)

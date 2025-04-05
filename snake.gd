@@ -25,6 +25,9 @@ func process_frame() -> void:
 		$Body.set_inst_pos(i, Settings.vector2i_to_vector3(pos2d_list[i]))
 		$Body.set_inst_color(i, lerp(Color.RED, Color.BLUE, rate))
 
+func get_next_head_pos() -> Vector2i:
+	return pos2d_list[0] + Dir8Lib.Dir2Vt[move_dir]
+
 func change_move_dir(dir :Dir8Lib.Dir) -> void:
 	assert(not Dir8Lib.IsDiagonal(dir), "invalid dir %s" %[dir])
 	if Dir8Lib.DirOpppsite(dir) == move_dir:

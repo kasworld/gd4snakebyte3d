@@ -29,14 +29,12 @@ func init(n :int) -> Stage:
 func add_plum(i:int) -> void:
 	var pos := field.find_empty_pos(10)
 	assert(pos!=Vector2i(-1,-1), "fail to find empty pos in field")
-	var pl = plum_scene.instantiate().init(field, pos  , Dir8Lib.DiagonalList.pick_random(), i)
+	var pl = plum_scene.instantiate().init(field, pos , Dir8Lib.DiagonalList.pick_random(), i)
 	add_child(pl)
 	plum_list.append(pl)
 
 func add_apple(i:int) -> void:
-	var pos := field.find_empty_pos(10)
-	assert(pos!=Vector2i(-1,-1), "fail to find empty pos in field")
-	var ap = apple_scene.instantiate().init(field, pos, i)
+	var ap = apple_scene.instantiate().init(field, i)
 	add_child(ap)
 	apple_list.append(ap)
 
