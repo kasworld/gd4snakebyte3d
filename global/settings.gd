@@ -18,7 +18,7 @@ var BounderyWalls = [
 
 var LightColorList = NamedColorList.make_light_color_list()
 
-const SnakeLenStart := 4
+const SnakeLenStart := 8
 const SankeLenInc := 4
 const StartPos := Vector2i(Settings.FieldWidth/2, Settings.FieldHeight-1)
 const GoalPos := Vector2i(Settings.FieldWidth/2, 0)
