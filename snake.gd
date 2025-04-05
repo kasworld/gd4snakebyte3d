@@ -16,8 +16,9 @@ func process_frame() -> void:
 	pos2d_list.push_front(head)
 	$Body.set_visible_count(pos2d_list.size())
 	for i in pos2d_list.size():
+		var rate = (i as float) / pos2d_list.size()
 		$Body.set_inst_pos(i, Settings.vector2i_to_vector3(pos2d_list[i]))
-		$Body.set_inst_color(i, Color.RED)
+		$Body.set_inst_color(i, lerp(Color.RED, Color.BLUE, rate))
 
 func change_move_dir(dir :Dir8Lib.Dir) -> void:
 	assert(Dir8Lib.IsDiagonal(dir), "invalid dir %s" %[dir])
