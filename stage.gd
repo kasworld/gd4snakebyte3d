@@ -16,7 +16,7 @@ func init(n :int) -> Stage:
 	$Walls.init(field, Settings.Stage1Walls)
 	field.set_at( Settings.StartPos, Things.Start)
 	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Things.Goal)
-	for i in 2:
+	for i in Settings.PlumCount:
 		add_plum(i)
 	for i in 1:
 		add_apple(i)
