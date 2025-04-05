@@ -28,34 +28,6 @@ func get_width() -> int:
 func get_height() -> int:
 	return data.size()
 
-# include x2
-func draw_hline(x1 :int, x2 :int, y :int , v) -> Dictionary:
-	if x1 > x2 :
-		var t = x1
-		x1 = x2
-		x2 = t
-	var rtn := {}
-	for x in range(x1,x2+1):
-		var pos := Vector2i(x,y)
-		var old = set_at(pos, v)
-		if old != null:
-			rtn[pos] = old
-	return rtn
-
-# include y2
-func draw_vline(x :int, y1 :int, y2 :int , v) -> Dictionary:
-	if y1 > y2 :
-		var t = y1
-		y1 = y2
-		y2 = t
-	var rtn := {}
-	for y in range(y1,y2+1):
-		var pos := Vector2i(x,y)
-		var old = set_at(pos, v)
-		if old != null:
-			rtn[pos] = old
-	return rtn
-
 func get_at(pos :Vector2i) :
 	return data[pos.y][pos.x]
 
@@ -86,25 +58,6 @@ func del_at(pos :Vector2i):
 	if old != null:
 		count -=1
 	return old
-
-func exec_script(sc :Array) -> Array:
-	var rtn := []
-	for l in sc:
-		rtn.append(exec_script_line(l))
-	return rtn
-
-func exec_script_line(l:Array):
-	var rtn
-	match l[0]:
-		"set" :
-			rtn = set_at(Vector2i(l[1],l[2]), l[3])
-		"hline":
-			rtn = draw_hline(l[1],l[2],l[3], l[4])
-		"vline":
-			rtn = draw_vline(l[1],l[2],l[3], l[4])
-		_:
-			assert(false, "invalid script line %s" %[l])
-	return rtn
 
 func rand_x(margin :int=1) -> int:
 	return randi_range(margin,data[0].size()-1-margin)
