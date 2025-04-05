@@ -13,7 +13,7 @@ func init(n :int) -> Stage:
 	$Label3D.text = "stage %d" % number
 	$Timer.wait_time = Settings.FrameTime
 	field = PlacedThings.new(Settings.FieldSize)
-	$Walls.init(field)
+	$Walls.init(field, Settings.Stage1Walls)
 	field.set_at( Settings.StartPos, Things.Start)
 	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Things.Goal)
 	for i in 2:

@@ -5,11 +5,12 @@ var pos2d_list :Array[Vector2i]
 var move_dir :Dir8Lib.Dir
 var dest_body_len :int
 
-func init(pos :Vector2i) -> void:
-	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Sphere, 0.5)
+func init(pos :Vector2i) -> Snake:
+	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Sphere, 0.4)
 	$Body.init(mesh, Color.WHITE, Settings.FieldWidth*Settings.FieldHeight/2, Vector3.ZERO)
 	dest_body_len = Settings.SnakeLenStart
 	pos2d_list.append(pos)
+	return self
 
 func process_frame() -> void:
 	if pos2d_list.size() >= dest_body_len:

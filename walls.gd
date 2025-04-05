@@ -4,13 +4,14 @@ class_name Walls
 var field :PlacedThings
 var wall_list :Array
 
-func init(f :PlacedThings) -> void:
+func init(f :PlacedThings, add_walls :Array) -> void:
 	field = f
 	wall_list = []
-	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Sphere, 0.5)
+	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Box, 0.4)
 	$MultiMeshShape.init(mesh, Color.WHITE, Settings.FieldWidth*Settings.FieldHeight/2, Vector3.ZERO)
 	exec_script(Settings.BounderyWalls)
-	draw_rand_wall(10)
+	exec_script(add_walls)
+	#draw_rand_wall(10)
 	field2wall(field)
 
 func field2wall(field :PlacedThings) -> void:
