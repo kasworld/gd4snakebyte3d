@@ -14,12 +14,13 @@ func init(n :int) -> Stage:
 	$Timer.wait_time = Settings.FrameTime
 	field = PlacedThings.new(Settings.FieldSize)
 	$Walls.init(field)
-	field.set_at( Vector2i(Settings.FieldWidth/2, Settings.FieldHeight-1), Things.Start)
+	field.set_at( Settings.StartPos, Things.Start)
 	#field.set_at( Vector2i(Settings.FieldWidth/2, 0), Things.Goal)
 	for i in 2:
 		add_plum(i)
 	for i in 1:
 		add_apple(i)
+	$Snake.init(Settings.StartPos)
 	return self
 
 func add_plum(i:int) -> void:
@@ -39,6 +40,7 @@ func add_apple(i:int) -> void:
 func process_frame() -> void:
 	for p in plum_list:
 		p.move2d()
+	$Snake.process_frame()
 
 func _on_timer_timeout() -> void:
 	process_frame()
