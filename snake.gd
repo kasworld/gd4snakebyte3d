@@ -3,6 +3,7 @@ class_name Snake
 
 signal snake_dead()
 signal eat_apple(pos :Vector2i)
+signal tail_enter()
 
 var field :PlacedThings
 var pos2d_list :Array[Vector2i]
@@ -28,6 +29,8 @@ func process_frame() -> void:
 		if old is not Stage.Start:
 			field.del_at(tailpos)
 			assert( old is Snake, "invalid tailpos %s %s" %[tailpos, old] )
+		else :
+			tail_enter.emit()
 	var headpos = get_next_head_pos()
 	var headthings = field.get_at(headpos)
 	if headthings is Apple:

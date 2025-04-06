@@ -45,7 +45,7 @@ func close_startpos() -> void:
 	var pos3d = Settings.vector2i_to_vector3(pos)
 	#$MultiMeshShape.set_inst_pos(startwall_index, pos3d)
 	field.set_at(pos, self)
-	var pos1 = Settings.vector2i_to_vector3(Settings.StartPos-Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast])
+	var pos1 = Settings.vector2i_to_vector3(Settings.StartPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast])
 	var pos2 = Settings.vector2i_to_vector3(Settings.StartPos)
 	animate_inst = {
 		"start_time" : Time.get_unix_time_from_system(),

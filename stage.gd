@@ -36,6 +36,7 @@ func init(n :int) -> Stage:
 	$Snake.init(field, Settings.StartPos)
 	$Snake.connect("eat_apple", snake_eat_apple)
 	$Snake.connect("snake_dead", snake_die)
+	$Snake.connect("tail_enter", snake_enter_complete)
 	return self
 
 func snake_die() -> void:
@@ -51,6 +52,9 @@ func snake_eat_apple(pos :Vector2i) -> void:
 		$Walls.open_goalpos()
 		return
 	add_apple()
+
+func snake_enter_complete() -> void:
+	$Walls.close_startpos()
 
 func add_plum(i:int) -> void:
 	var pos := field.find_empty_pos(10)
