@@ -4,6 +4,7 @@ class_name Snake
 signal snake_dead()
 signal eat_apple(pos :Vector2i)
 signal tail_enter()
+signal reach_goal()
 
 var field :PlacedThings
 var pos2d_list :Array[Vector2i]
@@ -11,12 +12,12 @@ var move_dir :Dir8Lib.Dir
 var dest_body_len :int
 var is_alive : bool
 
-func init(f :PlacedThings, pos :Vector2i) -> Snake:
+func init(f :PlacedThings) -> Snake:
 	field = f
 	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Sphere, 0.4)
 	$Body.init(mesh, Color.WHITE, Settings.FieldWidth*Settings.FieldHeight/2, Vector3.ZERO)
 	dest_body_len = Settings.SnakeLenStart
-	pos2d_list.append(pos)
+	pos2d_list.append(Settings.StartPos)
 	is_alive = true
 	return self
 
@@ -36,6 +37,9 @@ func process_frame() -> void:
 	if headthings is Apple:
 		dest_body_len += Settings.SankeLenInc
 		eat_apple.emit(headpos)
+	elif headthings is Stage.Goal:
+		reach_goal.emit()
+		return
 	elif headthings != null:
 		snake_dead.emit()
 		is_alive = false

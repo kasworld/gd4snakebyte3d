@@ -1,6 +1,8 @@
 extends Node3D
 class_name Stage
 
+signal stage_cleared()
+
 class Start:
 	pass
 class Goal:
@@ -17,7 +19,7 @@ var apple_make_count :int
 var apple_eat_count :int
 var apple_end_count :int
 
-func init(n :int) -> Stage:
+func init(n :int, wallscript :Array) -> Stage:
 	number = n
 	$StageNumber.text = "stage %d" % number
 	$AppleNumber.text = "apple %d" % Settings.AppleCountPerStage
@@ -25,18 +27,18 @@ func init(n :int) -> Stage:
 	$AppleNumber.position.x = Settings.FieldWidth - 3
 	$Timer.wait_time = Settings.FrameTime
 	field = PlacedThings.new(Settings.FieldSize)
-	$Walls.init(field, [])
-	#$Walls.init(field, Settings.Stage1Walls)
+	$Walls.init(field, wallscript)
 	field.set_at( Settings.StartPos, Start.new())
 	for i in Settings.PlumCount:
 		add_plum(i)
 	for i in 1:
 		add_apple()
 	apple_end_count = Settings.AppleCountPerStage
-	$Snake.init(field, Settings.StartPos)
 	$Snake.connect("eat_apple", snake_eat_apple)
 	$Snake.connect("snake_dead", snake_die)
 	$Snake.connect("tail_enter", snake_enter_complete)
+	$Snake.connect("reach_goal", snake_reach_goal)
+	$Snake.init(field)
 	return self
 
 func snake_die() -> void:
@@ -52,6 +54,9 @@ func snake_eat_apple(pos :Vector2i) -> void:
 		$Walls.open_goalpos()
 		return
 	add_apple()
+
+func snake_reach_goal() -> void:
+	stage_cleared.emit()
 
 func snake_enter_complete() -> void:
 	$Walls.close_startpos()
