@@ -1,5 +1,7 @@
 extends Node3D
 
+var stage_scene = preload("res://stage.tscn")
+
 func _ready() -> void:
 	#var vp_size = get_viewport().get_visible_rect().size
 	var centerx = Settings.FieldWidth as float /2
@@ -7,11 +9,22 @@ func _ready() -> void:
 	$Camera3D.position = Vector3(centerx, centery, Settings.FieldHeight)
 	$Camera3D.look_at(Vector3(centerx, centery, 0))
 	$OmniLight3D.position = Vector3(centerx, centery, Settings.FieldHeight/4)
-	$Stage.init(1, Settings.StageWalls[0])
-	$Stage.connect("stage_cleared", stage_cleared)
+	start_stage()
+
+var stage_number :int
+var stage :Stage
+
+func start_stage() -> void:
+	if stage != null :
+		stage.queue_free()
+	stage = stage_scene.instantiate().init(stage_number+1, Settings.StageWalls[stage_number % Settings.StageWalls.size()])
+	add_child(stage)
+	stage.connect("stage_cleared", stage_cleared)
+	stage_number +=1
 
 func stage_cleared() -> void:
-	print_debug("stage cleared")
+	print_debug("stage cleared %s" [stage_number])
+	start_stage()
 
 var key2fn = {
 	KEY_ESCAPE:_on_button_esc_pressed,

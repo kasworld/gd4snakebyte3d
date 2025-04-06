@@ -12,6 +12,9 @@ var move_dir :Dir8Lib.Dir
 var dest_body_len :int
 var is_alive : bool
 
+func _to_string() -> String:
+	return "Snake alive:%s movedir:%s %s" % [is_alive,move_dir,pos2d_list]
+
 func init(f :PlacedThings) -> Snake:
 	field = f
 	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Sphere, 0.4)

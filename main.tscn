@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://dxajpsuwoh6nw"]
+[gd_scene load_steps=6 format=3 uid="uid://dxajpsuwoh6nw"]
 
 [ext_resource type="Script" uid="uid://d2pgmslp2ico3" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Texture2D" uid="uid://pqs6lcrw438x" path="res://image/skymap.hdr" id="2_0xm2m"]
-[ext_resource type="PackedScene" uid="uid://dcp4trrnspr0q" path="res://stage.tscn" id="3_h2yge"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_h2yge"]
 panorama = ExtResource("2_0xm2m")
@@ -31,5 +30,3 @@ omni_range = 64.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_lquwl")
-
-[node name="Stage" parent="." instance=ExtResource("3_h2yge")]

@@ -22,6 +22,9 @@ var apple_end_count :int
 var wall_script :Array
 var snake :Snake
 
+func _to_string() -> String:
+	return "Stage%d" % [number]
+
 func init(n :int, w_script :Array) -> Stage:
 	number = n
 	$StageNumber.text = "stage %d" % number
