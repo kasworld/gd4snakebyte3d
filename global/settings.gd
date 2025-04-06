@@ -3,7 +3,7 @@ extends Node
 const FieldWidth :int = 48
 const FieldHeight :int = 27
 const FieldSize := Vector2i(FieldWidth,FieldHeight)
-const FrameTime := 0.4 # second
+const FrameTime := 0.2 # second
 const SnakeLenStart := 12
 const SankeLenInc := 12
 const PlumCount := 2
