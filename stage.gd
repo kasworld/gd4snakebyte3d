@@ -15,7 +15,6 @@ var plum_scene = preload("res://plum.tscn")
 var apple_scene = preload("res://apple.tscn")
 var field :PlacedThings
 var plum_list :Array
-var apple_list :Array
 var number :int
 var apple_make_count :int
 var apple_eat_count :int
@@ -41,17 +40,17 @@ func new_snake() -> Stage:
 	for pl in plum_list:
 		pl.queue_free()
 	plum_list = []
-	apple_make_count -= apple_list.size()
-	for ap in apple_list:
-		ap.queue_free()
-	apple_list = []
+	apple_make_count = apple_eat_count
 	field = PlacedThings.new(Settings.FieldSize)
 	$Walls.init(field, wall_script)
 	field.set_at( Settings.StartPos, Start.new())
 	for i in Settings.PlumCount:
 		add_plum(i)
-	for i in 1:
-		add_apple()
+	if apple_eat_count >= apple_end_count:
+		$Walls.open_goalpos()
+	else:
+		for i in 1:
+			add_apple()
 	update_info_text	()
 	snake = snake_scene.instantiate()
 	add_child(snake)
@@ -97,7 +96,6 @@ func add_apple() -> void:
 	apple_make_count +=1
 	var ap = apple_scene.instantiate().init(field, apple_make_count)
 	add_child(ap)
-	apple_list.append(ap)
 
 func process_frame() -> void:
 	for p in plum_list:
