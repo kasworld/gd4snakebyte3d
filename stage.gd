@@ -26,12 +26,19 @@ func _to_string() -> String:
 	return "Stage%d" % [number]
 
 func init(n :int, w_script :Array) -> Stage:
+	var vp_size = get_viewport().get_visible_rect().size
+	$StageStartPanel.size = vp_size/2
+	$StageStartPanel.position = vp_size/4
+	$StageStartPanel/Label.text = "stage %d" % number
+	$StageStartPanel.visible =  true
+	$HidePanelTimer.start(3)
+
 	number = n
 	$StageNumber.text = "stage %d" % number
 	$AppleNumber.text = "apple %d" % Settings.AppleCountPerStage
 	$StageNumber.position.x = 2
 	$AppleNumber.position.x = Settings.FieldWidth - 3
-	$Timer.wait_time = Settings.FrameTime
+	$FrameTimer.wait_time = Settings.FrameTime
 	apple_end_count = Settings.AppleCountPerStage
 	wall_script = w_script
 	new_snake()
@@ -108,5 +115,10 @@ func process_frame() -> void:
 	if snake != null :
 		snake.process_frame()
 
-func _on_timer_timeout() -> void:
+func _on_hide_panel_timer_timeout() -> void:
+	$HidePanelTimer.stop()
+	$StageStartPanel.hide()
+	$FrameTimer.start()
+
+func _on_frame_timer_timeout() -> void:
 	process_frame()

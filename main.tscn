@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://dxajpsuwoh6nw"]
+[gd_scene load_steps=8 format=3 uid="uid://dxajpsuwoh6nw"]
 
 [ext_resource type="Script" uid="uid://d2pgmslp2ico3" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Texture2D" uid="uid://pqs6lcrw438x" path="res://image/skymap.hdr" id="2_0xm2m"]
@@ -16,6 +16,13 @@ ambient_light_source = 3
 ambient_light_color = Color(1, 1, 1, 1)
 ambient_light_sky_contribution = 0.5
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0xm2m"]
+bg_color = Color(0.6, 0.6, 0.6, 0.215686)
+
+[sub_resource type="LabelSettings" id="LabelSettings_0xm2m"]
+line_spacing = 30.0
+font_size = 96
+
 [node name="Main" type="Node3D"]
 script = ExtResource("1_ig7tw")
 
@@ -30,3 +37,17 @@ omni_range = 64.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_lquwl")
+
+[node name="DemoPanel" type="PanelContainer" parent="."]
+visible = false
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_0xm2m")
+
+[node name="Label" type="Label" parent="DemoPanel"]
+layout_mode = 2
+text = "Demo
+Press Space to start"
+label_settings = SubResource("LabelSettings_0xm2m")
+horizontal_alignment = 1
+vertical_alignment = 1

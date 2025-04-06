@@ -3,7 +3,9 @@ extends Node3D
 var stage_scene = preload("res://stage.tscn")
 
 func _ready() -> void:
-	#var vp_size = get_viewport().get_visible_rect().size
+	var vp_size = get_viewport().get_visible_rect().size
+	$DemoPanel.size = vp_size/2
+	$DemoPanel.position = vp_size/4
 	var centerx = Settings.FieldWidth as float /2
 	var centery = Settings.FieldHeight as float /2
 	$Camera3D.position = Vector3(centerx, centery, Settings.FieldHeight)
@@ -17,8 +19,9 @@ var stage :Stage
 func start_stage() -> void:
 	if stage != null :
 		stage.queue_free()
-	stage = stage_scene.instantiate().init(stage_number+1, Settings.StageWalls[stage_number % Settings.StageWalls.size()])
+	stage = stage_scene.instantiate()
 	add_child(stage)
+	stage.init(stage_number+1, Settings.StageWalls[stage_number % Settings.StageWalls.size()])
 	stage.connect("stage_cleared", stage_cleared)
 	stage_number +=1
 
