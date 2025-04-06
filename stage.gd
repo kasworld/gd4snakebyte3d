@@ -25,7 +25,8 @@ func init(n :int) -> Stage:
 	$AppleNumber.position.x = Settings.FieldWidth - 3
 	$Timer.wait_time = Settings.FrameTime
 	field = PlacedThings.new(Settings.FieldSize)
-	$Walls.init(field, Settings.Stage1Walls)
+	$Walls.init(field, [])
+	#$Walls.init(field, Settings.Stage1Walls)
 	field.set_at( Settings.StartPos, Start.new())
 	for i in Settings.PlumCount:
 		add_plum(i)
@@ -47,7 +48,7 @@ func snake_eat_apple(pos :Vector2i) -> void:
 	ap.queue_free()
 	apple_eat_count += 1
 	if apple_eat_count >= apple_end_count:
-		field.set_at( Vector2i(Settings.FieldWidth/2, 0), Goal.new())
+		$Walls.open_goalpos()
 		return
 	add_apple()
 

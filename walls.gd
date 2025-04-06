@@ -3,6 +3,8 @@ class_name Walls
 
 var field :PlacedThings
 var wall_list :Array
+var startwall_index :int
+var goalwall_index :int
 
 func init(f :PlacedThings, add_walls :Array) -> void:
 	field = f
@@ -11,7 +13,6 @@ func init(f :PlacedThings, add_walls :Array) -> void:
 	$MultiMeshShape.init(mesh, Color.WHITE, Settings.FieldWidth*Settings.FieldHeight/2, Vector3.ZERO)
 	exec_script(Settings.BounderyWalls)
 	exec_script(add_walls)
-	#draw_rand_wall(10)
 	field2wall()
 
 func field2wall() -> void:
@@ -19,22 +20,64 @@ func field2wall() -> void:
 	for l in wall_list:
 		var co = Settings.LightColorList.pick_random()[0]
 		for pos in l:
-			field.set_at(pos, self)
+			if pos == Settings.GoalPos:
+				goalwall_index = wall_count
+			if pos == Settings.StartPos:
+				startwall_index = wall_count
+				pos = pos + Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast]
+			else:
+				field.set_at(pos, self)
 			var pos3d = Settings.vector2i_to_vector3(pos)
 			$MultiMeshShape.set_inst_pos(wall_count, pos3d)
 			$MultiMeshShape.set_inst_color(wall_count, co)
 			wall_count += 1
 	$MultiMeshShape.set_visible_count(wall_count)
 
-func draw_rand_wall(n :int) -> void:
-	for i in n:
-		match i % 3:
-			0:
-				set_at(field.rand2dpos(2))
-			1:
-				draw_hline(field.rand_x(2),field.rand_x(2),field.rand_y(2))
-			2:
-				draw_vline(field.rand_x(2),field.rand_y(2),field.rand_y(2))
+var animate_inst := {
+	"start_time" : 0,
+	"inst_index" : 0,
+	"ani_dur_sec" : 0,
+	"pos1" :Vector3.ZERO,
+	"pos2" :Vector3.ZERO,
+}
+func close_startpos() -> void:
+	var pos = Settings.StartPos
+	var pos3d = Settings.vector2i_to_vector3(pos)
+	#$MultiMeshShape.set_inst_pos(startwall_index, pos3d)
+	field.set_at(pos, self)
+	var pos1 = Settings.vector2i_to_vector3(Settings.StartPos-Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast])
+	var pos2 = Settings.vector2i_to_vector3(Settings.StartPos)
+	animate_inst = {
+		"start_time" : Time.get_unix_time_from_system(),
+		"inst_index" : startwall_index,
+		"ani_dur_sec" : 1,
+		"pos1" : pos1,
+		"pos2" : pos2,
+	}
+
+func open_goalpos() -> void:
+	var pos = Settings.GoalPos
+	var pos3d = Settings.vector2i_to_vector3(pos)
+	var old = field.set_at( pos, Stage.Goal.new())
+	assert(old == self, "invalid goal pos not wall %s %s" % [pos,old])
+
+	var pos1 = Settings.vector2i_to_vector3(Settings.GoalPos)
+	var pos2 = Settings.vector2i_to_vector3(Settings.GoalPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.NorthWest])
+	animate_inst = {
+		"start_time" : Time.get_unix_time_from_system(),
+		"inst_index" : goalwall_index,
+		"ani_dur_sec" : 1,
+		"pos1" : pos1,
+		"pos2" : pos2,
+	}
+
+func _process(delta: float) -> void:
+	if animate_inst.start_time != 0:
+		var rate = (Time.get_unix_time_from_system() - animate_inst.start_time) / animate_inst.ani_dur_sec
+		var pos = lerp(animate_inst.pos1, animate_inst.pos2, rate )
+		$MultiMeshShape.set_inst_pos(animate_inst.inst_index, pos)
+		if rate >= 1 :
+			animate_inst.start_time = 0
 
 func set_at(pos :Vector2i):
 	wall_list.append([pos])
