@@ -43,6 +43,8 @@ func new_snake() -> Stage:
 	for pl in plum_list:
 		pl.queue_free()
 	plum_list = []
+	for n in $AppleContainer.get_children():
+		n.queue_free()
 	apple_make_count = apple_eat_count
 	field = PlacedThings.new(Settings.FieldSize)
 	$Walls.init(field, wall_script)
@@ -98,7 +100,7 @@ func add_plum(i:int) -> void:
 func add_apple() -> void:
 	apple_make_count +=1
 	var ap = apple_scene.instantiate().init(field, apple_make_count)
-	add_child(ap)
+	$AppleContainer.add_child(ap)
 
 func process_frame() -> void:
 	for p in plum_list:
