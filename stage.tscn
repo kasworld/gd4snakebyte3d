@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://dcp4trrnspr0q"]
+[gd_scene load_steps=3 format=3 uid="uid://dcp4trrnspr0q"]
 
 [ext_resource type="Script" uid="uid://bl0ir0l2ndush" path="res://stage.gd" id="1_6eo5e"]
 [ext_resource type="PackedScene" uid="uid://dr7etomru4cuy" path="res://walls.tscn" id="2_aees8"]
-[ext_resource type="PackedScene" uid="uid://c7s28rwtmb200" path="res://snake.tscn" id="3_rnkuw"]
 
 [node name="Stage" type="Node3D"]
 script = ExtResource("1_6eo5e")
@@ -15,8 +14,6 @@ autostart = true
 
 [node name="StageNumber" type="Label3D" parent="."]
 pixel_size = 0.05
-
-[node name="Snake" parent="." instance=ExtResource("3_rnkuw")]
 
 [node name="AppleNumber" type="Label3D" parent="."]
 pixel_size = 0.05

@@ -10,39 +10,59 @@ class Goal:
 class Wall:
 	pass
 
+var snake_scene = preload("res://snake.tscn")
 var plum_scene = preload("res://plum.tscn")
 var apple_scene = preload("res://apple.tscn")
 var field :PlacedThings
 var plum_list :Array
+var apple_list :Array
 var number :int
 var apple_make_count :int
 var apple_eat_count :int
 var apple_end_count :int
+var wall_script :Array
+var snake :Snake
 
-func init(n :int, wallscript :Array) -> Stage:
+func init(n :int, w_script :Array) -> Stage:
 	number = n
 	$StageNumber.text = "stage %d" % number
 	$AppleNumber.text = "apple %d" % Settings.AppleCountPerStage
 	$StageNumber.position.x = 2
 	$AppleNumber.position.x = Settings.FieldWidth - 3
 	$Timer.wait_time = Settings.FrameTime
+	wall_script = w_script
+	new_snake()
+	return self
+
+func new_snake() -> Stage:
+	if snake != null :
+		snake.queue_free()
+	for pl in plum_list:
+		pl.queue_free()
+	plum_list = []
+	apple_make_count -= apple_list.size()
+	for ap in apple_list:
+		ap.queue_free()
+	apple_list = []
 	field = PlacedThings.new(Settings.FieldSize)
-	$Walls.init(field, wallscript)
+	$Walls.init(field, wall_script)
 	field.set_at( Settings.StartPos, Start.new())
 	for i in Settings.PlumCount:
 		add_plum(i)
 	for i in 1:
 		add_apple()
 	apple_end_count = Settings.AppleCountPerStage
-	$Snake.connect("eat_apple", snake_eat_apple)
-	$Snake.connect("snake_dead", snake_die)
-	$Snake.connect("tail_enter", snake_enter_complete)
-	$Snake.connect("reach_goal", snake_reach_goal)
-	$Snake.init(field)
+	snake = snake_scene.instantiate()
+	add_child(snake)
+	snake.connect("eat_apple", snake_eat_apple)
+	snake.connect("snake_dead", snake_die)
+	snake.connect("tail_enter", snake_enter_complete)
+	snake.connect("reach_goal", snake_reach_goal)
+	snake.init(field)
 	return self
 
 func snake_die() -> void:
-	print_debug("snake die")
+	new_snake()
 
 func snake_eat_apple(pos :Vector2i) -> void:
 	var ap = field.get_at(pos)
@@ -72,11 +92,13 @@ func add_apple() -> void:
 	apple_make_count +=1
 	var ap = apple_scene.instantiate().init(field, apple_make_count)
 	add_child(ap)
+	apple_list.append(ap)
 
 func process_frame() -> void:
 	for p in plum_list:
 		p.move2d()
-	$Snake.process_frame()
+	if snake != null :
+		snake.process_frame()
 
 func _on_timer_timeout() -> void:
 	process_frame()

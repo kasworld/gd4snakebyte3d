@@ -6,7 +6,7 @@ const FieldSize := Vector2i(FieldWidth,FieldHeight)
 const FrameTime := 0.4 # second
 const SnakeLenStart := 12
 const SankeLenInc := 12
-const PlumCount := 0
+const PlumCount := 2
 const AppleCountPerStage := 1
 const AppleIncOnTimeOut := 3
 
