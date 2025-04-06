@@ -30,6 +30,7 @@ func init(n :int, w_script :Array) -> Stage:
 	$StageNumber.position.x = 2
 	$AppleNumber.position.x = Settings.FieldWidth - 3
 	$Timer.wait_time = Settings.FrameTime
+	apple_end_count = Settings.AppleCountPerStage
 	wall_script = w_script
 	new_snake()
 	return self
@@ -51,7 +52,7 @@ func new_snake() -> Stage:
 		add_plum(i)
 	for i in 1:
 		add_apple()
-	apple_end_count = Settings.AppleCountPerStage
+	update_info_text	()
 	snake = snake_scene.instantiate()
 	add_child(snake)
 	snake.connect("eat_apple", snake_eat_apple)
@@ -64,12 +65,16 @@ func new_snake() -> Stage:
 func snake_die() -> void:
 	new_snake()
 
+func update_info_text() -> void:
+	$AppleNumber.text = "apple %d/%d" % [apple_eat_count, apple_end_count]
+
 func snake_eat_apple(pos :Vector2i) -> void:
 	var ap = field.get_at(pos)
 	assert(ap is Apple, "eat not apple %s %s" %[ ap, pos])
 	ap.delete()
 	ap.queue_free()
 	apple_eat_count += 1
+	update_info_text	()
 	if apple_eat_count >= apple_end_count:
 		$Walls.open_goalpos()
 		return

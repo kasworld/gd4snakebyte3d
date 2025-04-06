@@ -7,7 +7,7 @@ func _ready() -> void:
 	$Camera3D.position = Vector3(centerx, centery, Settings.FieldHeight)
 	$Camera3D.look_at(Vector3(centerx, centery, 0))
 	$OmniLight3D.position = Vector3(centerx, centery, Settings.FieldHeight/4)
-	$Stage.init(1, [])
+	$Stage.init(1, Settings.StageWalls[1])
 	$Stage.connect("stage_cleared", stage_cleared)
 
 func stage_cleared() -> void:
