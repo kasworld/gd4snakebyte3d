@@ -5,6 +5,7 @@ var field :PlacedThings
 var wall_list :Array
 var startwall_index :int
 var goalwall_index :int
+var animate_inst :Dictionary
 
 func init(f :PlacedThings, add_walls :Array) -> void:
 	field = f
@@ -14,6 +15,14 @@ func init(f :PlacedThings, add_walls :Array) -> void:
 	exec_script(Settings.BounderyWalls)
 	exec_script(add_walls)
 	field2wall()
+	# stop old animation
+	animate_inst = {
+		"start_time" : 0,
+		"inst_index" : 0,
+		"ani_dur_sec" : 0,
+		"pos1" :Vector3.ZERO,
+		"pos2" :Vector3.ZERO,
+	}
 
 func field2wall() -> void:
 	var wall_count := 0
@@ -33,17 +42,8 @@ func field2wall() -> void:
 			wall_count += 1
 	$MultiMeshShape.set_visible_count(wall_count)
 
-var animate_inst := {
-	"start_time" : 0,
-	"inst_index" : 0,
-	"ani_dur_sec" : 0,
-	"pos1" :Vector3.ZERO,
-	"pos2" :Vector3.ZERO,
-}
 func close_startpos() -> void:
 	var pos = Settings.StartPos
-	var pos3d = Settings.vector2i_to_vector3(pos)
-	#$MultiMeshShape.set_inst_pos(startwall_index, pos3d)
 	field.set_at(pos, self)
 	var pos1 = Settings.vector2i_to_vector3(Settings.StartPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast])
 	var pos2 = Settings.vector2i_to_vector3(Settings.StartPos)
@@ -57,10 +57,8 @@ func close_startpos() -> void:
 
 func open_goalpos() -> void:
 	var pos = Settings.GoalPos
-	var pos3d = Settings.vector2i_to_vector3(pos)
 	var old = field.set_at( pos, Stage.Goal.new())
 	assert(old == self, "invalid goal pos not wall %s %s" % [pos,old])
-
 	var pos1 = Settings.vector2i_to_vector3(Settings.GoalPos)
 	var pos2 = Settings.vector2i_to_vector3(Settings.GoalPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.NorthWest])
 	animate_inst = {
@@ -71,7 +69,7 @@ func open_goalpos() -> void:
 		"pos2" : pos2,
 	}
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if animate_inst.start_time != 0:
 		var rate = (Time.get_unix_time_from_system() - animate_inst.start_time) / animate_inst.ani_dur_sec
 		var pos = lerp(animate_inst.pos1, animate_inst.pos2, rate )
