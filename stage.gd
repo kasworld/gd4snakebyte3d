@@ -154,3 +154,17 @@ func process_frame() -> void:
 
 func _on_frame_timer_timeout() -> void:
 	process_frame()
+
+# ai move functions for demo
+func get_next_apple_pos2i() -> Vector2i:
+	return $AppleContainer.get_child(0).pos2d
+func snake_head_pos2i() -> Vector2i:
+	return snake.pos2d_list[0]
+func snake_next_pos2i() -> Vector2i:
+	return snake.get_next_head_pos()
+func can_turn(from :Dir8Lib.Dir, to :Dir8Lib.Dir) -> bool:
+	return from != Dir8Lib.DirOpppsite(to)
+func demo_move() -> void:
+	if snake == null or not snake.is_alive:
+		return
+	var movevt = sign(get_next_apple_pos2i() - snake_head_pos2i())
