@@ -188,10 +188,11 @@ func demo_move() -> void:
 		diff_vt = sign(Settings.GoalPos - snake_head_pos2i())
 	else:
 		diff_vt = sign(get_next_apple_pos2i() - snake_head_pos2i())
-	print_debug(diff_vt)
 	var snake_mvvt = Dir8Lib.Dir2Vt[snake.move_dir]
 	if diff_vt.x != 0 : # try sync x
 		if snake_mvvt.x == diff_vt.x:
+			if field.get_at(snake_head_pos2i()+snake_mvvt) != null:
+				ai_setmove_y(diff_vt)
 			return # do nothing
 		if snake_mvvt.x == -diff_vt.x: # x is opposite, move y first
 			ai_setmove_y(diff_vt)
@@ -199,22 +200,30 @@ func demo_move() -> void:
 			ai_setmove_x(diff_vt)
 	elif diff_vt.y != 0: # try sync y
 		if snake_mvvt.y == diff_vt.y:
+			if field.get_at(snake_head_pos2i()+snake_mvvt) != null:
+				ai_setmove_x(diff_vt)
 			return # do nothing
 		if snake_mvvt.y == -diff_vt.y: # y is opposite, move x first
 			ai_setmove_x(diff_vt)
 		else:
 			ai_setmove_y(diff_vt)
 
-func ai_setmove_x(diff_vt :Vector2i) -> void:
+func ai_setmove_x(diff_vt :Vector2i) -> bool:
 	var try_vt = Vector2i( diff_vt.x, 0)
 	if field.get_at(snake_head_pos2i()+try_vt) == null:
 		snake.cmd_queue.append(Dir8Lib.Vt2Dir[try_vt])
+		return true
 	elif field.get_at(snake_head_pos2i()-try_vt) == null:
 		snake.cmd_queue.append(Dir8Lib.Vt2Dir[-try_vt])
+		return true
+	return false
 
-func ai_setmove_y(diff_vt :Vector2i) -> void:
+func ai_setmove_y(diff_vt :Vector2i) -> bool:
 	var try_vt =  Vector2i(0, diff_vt.y)
 	if field.get_at(snake_head_pos2i()+try_vt) == null:
 		snake.cmd_queue.append(Dir8Lib.Vt2Dir[try_vt])
+		return true
 	elif field.get_at(snake_head_pos2i()-try_vt) == null:
 		snake.cmd_queue.append(Dir8Lib.Vt2Dir[-try_vt])
+		return true
+	return false
