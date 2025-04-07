@@ -28,7 +28,7 @@ func new_game() -> void:
 func start_stage() -> void:
 	if stage != null :
 		stage.queue_free()
-	stage = stage_scene.instantiate()
+	stage = stage_scene.instantiate().set_demo_mode(true)
 	add_child(stage)
 	stage.init(game_info, stage_number+1, Settings.StageWalls[stage_number % Settings.StageWalls.size()])
 	stage.connect("stage_cleared", stage_cleared)

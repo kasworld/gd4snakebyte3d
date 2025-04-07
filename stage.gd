@@ -24,6 +24,8 @@ var snake :Snake
 var snake_step_after_eat :int
 var gauge :StepOverGauge
 var game_info :Dictionary
+var demo_mode :bool
+
 func _to_string() -> String:
 	return "Stage%d %s" % [number, game_info]
 
@@ -47,6 +49,10 @@ func init(gameinfo :Dictionary, n :int, w_script :Array) -> Stage:
 	gauge.position = Settings.vector2i_to_vector3(Vector2i(Settings.FieldWidth,Settings.FieldHeight-1))
 	add_child(gauge)
 	new_snake()
+	return self
+
+func set_demo_mode(b :bool) -> Stage:
+	demo_mode = b
 	return self
 
 func show_start_panel() -> void:
@@ -77,7 +83,7 @@ func new_snake() -> Stage:
 	field.set_at( Settings.StartPos, Start.new())
 	for i in Settings.PlumCount:
 		add_plum(i)
-	if apple_eat_count >= apple_end_count:
+	if all_apple_eaten():
 		$Walls.open_goalpos()
 	else:
 		add_apple()
@@ -111,11 +117,14 @@ func snake_eat_apple(pos :Vector2i) -> void:
 	snake_step_after_eat = 0
 	update_apple_info()
 	update_snake_info()
-	if apple_eat_count >= apple_end_count:
+	if all_apple_eaten():
 		$Walls.open_goalpos()
 		return
 	if $AppleContainer.get_child_count() <= 1:
 		add_apple()
+
+func all_apple_eaten() -> bool:
+	return apple_eat_count >= apple_end_count
 
 func snake_reach_goal() -> void:
 	stage_cleared.emit()
@@ -139,8 +148,10 @@ func process_frame() -> void:
 	for p in plum_list:
 		p.move2d()
 	if is_snake_alive():
+		if demo_mode:
+			demo_move()
 		snake.process_frame()
-		if apple_eat_count < apple_end_count:
+		if not all_apple_eaten():
 			snake_step_after_eat += 1
 			if snake_step_after_eat >= Settings.EatStepOverLimit:
 				snake_step_after_eat = 0
@@ -158,6 +169,7 @@ func _on_frame_timer_timeout() -> void:
 func is_snake_alive() -> bool:
 	return snake != null and snake.is_alive
 
+#####################################################################
 # ai move functions for demo
 func get_next_apple_pos2i() -> Vector2i:
 	return $AppleContainer.get_child(0).pos2d
@@ -167,30 +179,42 @@ func snake_next_pos2i() -> Vector2i:
 	return snake.get_next_head_pos()
 func can_turn(from :Dir8Lib.Dir, to :Dir8Lib.Dir) -> bool:
 	return from != Dir8Lib.DirOpposite(to)
+
 func demo_move() -> void:
 	if not is_snake_alive():
 		return
-	var movevt = sign(get_next_apple_pos2i() - snake_head_pos2i())
+	var diff_vt :Vector2i
+	if all_apple_eaten():
+		diff_vt = sign(Settings.GoalPos - snake_head_pos2i())
+	else:
+		diff_vt = sign(get_next_apple_pos2i() - snake_head_pos2i())
+	print_debug(diff_vt)
 	var snake_mvvt = Dir8Lib.Dir2Vt[snake.move_dir]
-	if movevt.x != 0 : # try sync x
-		if snake_mvvt.x == movevt.x:
+	if diff_vt.x != 0 : # try sync x
+		if snake_mvvt.x == diff_vt.x:
 			return # do nothing
-		# x is opposite, move y first
-		var try_vt =  Vector2i(0, movevt.y)  # try sync y
-		if field.get_at(snake_head_pos2i()+try_vt) == null:
-			snake.cmd_queue.append(Dir8Lib.Vt2Dir[try_vt])
-			return
+		if snake_mvvt.x == -diff_vt.x: # x is opposite, move y first
+			ai_setmove_y(diff_vt)
 		else:
-			snake.cmd_queue.append(Dir8Lib.Vt2Dir[-try_vt])
-			return
-	else: # try sync y
-		if snake_mvvt.y == movevt.y:
+			ai_setmove_x(diff_vt)
+	elif diff_vt.y != 0: # try sync y
+		if snake_mvvt.y == diff_vt.y:
 			return # do nothing
-		# y is opposite, move x first
-		var try_vt =  Vector2i( movevt.x, 0)  # try sync x
-		if field.get_at(snake_head_pos2i()+try_vt) == null:
-			snake.cmd_queue.append(Dir8Lib.Vt2Dir[try_vt])
-			return
+		if snake_mvvt.y == -diff_vt.y: # y is opposite, move x first
+			ai_setmove_x(diff_vt)
 		else:
-			snake.cmd_queue.append(Dir8Lib.Vt2Dir[-try_vt])
-			return
+			ai_setmove_y(diff_vt)
+
+func ai_setmove_x(diff_vt :Vector2i) -> void:
+	var try_vt = Vector2i( diff_vt.x, 0)
+	if field.get_at(snake_head_pos2i()+try_vt) == null:
+		snake.cmd_queue.append(Dir8Lib.Vt2Dir[try_vt])
+	elif field.get_at(snake_head_pos2i()-try_vt) == null:
+		snake.cmd_queue.append(Dir8Lib.Vt2Dir[-try_vt])
+
+func ai_setmove_y(diff_vt :Vector2i) -> void:
+	var try_vt =  Vector2i(0, diff_vt.y)
+	if field.get_at(snake_head_pos2i()+try_vt) == null:
+		snake.cmd_queue.append(Dir8Lib.Vt2Dir[try_vt])
+	elif field.get_at(snake_head_pos2i()-try_vt) == null:
+		snake.cmd_queue.append(Dir8Lib.Vt2Dir[-try_vt])
