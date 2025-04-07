@@ -78,8 +78,7 @@ func new_snake() -> Stage:
 	if apple_eat_count >= apple_end_count:
 		$Walls.open_goalpos()
 	else:
-		for i in 1:
-			add_apple()
+		add_apple()
 	update_info_text	()
 	snake = snake_scene.instantiate()
 	add_child(snake)
@@ -107,7 +106,8 @@ func snake_eat_apple(pos :Vector2i) -> void:
 	if apple_eat_count >= apple_end_count:
 		$Walls.open_goalpos()
 		return
-	add_apple()
+	if $AppleContainer.get_child_count() <= 1:
+		add_apple()
 
 func snake_reach_goal() -> void:
 	stage_cleared.emit()
@@ -137,7 +137,7 @@ func process_frame() -> void:
 			snake_step_after_eat = 0
 			for i in Settings.AppleIncOnStepOver:
 				add_apple()
-				apple_end_count += 1
+			apple_end_count += Settings.AppleIncOnStepOver
 			update_info_text()
 		gauge.set_value(snake_step_after_eat)
 
