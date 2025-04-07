@@ -31,9 +31,6 @@ func init(n :int, w_script :Array) -> Stage:
 	var vp_size = get_viewport().get_visible_rect().size
 	$StageStartPanel.size = vp_size/2
 	$StageStartPanel.position = vp_size/4
-	$StageStartPanel/Label.text = "stage %d" % [ number ]
-	$StageStartPanel.visible =  true
-	$HidePanelTimer.start(1)
 
 	$StageNumber.text = "stage %d" % number
 	$AppleNumber.text = "apple %d" % Settings.AppleCountPerStage
@@ -44,7 +41,19 @@ func init(n :int, w_script :Array) -> Stage:
 	new_snake()
 	return self
 
+func show_start_panel() -> void:
+	$FrameTimer.stop()
+	$StageStartPanel/Label.text = "stage %d" % [ number ]
+	$StageStartPanel.visible =  true
+	$HidePanelTimer.start(1)
+
+func _on_hide_panel_timer_timeout() -> void:
+	$HidePanelTimer.stop()
+	$StageStartPanel.hide()
+	$FrameTimer.start()
+
 func new_snake() -> Stage:
+	show_start_panel()
 	if snake != null :
 		snake.queue_free()
 	for pl in plum_list:
@@ -115,10 +124,6 @@ func process_frame() -> void:
 	if snake != null :
 		snake.process_frame()
 
-func _on_hide_panel_timer_timeout() -> void:
-	$HidePanelTimer.stop()
-	$StageStartPanel.hide()
-	$FrameTimer.start()
 
 func _on_frame_timer_timeout() -> void:
 	process_frame()
