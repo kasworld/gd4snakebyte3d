@@ -132,14 +132,15 @@ func process_frame() -> void:
 		p.move2d()
 	if snake != null :
 		snake.process_frame()
-		snake_step_after_eat += 1
-		if snake_step_after_eat >= Settings.EatStepOverLimit:
-			snake_step_after_eat = 0
-			for i in Settings.AppleIncOnStepOver:
-				add_apple()
-			apple_end_count += Settings.AppleIncOnStepOver
-			update_info_text()
-		gauge.set_value(snake_step_after_eat)
+		if apple_eat_count < apple_end_count:
+			snake_step_after_eat += 1
+			if snake_step_after_eat >= Settings.EatStepOverLimit:
+				snake_step_after_eat = 0
+				for i in Settings.AppleIncOnStepOver:
+					add_apple()
+				apple_end_count += Settings.AppleIncOnStepOver
+				update_info_text()
+			gauge.set_value(snake_step_after_eat)
 
 func _on_frame_timer_timeout() -> void:
 	process_frame()
