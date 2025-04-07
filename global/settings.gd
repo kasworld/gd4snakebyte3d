@@ -8,7 +8,10 @@ const SnakeLenStart := 12
 const SankeLenInc := 12
 const PlumCount := 2
 const AppleCountPerStage := 1
-const AppleIncOnTimeOut := 3
+const AppleIncOnStepOver := 3
+const EatStepOverLimit := FieldWidth + FieldHeight
+const SnakeLife := 3
+const SnakeLifeIncOnStageClear := 1
 
 func vector2i_to_vector3(from :Vector2i) -> Vector3:
 	return Vector3(from.x,FieldHeight - from.y, 0)

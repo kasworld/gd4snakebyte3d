@@ -21,6 +21,7 @@ var apple_eat_count :int
 var apple_end_count :int
 var wall_script :Array
 var snake :Snake
+var snake_step_after_eat :int
 
 func _to_string() -> String:
 	return "Stage%d" % [number]
@@ -53,7 +54,6 @@ func _on_hide_panel_timer_timeout() -> void:
 	$FrameTimer.start()
 
 func new_snake() -> Stage:
-	show_start_panel()
 	if snake != null :
 		snake.queue_free()
 	for pl in plum_list:
@@ -61,6 +61,9 @@ func new_snake() -> Stage:
 	plum_list = []
 	for n in $AppleContainer.get_children():
 		n.queue_free()
+
+	show_start_panel()
+	snake_step_after_eat = 0
 	apple_make_count = apple_eat_count
 	field = PlacedThings.new(Settings.FieldSize)
 	$Walls.init(field, wall_script)
@@ -94,6 +97,7 @@ func snake_eat_apple(pos :Vector2i) -> void:
 	ap.delete()
 	ap.queue_free()
 	apple_eat_count += 1
+	snake_step_after_eat = 0
 	update_info_text	()
 	if apple_eat_count >= apple_end_count:
 		$Walls.open_goalpos()
@@ -123,7 +127,7 @@ func process_frame() -> void:
 		p.move2d()
 	if snake != null :
 		snake.process_frame()
-
+		snake_step_after_eat += 1
 
 func _on_frame_timer_timeout() -> void:
 	process_frame()
