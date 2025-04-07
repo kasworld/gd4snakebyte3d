@@ -13,6 +13,7 @@ class Wall:
 var snake_scene = preload("res://snake.tscn")
 var plum_scene = preload("res://plum.tscn")
 var apple_scene = preload("res://apple.tscn")
+var gauge_scene = preload("res://step_over_gauge.tscn")
 var field :PlacedThings
 var plum_list :Array
 var number :int
@@ -22,7 +23,7 @@ var apple_end_count :int
 var wall_script :Array
 var snake :Snake
 var snake_step_after_eat :int
-
+var gauge :StepOverGauge
 func _to_string() -> String:
 	return "Stage%d" % [number]
 
@@ -39,6 +40,10 @@ func init(n :int, w_script :Array) -> Stage:
 	$AppleNumber.position.x = Settings.FieldWidth - 3
 	$FrameTimer.wait_time = Settings.FrameTime
 	apple_end_count = Settings.AppleCountPerStage
+	gauge = gauge_scene.instantiate().init(Settings.EatStepOverLimit, Settings.FieldHeight)
+	gauge.position = Settings.vector2i_to_vector3(Vector2i(Settings.FieldWidth,Settings.FieldHeight-1))
+	add_child(gauge)
+
 	new_snake()
 	return self
 
@@ -128,6 +133,13 @@ func process_frame() -> void:
 	if snake != null :
 		snake.process_frame()
 		snake_step_after_eat += 1
+		if snake_step_after_eat >= Settings.EatStepOverLimit:
+			snake_step_after_eat = 0
+			for i in Settings.AppleIncOnStepOver:
+				add_apple()
+				apple_end_count += 1
+			update_info_text()
+		gauge.set_value(snake_step_after_eat)
 
 func _on_frame_timer_timeout() -> void:
 	process_frame()
