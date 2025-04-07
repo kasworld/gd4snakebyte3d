@@ -2,6 +2,7 @@ extends Node3D
 class_name Stage
 
 signal stage_cleared()
+signal snake_dead()
 
 class Start:
 	pass
@@ -47,7 +48,6 @@ func init(gameinfo :Dictionary, n :int, w_script :Array) -> Stage:
 	gauge = gauge_scene.instantiate().init(Settings.EatStepOverLimit, Settings.FieldHeight)
 	gauge.position = Settings.vector2i_to_vector3(Vector2i(Settings.FieldWidth,Settings.FieldHeight-1))
 	add_child(gauge)
-
 	new_snake()
 	return self
 
@@ -95,8 +95,7 @@ func new_snake() -> Stage:
 	return self
 
 func snake_die() -> void:
-	game_info.snake -= 1
-	new_snake()
+	snake_dead.emit()
 
 func update_apple_info() -> void:
 	$AppleInfo.text = "apple %d/%d" % [apple_eat_count, apple_end_count]

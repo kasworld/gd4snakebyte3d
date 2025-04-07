@@ -21,6 +21,10 @@ Global3d="*res://global/global3d.gd"
 NamedColorList="*res://global/named_color_list.gd"
 Settings="*res://global/settings.gd"
 
+[debug]
+
+gdscript/warnings/integer_division=0
+
 [display]
 
 window/size/viewport_width=1920

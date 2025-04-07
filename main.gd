@@ -28,12 +28,17 @@ func start_stage() -> void:
 	add_child(stage)
 	stage.init(game_info, stage_number+1, Settings.StageWalls[stage_number % Settings.StageWalls.size()])
 	stage.connect("stage_cleared", stage_cleared)
+	stage.connect("snake_dead", snake_dead)
 	stage_number +=1
 
 func stage_cleared() -> void:
 	print_debug("stage cleared %s" [stage_number])
 	game_info.snake += Settings.SnakeLifeIncOnStageClear
 	start_stage()
+
+func snake_dead() -> void:
+	game_info.snake -= 1
+	stage.new_snake()
 
 var key2fn = {
 	KEY_ESCAPE:_on_button_esc_pressed,
