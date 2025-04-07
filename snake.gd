@@ -11,6 +11,7 @@ var pos2d_list :Array[Vector2i]
 var move_dir :Dir8Lib.Dir
 var dest_body_len :int
 var is_alive : bool
+var cmd_queue :Array
 
 func _to_string() -> String:
 	return "Snake alive:%s movedir:%s %s" % [is_alive,move_dir,pos2d_list]
@@ -22,11 +23,16 @@ func init(f :PlacedThings) -> Snake:
 	dest_body_len = Settings.SnakeLenStart
 	pos2d_list.append(Settings.StartPos)
 	is_alive = true
+	cmd_queue = []
 	return self
 
 func process_frame() -> void:
 	if not is_alive:
 		return
+	if cmd_queue.size() >= 1:
+		var dir = cmd_queue.pop_back()
+		change_move_dir(dir)
+		cmd_queue.clear()
 	if pos2d_list.size() >= dest_body_len:
 		var tailpos = pos2d_list.pop_back()
 		var old = field.get_at(tailpos)
@@ -75,4 +81,5 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
 		var dir = key2dir.get(event.keycode)
 		if dir != null:
-			change_move_dir(dir)
+			cmd_queue.append(dir)
+			#change_move_dir(dir)
