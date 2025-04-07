@@ -24,12 +24,14 @@ var wall_script :Array
 var snake :Snake
 var snake_step_after_eat :int
 var gauge :StepOverGauge
+var game_info :Dictionary
 func _to_string() -> String:
-	return "Stage%d" % [number]
+	return "Stage%d %s" % [number, game_info]
 
-func init(n :int, w_script :Array) -> Stage:
+func init(gameinfo :Dictionary, n :int, w_script :Array) -> Stage:
 	number = n
 	wall_script = w_script
+	game_info = gameinfo
 	var vp_size = get_viewport().get_visible_rect().size
 	$StageStartPanel.size = vp_size/2
 	$StageStartPanel.position = vp_size/4
@@ -39,6 +41,7 @@ func init(n :int, w_script :Array) -> Stage:
 	$SnakeInfo.position.x = Settings.FieldWidth /3
 	$AppleInfo.position.x = Settings.FieldWidth - 3
 	update_apple_info()
+	update_snake_info()
 	$FrameTimer.wait_time = Settings.FrameTime
 	apple_end_count = Settings.AppleCountPerStage
 	gauge = gauge_scene.instantiate().init(Settings.EatStepOverLimit, Settings.FieldHeight)
@@ -81,6 +84,7 @@ func new_snake() -> Stage:
 	else:
 		add_apple()
 	update_apple_info()
+	update_snake_info()
 	snake = snake_scene.instantiate()
 	add_child(snake)
 	snake.connect("eat_apple", snake_eat_apple)
@@ -91,13 +95,14 @@ func new_snake() -> Stage:
 	return self
 
 func snake_die() -> void:
+	game_info.snake -= 1
 	new_snake()
 
 func update_apple_info() -> void:
 	$AppleInfo.text = "apple %d/%d" % [apple_eat_count, apple_end_count]
 
-func update_snake_info(snakelife :int, snake_life_total :int) -> void:
-	$SnakeInfo.text = "snake %d/%d" % [snakelife, snake_life_total]
+func update_snake_info() -> void:
+	$SnakeInfo.text = "score:%d snake:%d" % [game_info.score, game_info.snake]
 
 func snake_eat_apple(pos :Vector2i) -> void:
 	var ap = field.get_at(pos)
@@ -105,8 +110,10 @@ func snake_eat_apple(pos :Vector2i) -> void:
 	ap.delete()
 	ap.queue_free()
 	apple_eat_count += 1
+	game_info.score += Settings.ScorePerApple
 	snake_step_after_eat = 0
-	update_apple_info	()
+	update_apple_info()
+	update_snake_info()
 	if apple_eat_count >= apple_end_count:
 		$Walls.open_goalpos()
 		return

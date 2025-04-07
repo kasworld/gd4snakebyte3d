@@ -24,6 +24,7 @@ pixel_size = 0.05
 pixel_size = 0.05
 
 [node name="SnakeInfo" type="Label3D" parent="."]
+pixel_size = 0.05
 
 [node name="AppleContainer" type="Node3D" parent="."]
 

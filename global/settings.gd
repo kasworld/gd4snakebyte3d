@@ -12,6 +12,7 @@ const AppleIncOnStepOver := 3
 const EatStepOverLimit := FieldWidth + FieldHeight
 const SnakeLife := 3
 const SnakeLifeIncOnStageClear := 1
+const ScorePerApple := 10
 
 func vector2i_to_vector3(from :Vector2i) -> Vector3:
 	return Vector3(from.x,FieldHeight - from.y, 0)
