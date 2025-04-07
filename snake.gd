@@ -83,4 +83,3 @@ func _unhandled_input(event: InputEvent) -> void:
 		var dir = key2dir.get(event.keycode)
 		if dir != null:
 			cmd_queue.append(dir)
-			#change_move_dir(dir)

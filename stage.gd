@@ -8,8 +8,6 @@ class Start:
 	pass
 class Goal:
 	pass
-class Wall:
-	pass
 
 var snake_scene = preload("res://snake.tscn")
 var plum_scene = preload("res://plum.tscn")
