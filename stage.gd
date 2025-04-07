@@ -34,10 +34,11 @@ func init(n :int, w_script :Array) -> Stage:
 	$StageStartPanel.size = vp_size/2
 	$StageStartPanel.position = vp_size/4
 
-	$StageNumber.text = "stage %d" % number
-	$AppleNumber.text = "apple %d" % Settings.AppleCountPerStage
-	$StageNumber.position.x = 2
-	$AppleNumber.position.x = Settings.FieldWidth - 3
+	$StageInfo.text = "stage %d" % number
+	$StageInfo.position.x = 2
+	$SnakeInfo.position.x = Settings.FieldWidth /3
+	$AppleInfo.position.x = Settings.FieldWidth - 3
+	update_apple_info()
 	$FrameTimer.wait_time = Settings.FrameTime
 	apple_end_count = Settings.AppleCountPerStage
 	gauge = gauge_scene.instantiate().init(Settings.EatStepOverLimit, Settings.FieldHeight)
@@ -79,7 +80,7 @@ func new_snake() -> Stage:
 		$Walls.open_goalpos()
 	else:
 		add_apple()
-	update_info_text	()
+	update_apple_info()
 	snake = snake_scene.instantiate()
 	add_child(snake)
 	snake.connect("eat_apple", snake_eat_apple)
@@ -92,8 +93,11 @@ func new_snake() -> Stage:
 func snake_die() -> void:
 	new_snake()
 
-func update_info_text() -> void:
-	$AppleNumber.text = "apple %d/%d" % [apple_eat_count, apple_end_count]
+func update_apple_info() -> void:
+	$AppleInfo.text = "apple %d/%d" % [apple_eat_count, apple_end_count]
+
+func update_snake_info(snakelife :int, snake_life_total :int) -> void:
+	$SnakeInfo.text = "snake %d/%d" % [snakelife, snake_life_total]
 
 func snake_eat_apple(pos :Vector2i) -> void:
 	var ap = field.get_at(pos)
@@ -102,7 +106,7 @@ func snake_eat_apple(pos :Vector2i) -> void:
 	ap.queue_free()
 	apple_eat_count += 1
 	snake_step_after_eat = 0
-	update_info_text	()
+	update_apple_info	()
 	if apple_eat_count >= apple_end_count:
 		$Walls.open_goalpos()
 		return
@@ -139,7 +143,7 @@ func process_frame() -> void:
 				for i in Settings.AppleIncOnStepOver:
 					add_apple()
 				apple_end_count += Settings.AppleIncOnStepOver
-				update_info_text()
+				update_apple_info()
 			gauge.set_value(snake_step_after_eat)
 
 func _on_frame_timer_timeout() -> void:

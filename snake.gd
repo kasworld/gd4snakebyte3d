@@ -19,7 +19,8 @@ func _to_string() -> String:
 func init(f :PlacedThings) -> Snake:
 	field = f
 	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Sphere, 0.4)
-	$Body.init(mesh, Color.WHITE, Settings.FieldWidth*Settings.FieldHeight/2, Vector3.ZERO)
+	var pos = Settings.vector2i_to_vector3( Vector2i(Settings.FieldWidth/2,Settings.FieldHeight) )
+	$Body.init(mesh, Color.WHITE, Settings.FieldWidth*Settings.FieldHeight/2, pos)
 	dest_body_len = Settings.SnakeLenStart
 	pos2d_list.append(Settings.StartPos)
 	is_alive = true
