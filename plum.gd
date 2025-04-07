@@ -59,11 +59,11 @@ func find_new_dir(oldpos2d :Vector2i, olddir :Dir8Lib.Dir) -> Dictionary:
 		newdir = olddir
 		movedir = newdir
 	elif 기존방향3.right == null and 기존방향3.left == null: # 진행 방향이 막혀 있어 뒤로 반사
-		newdir = Dir8Lib.DirOpppsite(olddir)
+		newdir = Dir8Lib.DirOpposite(olddir)
 		movedir = newdir
 		rotate_v = randf_range(-5,5)
 	elif 기존방향3.right != null and 기존방향3.left != null: # 진행 방향이 막혀 있어 뒤로 반사
-		newdir = Dir8Lib.DirOpppsite(olddir)
+		newdir = Dir8Lib.DirOpposite(olddir)
 		movedir = newdir
 		rotate_v = randf_range(-5,5)
 	elif 기존방향3.right == null and 기존방향3.left != null: # 오른쪽이 비어 있어 오른쪽으로 반사

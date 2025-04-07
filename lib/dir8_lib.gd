@@ -20,7 +20,7 @@ static func IsDiagonal(d :Dir) -> bool:
 	var vt = Dir2Vt[d]
 	return vt.x != 0 and vt.y != 0
 
-static func DirOpppsite(d :Dir) -> Dir:
+static func DirOpposite(d :Dir) -> Dir:
 	return ((d + Dir.size()/2) % Dir.size()) as Dir
 
 static func DirTurnLeft(d :Dir, i :int=2) -> Dir:
@@ -89,8 +89,8 @@ const Dir2Flag = {
 static func Flag2Str(d :Flag) -> String:
 	return Flag.keys()[d]
 
-static func FlagOpppsite(f :Flag) -> Flag:
-	return Dir2Flag[ DirOpppsite(Flag2Dir[f]) ]
+static func FlagOpposite(f :Flag) -> Flag:
+	return Dir2Flag[ DirOpposite(Flag2Dir[f]) ]
 
 static func FlagTurnLeft(f :Flag, i :int=2) -> Flag:
 	return Dir2Flag[ DirTurnLeft(Flag2Dir[f],i) ]

@@ -67,7 +67,7 @@ func get_next_head_pos() -> Vector2i:
 
 func change_move_dir(dir :Dir8Lib.Dir) -> void:
 	assert(not Dir8Lib.IsDiagonal(dir), "invalid dir %s" %[dir])
-	if Dir8Lib.DirOpppsite(dir) == move_dir:
+	if Dir8Lib.DirOpposite(dir) == move_dir:
 		print_debug("cannot change dir %s %s" % [dir, move_dir])
 		return
 	move_dir = dir

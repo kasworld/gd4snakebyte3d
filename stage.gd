@@ -138,7 +138,7 @@ func add_apple() -> void:
 func process_frame() -> void:
 	for p in plum_list:
 		p.move2d()
-	if snake != null and snake.is_alive:
+	if is_snake_alive():
 		snake.process_frame()
 		if apple_eat_count < apple_end_count:
 			snake_step_after_eat += 1
@@ -155,6 +155,9 @@ func process_frame() -> void:
 func _on_frame_timer_timeout() -> void:
 	process_frame()
 
+func is_snake_alive() -> bool:
+	return snake != null and snake.is_alive
+
 # ai move functions for demo
 func get_next_apple_pos2i() -> Vector2i:
 	return $AppleContainer.get_child(0).pos2d
@@ -163,8 +166,31 @@ func snake_head_pos2i() -> Vector2i:
 func snake_next_pos2i() -> Vector2i:
 	return snake.get_next_head_pos()
 func can_turn(from :Dir8Lib.Dir, to :Dir8Lib.Dir) -> bool:
-	return from != Dir8Lib.DirOpppsite(to)
+	return from != Dir8Lib.DirOpposite(to)
 func demo_move() -> void:
-	if snake == null or not snake.is_alive:
+	if not is_snake_alive():
 		return
 	var movevt = sign(get_next_apple_pos2i() - snake_head_pos2i())
+	var snake_mvvt = Dir8Lib.Dir2Vt[snake.move_dir]
+	if movevt.x != 0 : # try sync x
+		if snake_mvvt.x == movevt.x:
+			return # do nothing
+		# x is opposite, move y first
+		var try_vt =  Vector2i(0, movevt.y)  # try sync y
+		if field.get_at(snake_head_pos2i()+try_vt) == null:
+			snake.cmd_queue.append(Dir8Lib.Vt2Dir[try_vt])
+			return
+		else:
+			snake.cmd_queue.append(Dir8Lib.Vt2Dir[-try_vt])
+			return
+	else: # try sync y
+		if snake_mvvt.y == movevt.y:
+			return # do nothing
+		# y is opposite, move x first
+		var try_vt =  Vector2i( movevt.x, 0)  # try sync x
+		if field.get_at(snake_head_pos2i()+try_vt) == null:
+			snake.cmd_queue.append(Dir8Lib.Vt2Dir[try_vt])
+			return
+		else:
+			snake.cmd_queue.append(Dir8Lib.Vt2Dir[-try_vt])
+			return
