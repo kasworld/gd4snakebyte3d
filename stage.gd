@@ -140,7 +140,7 @@ func add_apple() -> void:
 func process_frame() -> void:
 	for p in plum_list:
 		p.move2d()
-	if snake != null :
+	if snake != null and snake.is_alive:
 		snake.process_frame()
 		if apple_eat_count < apple_end_count:
 			snake_step_after_eat += 1
@@ -151,6 +151,8 @@ func process_frame() -> void:
 				apple_end_count += Settings.AppleIncOnStepOver
 				update_apple_info()
 			gauge.set_value(snake_step_after_eat)
+	else:
+		gauge.set_value(0)
 
 func _on_frame_timer_timeout() -> void:
 	process_frame()

@@ -11,15 +11,19 @@ func _ready() -> void:
 	$Camera3D.position = Vector3(centerx, centery, Settings.FieldHeight)
 	$Camera3D.look_at(Vector3(centerx, centery, 0))
 	$OmniLight3D.position = Vector3(centerx, centery, Settings.FieldHeight/4)
-	game_info = {
-		"score" : 0,
-		"snake" : Settings.SnakeLife,
-	}
-	start_stage()
+	new_game()
 
 var stage_number :int
 var stage :Stage
 var game_info :Dictionary
+
+func new_game() -> void:
+	game_info = {
+		"score" : 0,
+		"snake" : Settings.SnakeLife,
+	}
+	stage_number = 0
+	start_stage()
 
 func start_stage() -> void:
 	if stage != null :
@@ -38,7 +42,16 @@ func stage_cleared() -> void:
 
 func snake_dead() -> void:
 	game_info.snake -= 1
-	stage.new_snake()
+	if game_info.snake > 0:
+		stage.new_snake()
+	else:
+		$DemoPanel/Label.text = "game over"
+		$DemoPanel.show()
+		$HidePanelTimer.start(3)
+
+func _on_hide_panel_timer_timeout() -> void:
+	$DemoPanel.hide()
+	new_game()
 
 var key2fn = {
 	KEY_ESCAPE:_on_button_esc_pressed,
