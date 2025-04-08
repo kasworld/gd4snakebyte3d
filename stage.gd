@@ -151,20 +151,21 @@ func process_frame() -> void:
 		if demo_mode:
 			demo_move()
 		snake.process_frame()
-		if not all_apple_eaten():
-			snake_step_after_eat += 1
-			if snake_step_after_eat >= Settings.EatStepOverLimit:
-				handle_stepover()
-			gauge.set_value(snake_step_after_eat)
+		#if not all_apple_eaten():
+		snake_step_after_eat += 1
+		if snake_step_after_eat >= Settings.EatStepOverLimit:
+			handle_stepover()
+		gauge.set_value(snake_step_after_eat)
 	else:
 		gauge.set_value(0)
 
 func handle_stepover() -> void:
 	snake_step_after_eat = 0
-	for i in Settings.AppleIncOnStepOver:
-		add_apple()
-	apple_end_count += Settings.AppleIncOnStepOver
-	update_apple_info()
+	if not all_apple_eaten():
+		for i in Settings.AppleIncOnStepOver:
+			add_apple()
+		apple_end_count += Settings.AppleIncOnStepOver
+		update_apple_info()
 	snake.dest_body_len += Settings.SankeLenInc
 
 func _on_frame_timer_timeout() -> void:
