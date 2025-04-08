@@ -27,7 +27,6 @@ func init(f :PlacedThings) -> Snake:
 	cmd_queue = []
 	return self
 
-
 func process_frame() -> void:
 	if not is_alive:
 		return
