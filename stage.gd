@@ -34,8 +34,8 @@ func init(gameinfo :Dictionary, n :int, w_script :Array) -> Stage:
 	wall_script = w_script
 	game_info = gameinfo
 	var vp_size = get_viewport().get_visible_rect().size
-	$StageStartPanel.size = vp_size/2
-	$StageStartPanel.position = vp_size/4
+	$StageStartPanel.size = vp_size/4
+	$StageStartPanel.position = vp_size/2 - vp_size/8 + Vector2(0,vp_size.y/6)
 
 	$StageInfo.text = "stage %d" % number
 	$StageInfo.position.x = 2

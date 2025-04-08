@@ -21,7 +21,7 @@ bg_color = Color(0.6, 0.6, 0.6, 0.215686)
 
 [sub_resource type="LabelSettings" id="LabelSettings_0xm2m"]
 line_spacing = 30.0
-font_size = 96
+font_size = 64
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_ig7tw")
@@ -39,9 +39,8 @@ omni_range = 64.0
 environment = SubResource("Environment_lquwl")
 
 [node name="DemoPanel" type="PanelContainer" parent="."]
-visible = false
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 607.0
+offset_bottom = 206.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_0xm2m")
 
 [node name="Label" type="Label" parent="DemoPanel"]
