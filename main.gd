@@ -18,8 +18,6 @@ func _ready() -> void:
 	reset_camera()
 	new_game()
 
-
-
 func new_game() -> void:
 	game_info = {
 		"score" : 0,
