@@ -11,7 +11,7 @@ func init(f :PlacedThings, add_walls :Array) -> void:
 	field = f
 	wall_list = []
 	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Box, 0.4)
-	$MultiMeshShape.init(mesh, Color.WHITE, Settings.FieldWidth*Settings.FieldHeight/2, Vector3.ZERO)
+	$MultiMeshShape.init_with_alpha(mesh, Settings.FieldWidth*Settings.FieldHeight/2)
 	exec_script(Settings.BounderyWalls)
 	exec_script(add_walls)
 	field2wall()
@@ -37,7 +37,7 @@ func field2wall() -> void:
 			else:
 				field.set_at(pos, self)
 			var pos3d = Settings.vector2i_to_vector3(pos)
-			$MultiMeshShape.set_inst_pos(wall_count, pos3d)
+			$MultiMeshShape.set_inst_position(wall_count, pos3d)
 			$MultiMeshShape.set_inst_color(wall_count, co)
 			wall_count += 1
 	$MultiMeshShape.set_visible_count(wall_count)
@@ -73,7 +73,7 @@ func _process(_delta: float) -> void:
 	if animate_inst.start_time != 0:
 		var rate = (Time.get_unix_time_from_system() - animate_inst.start_time) / animate_inst.ani_dur_sec
 		var pos = lerp(animate_inst.pos1, animate_inst.pos2, rate )
-		$MultiMeshShape.set_inst_pos(animate_inst.inst_index, pos)
+		$MultiMeshShape.set_inst_position(animate_inst.inst_index, pos)
 		if rate >= 1 :
 			animate_inst.start_time = 0
 

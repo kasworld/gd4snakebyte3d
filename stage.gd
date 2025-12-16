@@ -12,7 +12,6 @@ class Goal:
 var snake_scene = preload("res://snake.tscn")
 var plum_scene = preload("res://plum.tscn")
 var apple_scene = preload("res://apple.tscn")
-var gauge_scene = preload("res://bar_gauge/bar_gauge.tscn")
 var field :PlacedThings
 var plum_list :Array
 var number :int
@@ -22,7 +21,7 @@ var apple_end_count :int
 var wall_script :Array
 var snake :Snake
 var snake_step_after_eat :int
-var gauge :BarGauge
+var gauge :MultiMeshShape
 var game_info :Dictionary
 var demo_mode :bool
 
@@ -45,8 +44,8 @@ func init(gameinfo :Dictionary, n :int, w_script :Array) -> Stage:
 	update_snake_info()
 	$FrameTimer.wait_time = Settings.FrameTime
 	apple_end_count = Settings.AppleCountPerStage
-	gauge = gauge_scene.instantiate().init(
-		Settings.EatStepOverLimit, Vector3(1, Settings.FieldHeight, 1), Color.GREEN, Color.RED)
+	gauge = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
+		).init_bar_gauge_y(Settings.EatStepOverLimit, Vector3(1, Settings.FieldHeight, 1), Color.GREEN, Color.RED)
 	gauge.position = Settings.vector2i_to_vector3(Vector2i(Settings.FieldWidth,Settings.FieldHeight-1))
 	add_child(gauge)
 	new_snake()
@@ -156,9 +155,9 @@ func process_frame() -> void:
 		snake_step_after_eat += 1
 		if snake_step_after_eat >= Settings.EatStepOverLimit:
 			handle_stepover()
-		gauge.set_current_value(snake_step_after_eat)
+		gauge.set_visible_count(snake_step_after_eat)
 	else:
-		gauge.set_current_value(0)
+		gauge.set_visible_count(0)
 
 func handle_stepover() -> void:
 	snake_step_after_eat = 0
