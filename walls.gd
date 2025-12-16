@@ -11,6 +11,7 @@ func init(f :PlacedThings, add_walls :Array) -> void:
 	field = f
 	wall_list = []
 	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Box, 0.4)
+	$MultiMeshShape.multimesh.instance_count = 0
 	$MultiMeshShape.init_with_alpha(mesh, Settings.FieldWidth*Settings.FieldHeight/2)
 	exec_script(Settings.BounderyWalls)
 	exec_script(add_walls)
