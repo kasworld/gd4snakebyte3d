@@ -11,8 +11,9 @@ func init(f :PlacedThings, add_walls :Array) -> void:
 	field = f
 	wall_list = []
 	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Box, 0.4)
+	mesh.material = MultiMeshShape.make_color_material()
 	$MultiMeshShape.multimesh.instance_count = 0
-	$MultiMeshShape.init_with_alpha(mesh, Settings.FieldWidth*Settings.FieldHeight/2)
+	$MultiMeshShape.init_with_color_mesh(mesh, Settings.FieldWidth*Settings.FieldHeight/2)
 	exec_script(Settings.BounderyWalls)
 	exec_script(add_walls)
 	field2wall()
@@ -28,7 +29,7 @@ func init(f :PlacedThings, add_walls :Array) -> void:
 func field2wall() -> void:
 	var wall_count := 0
 	for l in wall_list:
-		var co = Settings.LightColorList.pick_random()[0]
+		var co = Settings.LightColorList.pick_random()
 		for pos in l:
 			if pos == Settings.GoalPos:
 				goalwall_index = wall_count

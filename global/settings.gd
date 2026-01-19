@@ -39,4 +39,4 @@ var StageWalls = [
 	],
 ]
 
-var LightColorList = NamedColorList.make_light_color_list()
+var LightColorList = NamedColors.filter_light_color_list()
