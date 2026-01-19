@@ -28,23 +28,23 @@ func get_width() -> int:
 func get_height() -> int:
 	return data.size()
 
-func get_at(pos :Vector2i) :
+func get_at(pos :Vector2i) -> Variant:
 	return data[pos.y][pos.x]
 
-func set_at(pos :Vector2i, v):
+func set_at(pos :Vector2i, v) -> Variant:
 	var old = data[pos.y][pos.x]
 	data[pos.y][pos.x] = v
 	if old == null:
 		count +=1
 	return old
 
-func move(from :Vector2i, to :Vector2i) :
+func move(from :Vector2i, to :Vector2i) -> Variant:
 	var from_data = del_at(from)
 	assert(from_data != null, "empty move from %s -> %s" %[from, to] )
 	var to_data = set_at(to, from_data)
 	return to_data
 
-func swap(pos1 :Vector2i, pos2 :Vector2i) :
+func swap(pos1 :Vector2i, pos2 :Vector2i) -> void:
 	var p1data = del_at(pos1)
 	assert(p1data != null, "empty swap pos1 %s -> %s" %[pos1, pos2] )
 	var p2data = set_at(pos2, p1data)
@@ -52,7 +52,7 @@ func swap(pos1 :Vector2i, pos2 :Vector2i) :
 	set_at(pos1,p2data)
 	# no return
 
-func del_at(pos :Vector2i):
+func del_at(pos :Vector2i) -> Variant:
 	var old = data[pos.y][pos.x]
 	data[pos.y][pos.x] = null
 	if old != null:
