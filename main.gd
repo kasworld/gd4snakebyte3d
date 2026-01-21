@@ -1,6 +1,6 @@
 extends Node3D
 
-var stage_scene = preload("res://stage.tscn")
+var stage_scene = preload("res://snake_byte/stage.tscn")
 
 var stage_number :int
 var stage :Stage

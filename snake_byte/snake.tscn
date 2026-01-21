@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://c7s28rwtmb200"]
 
-[ext_resource type="Script" uid="uid://dbr8gr8183ws5" path="res://snake.gd" id="1_baghe"]
+[ext_resource type="Script" uid="uid://dbr8gr8183ws5" path="res://snake_byte/snake.gd" id="1_baghe"]
 [ext_resource type="PackedScene" uid="uid://cfnbpemvoy1i6" path="res://multi_mesh_shape/multi_mesh_shape.tscn" id="2_gxkgb"]
 
 [node name="Snake" type="Node3D"]

@@ -1,4 +1,4 @@
-extends Node
+class_name Settings
 
 const FieldWidth :int = 48
 const FieldHeight :int = 27
@@ -14,19 +14,19 @@ const SnakeLife := 3
 const SnakeLifeIncOnStageClear := 1
 const ScorePerApple := 10
 
-func vector2i_to_vector3(from :Vector2i) -> Vector3:
+static func vector2i_to_vector3(from :Vector2i) -> Vector3:
 	return Vector3(from.x,FieldHeight - from.y, 0)
 
 const StartPos := Vector2i(FieldWidth/2, FieldHeight-1)
 const GoalPos := Vector2i(FieldWidth/2, 0)
 
-var BounderyWalls = [
+static var BounderyWalls = [
 	["hline", 0, FieldWidth-2, 0],
 	["vline", FieldWidth-1, 0, FieldHeight-2],
 	["hline", 1, FieldWidth-1, FieldHeight-1],
 	["vline", 0, 1, FieldHeight-1],
 ]
-var StageWalls = [
+static var StageWalls = [
 	[],
 	[
 		["hline", FieldWidth/2-5, FieldWidth/2+5, FieldHeight/2],
@@ -39,4 +39,4 @@ var StageWalls = [
 	],
 ]
 
-var LightColorList = NamedColors.filter_light_color_list()
+static var LightColorList = NamedColors.filter_light_color_list()

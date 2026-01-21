@@ -9,9 +9,9 @@ class Start:
 class Goal:
 	pass
 
-var snake_scene = preload("res://snake.tscn")
-var plum_scene = preload("res://plum.tscn")
-var apple_scene = preload("res://apple.tscn")
+var snake_scene = preload("res://snake_byte/snake.tscn")
+var plum_scene = preload("res://snake_byte/plum.tscn")
+var apple_scene = preload("res://snake_byte/apple.tscn")
 var field :PlacedThings
 var plum_list :Array
 var number :int

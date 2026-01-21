@@ -1,15 +1,15 @@
-extends Node
+class_name Global3d
 
-var font = preload("res://HakgyoansimBareondotumR.ttf")
+static var font = preload("res://HakgyoansimBareondotumR.ttf")
 
-func get_color_mat(co: Color)->Material:
+static func get_color_mat(co: Color)->Material:
 	var mat = StandardMaterial3D.new()
 	mat.albedo_color = co
 	#mat.metallic = 1
 	#mat.clearcoat = true
 	return mat
 
-func new_box(bsize :Vector3, mat :Material)->MeshInstance3D:
+static func new_box(bsize :Vector3, mat :Material)->MeshInstance3D:
 	var mesh = BoxMesh.new()
 	mesh.size = bsize
 	mesh.material = mat
@@ -17,7 +17,7 @@ func new_box(bsize :Vector3, mat :Material)->MeshInstance3D:
 	sp.mesh = mesh
 	return sp
 
-func new_sphere(r :float, mat :Material)->MeshInstance3D:
+static func new_sphere(r :float, mat :Material)->MeshInstance3D:
 	var mesh = SphereMesh.new()
 	mesh.radius = r
 	#mesh.radial_segments = 100
@@ -27,7 +27,7 @@ func new_sphere(r :float, mat :Material)->MeshInstance3D:
 	sp.mesh = mesh
 	return sp
 
-func new_cylinder(h :float, r1 :float, r2 :float, mat :Material)->MeshInstance3D:
+static func new_cylinder(h :float, r1 :float, r2 :float, mat :Material)->MeshInstance3D:
 	var mesh = CylinderMesh.new()
 	mesh.height = h
 	mesh.top_radius = r1
@@ -38,7 +38,7 @@ func new_cylinder(h :float, r1 :float, r2 :float, mat :Material)->MeshInstance3D
 	sp.mesh = mesh
 	return sp
 
-func new_cylinder2(h :float, r1 :float, r2 :float,rs:int, mat :Material)->MeshInstance3D:
+static func new_cylinder2(h :float, r1 :float, r2 :float,rs:int, mat :Material)->MeshInstance3D:
 	var mesh = CylinderMesh.new()
 	mesh.height = h
 	mesh.top_radius = r1
@@ -49,7 +49,7 @@ func new_cylinder2(h :float, r1 :float, r2 :float,rs:int, mat :Material)->MeshIn
 	sp.mesh = mesh
 	return sp
 
-func new_text(fsize :float, fdepth :float, mat :Material, text :String)->MeshInstance3D:
+static func new_text(fsize :float, fdepth :float, mat :Material, text :String)->MeshInstance3D:
 	var mesh = TextMesh.new()
 	mesh.font = font
 	mesh.depth = fdepth
@@ -61,7 +61,7 @@ func new_text(fsize :float, fdepth :float, mat :Material, text :String)->MeshIns
 	sp.mesh = mesh
 	return sp
 
-func new_torus(r1 :float,r2 :float, mat :Material)->MeshInstance3D:
+static func new_torus(r1 :float,r2 :float, mat :Material)->MeshInstance3D:
 	var mesh = TorusMesh.new()
 	mesh.outer_radius = r1
 	mesh.inner_radius = r2
@@ -70,7 +70,7 @@ func new_torus(r1 :float,r2 :float, mat :Material)->MeshInstance3D:
 	sp.mesh = mesh
 	return sp
 
-func new_plane(size :Vector2, mat :Material)->MeshInstance3D:
+static func new_plane(size :Vector2, mat :Material)->MeshInstance3D:
 	var mesh = PlaneMesh.new()
 	mesh.size = size
 	mesh.material = mat
@@ -78,7 +78,7 @@ func new_plane(size :Vector2, mat :Material)->MeshInstance3D:
 	sp.mesh = mesh
 	return sp
 
-func new_capsule(h :float,r:float, mat :Material)->MeshInstance3D:
+static func new_capsule(h :float,r:float, mat :Material)->MeshInstance3D:
 	var mesh = CapsuleMesh.new()
 	mesh.height = h
 	mesh.radius = r
@@ -87,5 +87,5 @@ func new_capsule(h :float,r:float, mat :Material)->MeshInstance3D:
 	sp.mesh = mesh
 	return sp
 
-func random_color()->Color:
+static func random_color()->Color:
 	return Color(randf(),randf(),randf())
