@@ -13,7 +13,7 @@ func init(f :PlacedThings, n :int) -> SnakeByteApple:
 	number = n
 	$"번호".text = "%d" % number
 	field = f
-	$"모양".mesh.material.albedo_color = Settings.LightColorList.pick_random()
+	$"모양".mesh.material.albedo_color = SnakeByte.LightColorList.pick_random()
 	$"모양".rotation.z = randf_range(-PI,PI)
 	rotate_v = randf_range(-5,5)
 
@@ -29,7 +29,7 @@ func get_pos2d() -> Vector2i:
 	return pos2d
 
 func get_pos3d() -> Vector3:
-	return Settings.vector2i_to_vector3(pos2d)
+	return SnakeByte.vector2i_to_vector3(pos2d)
 
 func delete() -> void:
 	var old = field.del_at(pos2d)

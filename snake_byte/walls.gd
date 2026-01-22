@@ -13,8 +13,8 @@ func init(f :PlacedThings, add_SnakeByteWalls :Array) -> void:
 	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Box, 0.4)
 	mesh.material = MultiMeshShape.make_color_material()
 	$MultiMeshShape.multimesh.instance_count = 0
-	$MultiMeshShape.init_with_color_mesh(mesh, Settings.FieldWidth*Settings.FieldHeight/2)
-	exec_script(Settings.BounderySnakeByteWalls)
+	$MultiMeshShape.init_with_color_mesh(mesh, SnakeByte.FieldWidth*SnakeByte.FieldHeight/2)
+	exec_script(SnakeByte.BounderySnakeByteWalls)
 	exec_script(add_SnakeByteWalls)
 	field2wall()
 	# stop old animation
@@ -29,26 +29,26 @@ func init(f :PlacedThings, add_SnakeByteWalls :Array) -> void:
 func field2wall() -> void:
 	var wall_count := 0
 	for l in wall_list:
-		var co = Settings.LightColorList.pick_random()
+		var co = SnakeByte.LightColorList.pick_random()
 		for pos in l:
-			if pos == Settings.GoalPos:
+			if pos == SnakeByte.GoalPos:
 				goalwall_index = wall_count
-			if pos == Settings.StartPos:
+			if pos == SnakeByte.StartPos:
 				startwall_index = wall_count
 				pos = pos + Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast]
 			else:
 				field.set_at(pos, self)
-			var pos3d = Settings.vector2i_to_vector3(pos)
+			var pos3d = SnakeByte.vector2i_to_vector3(pos)
 			$MultiMeshShape.set_inst_position(wall_count, pos3d)
 			$MultiMeshShape.set_inst_color(wall_count, co)
 			wall_count += 1
 	$MultiMeshShape.set_visible_count(wall_count)
 
 func close_startpos() -> void:
-	var pos = Settings.StartPos
+	var pos = SnakeByte.StartPos
 	field.set_at(pos, self)
-	var pos1 = Settings.vector2i_to_vector3(Settings.StartPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast])
-	var pos2 = Settings.vector2i_to_vector3(Settings.StartPos)
+	var pos1 = SnakeByte.vector2i_to_vector3(SnakeByte.StartPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast])
+	var pos2 = SnakeByte.vector2i_to_vector3(SnakeByte.StartPos)
 	animate_inst = {
 		"start_time" : Time.get_unix_time_from_system(),
 		"inst_index" : startwall_index,
@@ -58,11 +58,11 @@ func close_startpos() -> void:
 	}
 
 func open_goalpos() -> void:
-	var pos = Settings.GoalPos
-	var old = field.set_at( pos, SnakeByteStage.Goal.new())
+	var pos = SnakeByte.GoalPos
+	var old = field.set_at( pos, SnakeByte.Goal.new())
 	assert(old == self, "invalid goal pos not wall %s %s" % [pos,old])
-	var pos1 = Settings.vector2i_to_vector3(Settings.GoalPos)
-	var pos2 = Settings.vector2i_to_vector3(Settings.GoalPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.NorthWest])
+	var pos1 = SnakeByte.vector2i_to_vector3(SnakeByte.GoalPos)
+	var pos2 = SnakeByte.vector2i_to_vector3(SnakeByte.GoalPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.NorthWest])
 	animate_inst = {
 		"start_time" : Time.get_unix_time_from_system(),
 		"inst_index" : goalwall_index,

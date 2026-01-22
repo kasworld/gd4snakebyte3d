@@ -1,5 +1,47 @@
 extends Node3D
-class_name SnakeByteStage
+class_name SnakeByte
+
+const FieldWidth :int = 48
+const FieldHeight :int = 27
+const FieldSize := Vector2i(FieldWidth,FieldHeight)
+const FrameTime := 0.2 # second
+const SnakeLenStart := 12
+const SankeLenInc := 12
+const PlumCount := 2
+const AppleCountPerStage := 10
+const AppleIncOnStepOver := 3
+const EatStepOverLimit := FieldWidth + FieldHeight
+const SnakeLife := 3
+const SnakeLifeIncOnStageClear := 1
+const ScorePerApple := 10
+
+static func vector2i_to_vector3(from :Vector2i) -> Vector3:
+	return Vector3(from.x,FieldHeight - from.y, 0)
+
+const StartPos := Vector2i(FieldWidth/2, FieldHeight-1)
+const GoalPos := Vector2i(FieldWidth/2, 0)
+
+static var BounderySnakeByteWalls = [
+	["hline", 0, FieldWidth-2, 0],
+	["vline", FieldWidth-1, 0, FieldHeight-2],
+	["hline", 1, FieldWidth-1, FieldHeight-1],
+	["vline", 0, 1, FieldHeight-1],
+]
+static var StageSnakeByteWalls = [
+	[],
+	[
+		["hline", FieldWidth/2-5, FieldWidth/2+5, FieldHeight/2],
+	],
+	[
+		["hline", 5, FieldWidth/2-2, FieldHeight/2],
+		["hline", FieldWidth/2+2, FieldWidth-1-5, FieldHeight/2],
+		["vline", FieldWidth/2, 5, FieldHeight/2-2],
+		["vline", FieldWidth/2, FieldHeight/2+2, FieldHeight-1-5],
+	],
+]
+
+static var LightColorList = NamedColors.filter_light_color_list()
+
 
 signal stage_cleared()
 signal snake_dead()
@@ -26,9 +68,9 @@ var game_info :Dictionary
 var demo_mode :bool
 
 func _to_string() -> String:
-	return "SnakeByteStage%d %s" % [number, game_info]
+	return "SnakeByte%d %s" % [number, game_info]
 
-func init(gameinfo :Dictionary, n :int, w_script :Array) -> SnakeByteStage:
+func init(gameinfo :Dictionary, n :int, w_script :Array) -> SnakeByte:
 	number = n
 	wall_script = w_script
 	game_info = gameinfo
@@ -38,20 +80,20 @@ func init(gameinfo :Dictionary, n :int, w_script :Array) -> SnakeByteStage:
 
 	$StageInfo.text = "stage %d" % number
 	$StageInfo.position.x = 2
-	$SnakeInfo.position.x = Settings.FieldWidth /3
-	$AppleInfo.position.x = Settings.FieldWidth - 3
+	$SnakeInfo.position.x = SnakeByte.FieldWidth /3
+	$AppleInfo.position.x = SnakeByte.FieldWidth - 3
 	update_apple_info()
 	update_snake_info()
-	$FrameTimer.wait_time = Settings.FrameTime
-	apple_end_count = Settings.AppleCountPerStage
+	$FrameTimer.wait_time = SnakeByte.FrameTime
+	apple_end_count = SnakeByte.AppleCountPerStage
 	gauge = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_bar_gauge_y(Settings.EatStepOverLimit, Vector3(1, Settings.FieldHeight, 1), Color.GREEN, Color.RED)
-	gauge.position = Settings.vector2i_to_vector3(Vector2i(Settings.FieldWidth,Settings.FieldHeight-1))
+		).init_bar_gauge_y(SnakeByte.EatStepOverLimit, Vector3(1, SnakeByte.FieldHeight, 1), Color.GREEN, Color.RED)
+	gauge.position = SnakeByte.vector2i_to_vector3(Vector2i(SnakeByte.FieldWidth,SnakeByte.FieldHeight-1))
 	add_child(gauge)
 	new_snake()
 	return self
 
-func set_demo_mode(b :bool) -> SnakeByteStage:
+func set_demo_mode(b :bool) -> SnakeByte:
 	demo_mode = b
 	return self
 
@@ -66,7 +108,7 @@ func _on_hide_panel_timer_timeout() -> void:
 	$StageStartPanel.hide()
 	$FrameTimer.start()
 
-func new_snake() -> SnakeByteStage:
+func new_snake() -> SnakeByte:
 	if snake != null :
 		snake.queue_free()
 	for pl in plum_list:
@@ -78,10 +120,10 @@ func new_snake() -> SnakeByteStage:
 	show_start_panel()
 	snake_step_after_eat = 0
 	apple_make_count = apple_eat_count
-	field = PlacedThings.new(Settings.FieldSize)
+	field = PlacedThings.new(SnakeByte.FieldSize)
 	$Walls.init(field, wall_script)
-	field.set_at( Settings.StartPos, Start.new())
-	for i in Settings.PlumCount:
+	field.set_at( SnakeByte.StartPos, Start.new())
+	for i in SnakeByte.PlumCount:
 		add_plum(i)
 	if all_apple_eaten():
 		$Walls.open_goalpos()
@@ -113,7 +155,7 @@ func snake_eat_apple(pos :Vector2i) -> void:
 	ap.delete()
 	ap.queue_free()
 	apple_eat_count += 1
-	game_info.score += Settings.ScorePerApple
+	game_info.score += SnakeByte.ScorePerApple
 	snake_step_after_eat = 0
 	update_apple_info()
 	update_snake_info()
@@ -153,7 +195,7 @@ func process_frame() -> void:
 		snake.process_frame()
 		#if not all_apple_eaten():
 		snake_step_after_eat += 1
-		if snake_step_after_eat >= Settings.EatStepOverLimit:
+		if snake_step_after_eat >= SnakeByte.EatStepOverLimit:
 			handle_stepover()
 		gauge.set_visible_count(snake_step_after_eat)
 	else:
@@ -162,11 +204,11 @@ func process_frame() -> void:
 func handle_stepover() -> void:
 	snake_step_after_eat = 0
 	if not all_apple_eaten():
-		for i in Settings.AppleIncOnStepOver:
+		for i in SnakeByte.AppleIncOnStepOver:
 			add_apple()
-		apple_end_count += Settings.AppleIncOnStepOver
+		apple_end_count += SnakeByte.AppleIncOnStepOver
 		update_apple_info()
-	snake.dest_body_len += Settings.SankeLenInc
+	snake.dest_body_len += SnakeByte.SankeLenInc
 
 func _on_frame_timer_timeout() -> void:
 	process_frame()
@@ -190,7 +232,7 @@ func demo_move() -> void:
 		return
 	var diff_vt :Vector2i
 	if all_apple_eaten():
-		diff_vt = sign(Settings.GoalPos - snake_head_pos2i())
+		diff_vt = sign(SnakeByte.GoalPos - snake_head_pos2i())
 	else:
 		diff_vt = sign(get_next_apple_pos2i() - snake_head_pos2i())
 	var snake_mvvt = Dir8Lib.Dir2Vt[snake.move_dir]

@@ -18,7 +18,7 @@ func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> SnakeBytePl
 	field = f
 	pos2d = p2d
 	move_dir = d
-	$"모양".mesh.material.albedo_color = Settings.LightColorList.pick_random()
+	$"모양".mesh.material.albedo_color = SnakeByte.LightColorList.pick_random()
 	$"모양".rotation.x = randf_range(-PI,PI)
 	$"이동모양".mesh = $"모양".mesh
 	rotate_v = randf_range(-5,5)
@@ -35,11 +35,11 @@ func _process(delta: float) -> void:
 	$"이동모양".position = lerp(
 		Vector3(-vt2.x, vt2.y, 0),
 		Vector3.ZERO,
-		(Time.get_unix_time_from_system() - old_pos_time)/Settings.FrameTime,
+		(Time.get_unix_time_from_system() - old_pos_time)/SnakeByte.FrameTime,
 		)
 
 func get_pos3d() -> Vector3:
-	return Settings.vector2i_to_vector3(pos2d)
+	return SnakeByte.vector2i_to_vector3(pos2d)
 
 func field_get(pos :Vector2i, d :Dir8Lib.Dir):
 	return field.get_at(pos + Dir8Lib.Dir2Vt[d] )
