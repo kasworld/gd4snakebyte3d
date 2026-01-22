@@ -1,7 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dxajpsuwoh6nw"]
+[gd_scene load_steps=11 format=3 uid="uid://dxajpsuwoh6nw"]
 
 [ext_resource type="Script" uid="uid://d2pgmslp2ico3" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Texture2D" uid="uid://pqs6lcrw438x" path="res://image/skymap.hdr" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://clnf86bglf40d" path="res://glass_cabinet/glass_cabinet.tscn" id="3_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://ces3a6yv0c5fi" path="res://moving_carmera_light/moving_camera_light.tscn" id="4_lquwl"]
+[ext_resource type="PackedScene" uid="uid://dl14flc0fkeyt" path="res://axis_arrow_3d/axis_arrow_3d.tscn" id="5_lquwl"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_h2yge"]
 panorama = ExtResource("2_0xm2m")
@@ -26,15 +29,6 @@ font_size = 64
 [node name="Main" type="Node3D"]
 script = ExtResource("1_ig7tw")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-keep_aspect = 0
-fov = 90.0
-
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
-light_energy = 10.0
-shadow_enabled = true
-omni_range = 64.0
-
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_lquwl")
 
@@ -53,5 +47,13 @@ vertical_alignment = 1
 
 [node name="HidePanelTimer" type="Timer" parent="."]
 one_shot = true
+
+[node name="GlassCabinet" parent="." instance=ExtResource("3_1bvp3")]
+
+[node name="AxisArrow3D" parent="." instance=ExtResource("5_lquwl")]
+
+[node name="MovingCameraLightAround" parent="." instance=ExtResource("4_lquwl")]
+
+[node name="MovingCameraLightHober" parent="." instance=ExtResource("4_lquwl")]
 
 [connection signal="timeout" from="HidePanelTimer" to="." method="_on_hide_panel_timer_timeout"]

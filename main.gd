@@ -1,21 +1,23 @@
 extends Node3D
 
-var stage_scene = preload("res://snake_byte/snake_byte.tscn")
+const WorldSize := Vector3(160,90,80)
 
 var stage_number :int
 var stage :SnakeByte
 var game_info :Dictionary
 var demo_mode :bool = true
-var camera_move := false
 
 func _ready() -> void:
 	var vp_size = get_viewport().get_visible_rect().size
 	$DemoPanel.size = vp_size/3
 	$DemoPanel.position = Vector2(vp_size.x/2, vp_size.y/4) - vp_size/6
-	var centerx = SnakeByte.FieldWidth as float /2
-	var centery = SnakeByte.FieldHeight as float /2
-	$OmniLight3D.position = Vector3(centerx, centery, SnakeByte.FieldHeight/4)
-	reset_camera()
+
+	$MovingCameraLightHober.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
+	$MovingCameraLightAround.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
+	$AxisArrow3D.set_colors().set_size(WorldSize.length()/20)
+	$GlassCabinet.init(WorldSize)
+	$GlassCabinet.get_camera_light().make_current()
+
 	new_game()
 
 func new_game() -> void:
@@ -34,7 +36,7 @@ func end_demo_start_game() -> void:
 func start_stage() -> void:
 	if stage != null :
 		stage.queue_free()
-	stage = stage_scene.instantiate().set_demo_mode(demo_mode)
+	stage = preload("res://snake_byte/snake_byte.tscn").instantiate().set_demo_mode(demo_mode)
 	add_child(stage)
 	stage.init(game_info, stage_number+1, SnakeByte.StageSnakeByteWalls[stage_number % SnakeByte.StageSnakeByteWalls.size()])
 	stage.connect("stage_cleared", stage_cleared)
@@ -64,13 +66,26 @@ func _on_hide_panel_timer_timeout() -> void:
 	pass
 
 func _process(delta: float) -> void:
-	if camera_move:
-		move_camera(delta)
+	var now := Time.get_unix_time_from_system()
+	if $MovingCameraLightHober.is_current_camera():
+		$MovingCameraLightHober.move_hober_around_z(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
+	elif $MovingCameraLightAround.is_current_camera():
+		$MovingCameraLightAround.move_wave_around_y(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )
+
+func _on_카메라변경_pressed() -> void:
+	MovingCameraLight.NextCamera()
+
+func _on_button_fov_up_pressed() -> void:
+	MovingCameraLight.GetCurrentCamera().camera_fov_inc()
+
+func _on_button_fov_down_pressed() -> void:
+	MovingCameraLight.GetCurrentCamera().camera_fov_dec()
 
 var key2fn = {
 	KEY_ESCAPE:_on_button_esc_pressed,
-	KEY_SPACE:end_demo_start_game,
-	KEY_C: _on_button_camera_pressed,
+	KEY_ENTER:_on_카메라변경_pressed,
+	KEY_PAGEUP:_on_button_fov_up_pressed,
+	KEY_PAGEDOWN:_on_button_fov_down_pressed,
 }
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
@@ -82,23 +97,3 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _on_button_esc_pressed() -> void:
 	get_tree().quit()
-
-func reset_camera() -> void:
-	var centerx = SnakeByte.FieldWidth as float /2
-	var centery = SnakeByte.FieldHeight as float /2
-	$Camera3D.position = Vector3(centerx, centery, SnakeByte.FieldHeight)
-	$Camera3D.look_at(Vector3(centerx, centery, 0))
-
-func move_camera(_delta: float) -> void:
-	var t = -Time.get_unix_time_from_system() /2.3
-	var r = SnakeByte.FieldSize.length()
-	var centerx = SnakeByte.FieldWidth as float /2
-	var centery = SnakeByte.FieldHeight as float /2
-	var center = Vector3(centerx, centery, 0)
-	$Camera3D.position = Vector3( sin(t)*r, sin(t*1.3)*SnakeByte.FieldHeight, cos(t)*r ) + center
-	$Camera3D.look_at(center)
-
-func _on_button_camera_pressed() -> void:
-	camera_move = !camera_move
-	if camera_move == false:
-		reset_camera()
