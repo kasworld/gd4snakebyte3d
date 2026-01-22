@@ -1,5 +1,5 @@
 extends Node3D
-class_name Stage
+class_name SnakeByteStage
 
 signal stage_cleared()
 signal snake_dead()
@@ -26,9 +26,9 @@ var game_info :Dictionary
 var demo_mode :bool
 
 func _to_string() -> String:
-	return "Stage%d %s" % [number, game_info]
+	return "SnakeByteStage%d %s" % [number, game_info]
 
-func init(gameinfo :Dictionary, n :int, w_script :Array) -> Stage:
+func init(gameinfo :Dictionary, n :int, w_script :Array) -> SnakeByteStage:
 	number = n
 	wall_script = w_script
 	game_info = gameinfo
@@ -51,7 +51,7 @@ func init(gameinfo :Dictionary, n :int, w_script :Array) -> Stage:
 	new_snake()
 	return self
 
-func set_demo_mode(b :bool) -> Stage:
+func set_demo_mode(b :bool) -> SnakeByteStage:
 	demo_mode = b
 	return self
 
@@ -66,7 +66,7 @@ func _on_hide_panel_timer_timeout() -> void:
 	$StageStartPanel.hide()
 	$FrameTimer.start()
 
-func new_snake() -> Stage:
+func new_snake() -> SnakeByteStage:
 	if snake != null :
 		snake.queue_free()
 	for pl in plum_list:
@@ -109,7 +109,7 @@ func update_snake_info() -> void:
 
 func snake_eat_apple(pos :Vector2i) -> void:
 	var ap = field.get_at(pos)
-	assert(ap is Apple, "eat not apple %s %s" %[ ap, pos])
+	assert(ap is SnakeByteApple, "eat not apple %s %s" %[ ap, pos])
 	ap.delete()
 	ap.queue_free()
 	apple_eat_count += 1
@@ -210,6 +210,6 @@ func demo_move() -> void:
 		if vt == -snake_mvvt:
 			continue
 		var fieldobj = field.get_at(snake_head_pos2i()+vt)
-		if  fieldobj == null or (not all_apple_eaten() and fieldobj is Apple) or (all_apple_eaten() and fieldobj is Goal) :
+		if  fieldobj == null or (not all_apple_eaten() and fieldobj is SnakeByteApple) or (all_apple_eaten() and fieldobj is Goal) :
 			snake.cmd_queue.append(Dir8Lib.Vt2Dir[vt])
 			break

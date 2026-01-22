@@ -1,5 +1,5 @@
 extends Node3D
-class_name Walls
+class_name SnakeByteWalls
 
 var field :PlacedThings
 var wall_list :Array
@@ -7,15 +7,15 @@ var startwall_index :int
 var goalwall_index :int
 var animate_inst :Dictionary
 
-func init(f :PlacedThings, add_walls :Array) -> void:
+func init(f :PlacedThings, add_SnakeByteWalls :Array) -> void:
 	field = f
 	wall_list = []
 	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Box, 0.4)
 	mesh.material = MultiMeshShape.make_color_material()
 	$MultiMeshShape.multimesh.instance_count = 0
 	$MultiMeshShape.init_with_color_mesh(mesh, Settings.FieldWidth*Settings.FieldHeight/2)
-	exec_script(Settings.BounderyWalls)
-	exec_script(add_walls)
+	exec_script(Settings.BounderySnakeByteWalls)
+	exec_script(add_SnakeByteWalls)
 	field2wall()
 	# stop old animation
 	animate_inst = {
@@ -59,7 +59,7 @@ func close_startpos() -> void:
 
 func open_goalpos() -> void:
 	var pos = Settings.GoalPos
-	var old = field.set_at( pos, Stage.Goal.new())
+	var old = field.set_at( pos, SnakeByteStage.Goal.new())
 	assert(old == self, "invalid goal pos not wall %s %s" % [pos,old])
 	var pos1 = Settings.vector2i_to_vector3(Settings.GoalPos)
 	var pos2 = Settings.vector2i_to_vector3(Settings.GoalPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.NorthWest])

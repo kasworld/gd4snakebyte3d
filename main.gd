@@ -3,7 +3,7 @@ extends Node3D
 var stage_scene = preload("res://snake_byte/stage.tscn")
 
 var stage_number :int
-var stage :Stage
+var stage :SnakeByteStage
 var game_info :Dictionary
 var demo_mode :bool = true
 var camera_move := false
@@ -36,7 +36,7 @@ func start_stage() -> void:
 		stage.queue_free()
 	stage = stage_scene.instantiate().set_demo_mode(demo_mode)
 	add_child(stage)
-	stage.init(game_info, stage_number+1, Settings.StageWalls[stage_number % Settings.StageWalls.size()])
+	stage.init(game_info, stage_number+1, Settings.StageSnakeByteWalls[stage_number % Settings.StageSnakeByteWalls.size()])
 	stage.connect("stage_cleared", stage_cleared)
 	stage.connect("snake_dead", snake_dead)
 	stage_number +=1

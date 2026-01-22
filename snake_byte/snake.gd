@@ -38,17 +38,17 @@ func process_frame() -> void:
 	if pos2d_list.size() >= dest_body_len:
 		var tailpos = pos2d_list.pop_back()
 		var old = field.get_at(tailpos)
-		if old is not Stage.Start:
+		if old is not SnakeByteStage.Start:
 			field.del_at(tailpos)
 			assert( old is Snake, "invalid tailpos %s %s" %[tailpos, old] )
 		else :
 			tail_enter.emit()
 	var headpos = get_next_head_pos()
 	var headthings = field.get_at(headpos)
-	if headthings is Apple:
+	if headthings is SnakeByteApple:
 		dest_body_len += Settings.SankeLenInc
 		eat_apple.emit(headpos)
-	elif headthings is Stage.Goal:
+	elif headthings is SnakeByteStage.Goal:
 		reach_goal.emit()
 		return
 	elif headthings != null:

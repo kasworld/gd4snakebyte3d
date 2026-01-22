@@ -1,5 +1,5 @@
 extends Node3D
-class_name Apple
+class_name SnakeByteApple
 
 var number :int
 var pos2d :Vector2i
@@ -7,9 +7,9 @@ var field :PlacedThings
 var rotate_v :float
 
 func _to_string() -> String:
-	return "Apple%d (%d,%d)" % [number, pos2d.x,pos2d.y]
+	return "SnakeByteApple%d (%d,%d)" % [number, pos2d.x,pos2d.y]
 
-func init(f :PlacedThings, n :int) -> Apple:
+func init(f :PlacedThings, n :int) -> SnakeByteApple:
 	number = n
 	$"번호".text = "%d" % number
 	field = f
@@ -33,7 +33,7 @@ func get_pos3d() -> Vector3:
 
 func delete() -> void:
 	var old = field.del_at(pos2d)
-	assert( old is Apple, "not %s at %s %s" % [self, pos2d , old] )
+	assert( old is SnakeByteApple, "not %s at %s %s" % [self, pos2d , old] )
 
 func _process(delta: float) -> void:
 	$"모양".rotate_x(delta*rotate_v)

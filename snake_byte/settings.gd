@@ -20,13 +20,13 @@ static func vector2i_to_vector3(from :Vector2i) -> Vector3:
 const StartPos := Vector2i(FieldWidth/2, FieldHeight-1)
 const GoalPos := Vector2i(FieldWidth/2, 0)
 
-static var BounderyWalls = [
+static var BounderySnakeByteWalls = [
 	["hline", 0, FieldWidth-2, 0],
 	["vline", FieldWidth-1, 0, FieldHeight-2],
 	["hline", 1, FieldWidth-1, FieldHeight-1],
 	["vline", 0, 1, FieldHeight-1],
 ]
-static var StageWalls = [
+static var StageSnakeByteWalls = [
 	[],
 	[
 		["hline", FieldWidth/2-5, FieldWidth/2+5, FieldHeight/2],
