@@ -2,15 +2,43 @@ extends Node3D
 
 const WorldSize := Vector3(160,90,80)
 
-var stage_number :int
-var stage :SnakeByte
-var game_info :Dictionary
-var demo_mode :bool = true
+func on_viewport_size_changed() -> void:
+	var vp_size := get_viewport().get_visible_rect().size
+	var 짧은길이 :float = min(vp_size.x, vp_size.y)
+	var panel_size := Vector2(vp_size.x/2 - 짧은길이/2, vp_size.y)
+	$"왼쪽패널".size = panel_size
+	$"왼쪽패널".custom_minimum_size = panel_size
+	$오른쪽패널.size = panel_size
+	$"오른쪽패널".custom_minimum_size = panel_size
+	$오른쪽패널.position = Vector2(vp_size.x/2 + 짧은길이/2, 0)
+	var msgrect := Rect2( vp_size.x * 0.1 ,vp_size.y * 0.4 , vp_size.x * 0.8 , vp_size.y * 0.25 )
+	$TimedMessage.init(vp_size.y*0.05 , msgrect, "%s %s" % [
+			ProjectSettings.get_setting("application/config/name"),
+			ProjectSettings.get_setting("application/config/version") ] )
+func timed_message_hidden(_s :String) -> void:
+	pass
+
+func label_demo() -> void:
+	if $"오른쪽패널/LabelPerformance".visible:
+		$"오른쪽패널/LabelPerformance".text = """%d FPS (%.2f mspf)
+Currently rendering: occlusion culling:%s
+%d objects
+%dK primitive indices
+%d draw calls""" % [
+		Engine.get_frames_per_second(),1000.0 / Engine.get_frames_per_second(),
+		get_tree().root.use_occlusion_culling,
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_OBJECTS_IN_FRAME),
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_PRIMITIVES_IN_FRAME) * 0.001,
+		RenderingServer.get_rendering_info(RenderingServer.RENDERING_INFO_TOTAL_DRAW_CALLS_IN_FRAME),
+		]
+	if $"오른쪽패널/LabelInfo".visible:
+		$"오른쪽패널/LabelInfo".text = "%s" % [ MovingCameraLight.GetCurrentCamera() ]
 
 func _ready() -> void:
-	var vp_size = get_viewport().get_visible_rect().size
-	$DemoPanel.size = vp_size/3
-	$DemoPanel.position = Vector2(vp_size.x/2, vp_size.y/4) - vp_size/6
+	on_viewport_size_changed()
+	get_viewport().size_changed.connect(on_viewport_size_changed)
+	$TimedMessage.panel_hidden.connect(timed_message_hidden)
+	$TimedMessage.show_message("",0)
 
 	$MovingCameraLightHober.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
 	$MovingCameraLightAround.set_center_pos_far(Vector3.ZERO, Vector3(0, 0, WorldSize.z),  WorldSize.length()*3)
@@ -19,6 +47,18 @@ func _ready() -> void:
 	$GlassCabinet.get_camera_light().make_current()
 
 	new_game()
+
+var stage_number :int
+var stage :SnakeByte
+var game_info :Dictionary
+
+var demo_mode :bool = true
+func set_demo_mode(b :bool) -> void:
+	demo_mode = b
+	if demo_mode:
+		$"왼쪽패널/Label".text = "GAME OVER\nPress Space to start"
+	else:
+		$"왼쪽패널/Label".text = ""
 
 func new_game() -> void:
 	game_info = {
@@ -29,8 +69,11 @@ func new_game() -> void:
 	start_stage()
 
 func end_demo_start_game() -> void:
-	demo_mode = false
-	$DemoPanel.visible = demo_mode
+	set_demo_mode(false)
+	new_game()
+
+func game_over() -> void:
+	set_demo_mode(true)
 	new_game()
 
 func start_stage() -> void:
@@ -55,15 +98,6 @@ func snake_dead() -> void:
 	else:
 		game_over()
 
-func game_over() -> void:
-	$DemoPanel/Label.text = "GAME OVER\nPress Space to start"
-	demo_mode = true
-	$DemoPanel.visible = demo_mode
-	new_game()
-	#$HidePanelTimer.start(3)
-
-func _on_hide_panel_timer_timeout() -> void:
-	pass
 
 func _process(_delta: float) -> void:
 	var now := Time.get_unix_time_from_system()
@@ -86,6 +120,7 @@ var key2fn = {
 	KEY_ENTER:_on_카메라변경_pressed,
 	KEY_PAGEUP:_on_button_fov_up_pressed,
 	KEY_PAGEDOWN:_on_button_fov_down_pressed,
+	KEY_SPACE:end_demo_start_game,
 }
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed:
