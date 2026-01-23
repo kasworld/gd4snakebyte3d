@@ -65,7 +65,7 @@ func game_over() -> void:
 func _on_hide_panel_timer_timeout() -> void:
 	pass
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	var now := Time.get_unix_time_from_system()
 	if $MovingCameraLightHober.is_current_camera():
 		$MovingCameraLightHober.move_hober_around_z(now/2.3, Vector3.ZERO, WorldSize.length()/2, WorldSize.length()/4 )

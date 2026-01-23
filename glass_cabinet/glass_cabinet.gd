@@ -1,6 +1,14 @@
 extends Node3D
 class_name GlassCabinet
 
+var focus_mode :bool
+signal focus_mode_changed(me :GlassCabinet, mode :bool)
+func set_focus_mode(b :bool) -> void:
+	focus_mode = b
+	focus_mode_changed.emit(self, focus_mode)
+func get_focus_mode() -> bool:
+	return focus_mode
+
 ## axis : x:0, y:1, z:2, axis_sign : 1,0,-1
 static func MakeSubgroupFlagsByPos(axis :int, axis_sign :int) -> int:
 	var pos_list := PlatonicSolids.CubePoints

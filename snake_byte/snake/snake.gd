@@ -45,7 +45,7 @@ func process_frame() -> void:
 			tail_enter.emit()
 	var headpos = get_next_head_pos()
 	var headthings = field.get_at(headpos)
-	if headthings is SnakeByteApple:
+	if headthings is SBApple:
 		dest_body_len += SnakeByte.SankeLenInc
 		eat_apple.emit(headpos)
 	elif headthings is SnakeByte.Goal:

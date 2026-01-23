@@ -1,5 +1,5 @@
 extends Node3D
-class_name SnakeByteWalls
+class_name SBWalls
 
 var field :PlacedThings
 var wall_list :Array

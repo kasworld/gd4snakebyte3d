@@ -51,9 +51,6 @@ class Start:
 class Goal:
 	pass
 
-var snake_scene = preload("res://snake_byte/snake.tscn")
-var plum_scene = preload("res://snake_byte/plum.tscn")
-var apple_scene = preload("res://snake_byte/apple.tscn")
 var field :PlacedThings
 var plum_list :Array
 var number :int
@@ -131,7 +128,7 @@ func new_snake() -> SnakeByte:
 		add_apple()
 	update_apple_info()
 	update_snake_info()
-	snake = snake_scene.instantiate()
+	snake = preload("res://snake_byte/snake/snake.tscn").instantiate()
 	add_child(snake)
 	snake.connect("eat_apple", snake_eat_apple)
 	snake.connect("snake_dead", snake_die)
@@ -151,7 +148,7 @@ func update_snake_info() -> void:
 
 func snake_eat_apple(pos :Vector2i) -> void:
 	var ap = field.get_at(pos)
-	assert(ap is SnakeByteApple, "eat not apple %s %s" %[ ap, pos])
+	assert(ap is SBApple, "eat not apple %s %s" %[ ap, pos])
 	ap.delete()
 	ap.queue_free()
 	apple_eat_count += 1
@@ -177,13 +174,13 @@ func snake_enter_complete() -> void:
 func add_plum(i:int) -> void:
 	var pos := field.find_empty_pos(10)
 	assert(pos!=Vector2i(-1,-1), "fail to find empty pos in field")
-	var pl = plum_scene.instantiate().init(field, pos , Dir8Lib.DiagonalList.pick_random(), i)
+	var pl = preload("res://snake_byte/plum/plum.tscn").instantiate().init(field, pos , Dir8Lib.DiagonalList.pick_random(), i)
 	add_child(pl)
 	plum_list.append(pl)
 
 func add_apple() -> void:
 	apple_make_count +=1
-	var ap = apple_scene.instantiate().init(field, apple_make_count)
+	var ap = preload("res://snake_byte/apple/apple.tscn").instantiate().init(field, apple_make_count)
 	$AppleContainer.add_child(ap)
 
 func process_frame() -> void:
@@ -252,6 +249,6 @@ func demo_move() -> void:
 		if vt == -snake_mvvt:
 			continue
 		var fieldobj = field.get_at(snake_head_pos2i()+vt)
-		if  fieldobj == null or (not all_apple_eaten() and fieldobj is SnakeByteApple) or (all_apple_eaten() and fieldobj is Goal) :
+		if  fieldobj == null or (not all_apple_eaten() and fieldobj is SBApple) or (all_apple_eaten() and fieldobj is Goal) :
 			snake.cmd_queue.append(Dir8Lib.Vt2Dir[vt])
 			break

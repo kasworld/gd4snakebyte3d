@@ -1,5 +1,5 @@
 extends Node3D
-class_name SnakeBytePlum
+class_name SBPlum
 
 var number :int
 var pos2d :Vector2i
@@ -10,9 +10,9 @@ var field :PlacedThings
 var rotate_v :float
 
 func _to_string() -> String:
-	return "SnakeBytePlum%d (%d,%d) %s" % [number, pos2d.x,pos2d.y, move_dir]
+	return "SBPlum%d (%d,%d) %s" % [number, pos2d.x,pos2d.y, move_dir]
 
-func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> SnakeBytePlum:
+func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> SBPlum:
 	number = n
 	$"번호".text = "%d" % number
 	field = f
