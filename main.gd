@@ -48,14 +48,12 @@ func _ready() -> void:
 
 	new_game()
 
-var stage_number :int
 var stage :SnakeByte
 var game_info :Dictionary
 
-var demo_mode :bool = true
 func set_demo_mode(b :bool) -> void:
-	demo_mode = b
-	if demo_mode:
+	game_info.demo_mode = b
+	if game_info.demo_mode:
 		$"왼쪽패널/Label".text = "GAME OVER\nPress Space to start"
 	else:
 		$"왼쪽패널/Label".text = ""
@@ -64,8 +62,9 @@ func new_game() -> void:
 	game_info = {
 		"score" : 0,
 		"snake" : SnakeByte.SnakeLife,
+		"stage_number" : 0,
+		"demo_mode" : true,
 	}
-	stage_number = 0
 	start_stage()
 
 func end_demo_start_game() -> void:
@@ -79,15 +78,14 @@ func game_over() -> void:
 func start_stage() -> void:
 	if stage != null :
 		stage.queue_free()
-	stage = preload("res://snake_byte/snake_byte.tscn").instantiate().set_demo_mode(demo_mode)
+	stage = preload("res://snake_byte/snake_byte.tscn").instantiate().set_demo_mode(game_info.demo_mode)
 	add_child(stage)
-	stage.init(game_info, stage_number )
+	stage.init(game_info)
 	stage.connect("stage_cleared", stage_cleared)
 	stage.connect("snake_dead", snake_dead)
-	stage_number +=1
+	game_info.stage_number +=1
 
 func stage_cleared() -> void:
-	print_debug("stage cleared %s" [stage_number])
 	game_info.snake += SnakeByte.SnakeLifeIncOnStageClear
 	start_stage()
 

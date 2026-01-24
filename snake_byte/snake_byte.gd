@@ -30,7 +30,6 @@ class Goal:
 
 var field :PlacedThings
 var plum_list :Array
-var stage_number :int
 var apple_make_count :int
 var apple_eat_count :int
 var apple_end_count :int
@@ -41,16 +40,15 @@ var game_info :Dictionary
 var demo_mode :bool
 
 func _to_string() -> String:
-	return "SnakeByte%d %s" % [stage_number, game_info]
+	return "SnakeByte%d %s" % [game_info]
 
-func init(gameinfo :Dictionary, stage_n :int) -> SnakeByte:
-	stage_number = stage_n
+func init(gameinfo :Dictionary) -> SnakeByte:
 	game_info = gameinfo
 	var vp_size = get_viewport().get_visible_rect().size
 	$StageStartPanel.size = vp_size/4
 	$StageStartPanel.position = vp_size/2 - vp_size/8 + Vector2(0,vp_size.y/6)
 
-	$StageInfo.text = "stage %d" % stage_number
+	$StageInfo.text = "stage %d" % game_info.stage_number
 	$StageInfo.position.x = 2
 	$SnakeInfo.position.x = SnakeByte.FieldSize.x /3
 	$AppleInfo.position.x = SnakeByte.FieldSize.x - 3
@@ -71,7 +69,7 @@ func set_demo_mode(b :bool) -> SnakeByte:
 
 func show_start_panel() -> void:
 	$FrameTimer.stop()
-	$StageStartPanel/Label.text = "stage %d" % [ stage_number ]
+	$StageStartPanel/Label.text = "stage %d" % [ game_info.stage_number ]
 	$StageStartPanel.visible =  true
 	$HidePanelTimer.start(1)
 
@@ -93,7 +91,7 @@ func new_snake() -> SnakeByte:
 	snake_step_after_eat = 0
 	apple_make_count = apple_eat_count
 	field = PlacedThings.new(SnakeByte.FieldSize)
-	$Walls.init(stage_number, field )
+	$Walls.init(game_info.stage_number, field )
 	field.set_at( SBWalls.StartPos, Start.new())
 	for i in SnakeByte.PlumCount:
 		add_plum(i)
