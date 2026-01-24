@@ -1,6 +1,9 @@
 extends Node3D
 class_name SnakeByte
 
+signal stage_cleared()
+signal snake_dead()
+
 const FieldSize := Vector2i(48,27)
 const FrameTime := 0.2 # second
 const SnakeLenStart := 12
@@ -16,17 +19,14 @@ const ScorePerApple := 10
 static func vector2i_to_vector3(from :Vector2i) -> Vector3:
 	return Vector3(from.x,FieldSize.y - from.y, 0)
 
-
 static var LightColorList = NamedColors.filter_light_color_list()
-
-
-signal stage_cleared()
-signal snake_dead()
 
 class Start:
 	pass
 class Goal:
 	pass
+
+var game_info :Dictionary
 
 var field :PlacedThings
 var plum_list :Array
@@ -36,8 +36,6 @@ var apple_end_count :int
 var snake :Snake
 var snake_step_after_eat :int
 var gauge :MultiMeshShape
-var game_info :Dictionary
-var demo_mode :bool
 
 func _to_string() -> String:
 	return "SnakeByte%d %s" % [game_info]
@@ -64,7 +62,7 @@ func init(gameinfo :Dictionary) -> SnakeByte:
 	return self
 
 func set_demo_mode(b :bool) -> SnakeByte:
-	demo_mode = b
+	game_info.demo_mode = b
 	return self
 
 func show_start_panel() -> void:
@@ -160,7 +158,7 @@ func process_frame() -> void:
 	for p in plum_list:
 		p.move2d()
 	if is_snake_alive():
-		if demo_mode:
+		if game_info.demo_mode:
 			demo_move()
 		snake.process_frame()
 		#if not all_apple_eaten():
