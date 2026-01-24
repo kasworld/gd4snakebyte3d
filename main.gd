@@ -46,6 +46,7 @@ func _ready() -> void:
 	$GlassCabinet.init(WorldSize)
 	$GlassCabinet.get_camera_light().make_current()
 	$GlassCabinet.get_camera_light().get_light().visible = false
+	$GlassCabinet.lights.set_light_energy(50, BitFlag.MakeFilledFlags( $GlassCabinet.lights.get_size() ))
 	new_game()
 
 var stage :SnakeByte
