@@ -69,9 +69,10 @@ func init(sz :Vector3, gameinfo :Dictionary) -> SnakeByte:
 	update_snake_info()
 	$FrameTimer.wait_time = SnakeByte.FrameTime
 	apple_end_count = SnakeByte.AppleCountPerStage
+
 	gauge = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_bar_gauge_y(SnakeByte.EatStepOverLimit, Vector3(1, SBWalls.FieldSize.y, 1), Color.GREEN, Color.RED)
-	gauge.position = pos2d_to_pos3d(SBWalls.FieldSize.x,SBWalls.FieldSize.y-1)
+		).init_bar_gauge_y(SnakeByte.EatStepOverLimit, Vector3(tile_size.x, cabinet_size.y, tile_size.z), Color.GREEN, Color.RED)
+	gauge.position = pos2d_to_pos3d(SBWalls.FieldSize.x, 0)
 	add_child(gauge)
 	new_snake()
 	return self
