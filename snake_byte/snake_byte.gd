@@ -109,6 +109,7 @@ func new_snake() -> SnakeByte:
 	return self
 
 func snake_die() -> void:
+	game_info.snake -= 1
 	snake_dead.emit()
 
 func update_apple_info() -> void:
@@ -137,6 +138,7 @@ func all_apple_eaten() -> bool:
 	return apple_eat_count >= apple_end_count
 
 func snake_reach_goal() -> void:
+	game_info.snake += SnakeLifeIncOnStageClear
 	stage_cleared.emit()
 
 func snake_enter_complete() -> void:

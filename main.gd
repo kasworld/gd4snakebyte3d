@@ -78,24 +78,21 @@ func game_over() -> void:
 func start_stage() -> void:
 	if stage != null :
 		stage.queue_free()
-	stage = preload("res://snake_byte/snake_byte.tscn").instantiate().set_demo_mode(game_info.demo_mode)
+	stage = preload("res://snake_byte/snake_byte.tscn").instantiate()
 	add_child(stage)
-	stage.init(game_info)
+	stage.init(game_info).set_demo_mode(game_info.demo_mode)
 	stage.connect("stage_cleared", stage_cleared)
 	stage.connect("snake_dead", snake_dead)
 	game_info.stage_number +=1
 
 func stage_cleared() -> void:
-	game_info.snake += SnakeByte.SnakeLifeIncOnStageClear
 	start_stage()
 
 func snake_dead() -> void:
-	game_info.snake -= 1
 	if game_info.snake > 0:
 		stage.new_snake()
 	else:
 		game_over()
-
 
 func _process(_delta: float) -> void:
 	var now := Time.get_unix_time_from_system()
