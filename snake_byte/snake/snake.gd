@@ -18,9 +18,11 @@ func _to_string() -> String:
 
 func init(f :PlacedThings) -> Snake:
 	field = f
-	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Sphere, 0.4)
+	var mesh := SphereMesh.new()
+	mesh.radius = SnakeByte.tile_size.x /2
+	mesh.height = SnakeByte.tile_size.y
 	mesh.material = MultiMeshShape.make_color_material()
-	var pos = SnakeByte.pos2d_to_pos3d( SBWalls.FieldSize.x/2,SBWalls.FieldSize.y)
+	var pos := SnakeByte.pos2d_to_pos3d( SBWalls.FieldSize.x/2,SBWalls.FieldSize.y)
 	$Body.init_with_color_mesh(mesh, SBWalls.FieldSize.x*SBWalls.FieldSize.y/2, 1.0,  pos)
 	dest_body_len = SnakeByte.SnakeLenStart
 	pos2d_list.append(SBWalls.StartPos)

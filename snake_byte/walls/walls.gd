@@ -32,9 +32,8 @@ var animate_inst :Dictionary
 func init(stage_number :int, f :PlacedThings) -> void:
 	field = f
 	wall_list = []
-	#var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Box, 0.4)
 	var mesh := BoxMesh.new()
-	mesh.size = Vector3(1,1,1)
+	mesh.size = SnakeByte.tile_size *0.9
 	mesh.material = MultiMeshShape.make_color_material()
 	$MultiMeshShape.multimesh.instance_count = 0
 	$MultiMeshShape.init_with_color_mesh(mesh, SBWalls.FieldSize.x*SBWalls.FieldSize.y/2)

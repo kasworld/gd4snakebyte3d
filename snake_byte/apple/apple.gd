@@ -14,6 +14,8 @@ func init(f :PlacedThings, n :int) -> SBApple:
 	$"번호".text = "%d" % number
 	field = f
 	$"모양".mesh.material.albedo_color = SnakeByte.LightColorList.pick_random()
+	$"모양".mesh.inner_radius = SnakeByte.tile_size.x /6
+	$"모양".mesh.outer_radius = SnakeByte.tile_size.x /2
 	$"모양".rotation.z = randf_range(-PI,PI)
 	rotate_v = randf_range(-5,5)
 

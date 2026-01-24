@@ -19,6 +19,8 @@ func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> SBPlum:
 	pos2d = p2d
 	move_dir = d
 	$"모양".mesh.material.albedo_color = SnakeByte.LightColorList.pick_random()
+	$"모양".mesh.radius = SnakeByte.tile_size.x/4
+	$"모양".mesh.height = SnakeByte.tile_size.y
 	$"모양".rotation.x = randf_range(-PI,PI)
 	$"이동모양".mesh = $"모양".mesh
 	rotate_v = randf_range(-5,5)
