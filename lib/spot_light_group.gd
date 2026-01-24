@@ -14,7 +14,7 @@ func _init(arg ) -> void:
 	else:
 		assert(false)
 
-## flag bit == 1 , set visible to b
+## flag bit == 1 , set light_energy
 func set_light_energy(v :float, flags :int) -> void:
 	for i in light_list.size():
 		if BitFlag.TestByPos(i, flags):
