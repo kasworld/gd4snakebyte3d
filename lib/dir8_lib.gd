@@ -11,7 +11,7 @@ enum Dir {
 	EastNorth,
 }
 
-static var DiagonalList = [Dir.NorthWest,Dir.WestSouth,Dir.SouthEast,Dir.EastNorth]
+static var DiagonalList :Array[Dir] = [Dir.NorthWest,Dir.WestSouth,Dir.SouthEast,Dir.EastNorth]
 
 static func Dir2Str(d :Dir) -> String:
 	return Dir.keys()[d]
@@ -29,7 +29,7 @@ static func DirTurnLeft(d :Dir, i :int=2) -> Dir:
 static func DirTurnRight(d :Dir, i :int=2) -> Dir:
 	return ((d - i + Dir.size()) % Dir.size()) as Dir
 
-const Dir2Vt = {
+const Dir2Vt :Dictionary[Dir, Vector2i]= {
 	Dir.North : Vector2i(0,-1),
 	Dir.NorthWest : Vector2i(-1,-1),
 	Dir.West : Vector2i(-1,0),
@@ -40,7 +40,7 @@ const Dir2Vt = {
 	Dir.EastNorth : Vector2i(1,-1),
 }
 
-const Vt2Dir = {
+const Vt2Dir :Dictionary[Vector2i, Dir]= {
 	 Vector2i( 0,-1) : Dir.North,
 	 Vector2i(-1,-1) : Dir.NorthWest,
 	 Vector2i(-1, 0) : Dir.West,
@@ -65,7 +65,7 @@ enum Flag {
 	EastNorth = 1 << Dir.EastNorth,
 }
 
-const Flag2Dir = {
+const Flag2Dir :Dictionary[Flag, Dir]= {
 	Flag.North : Dir.North,
 	Flag.NorthWest : Dir.NorthWest,
 	Flag.West : Dir.West,
@@ -75,7 +75,7 @@ const Flag2Dir = {
 	Flag.East : Dir.East,
 	Flag.EastNorth : Dir.EastNorth,
 }
-const Dir2Flag = {
+const Dir2Flag :Dictionary[Dir, Flag]= {
 	Dir.North : Flag.North,
 	Dir.NorthWest : Flag.NorthWest,
 	Dir.West : Flag.West,

@@ -34,18 +34,18 @@ func process_frame() -> void:
 	if not is_alive:
 		return
 	if cmd_queue.size() >= 1:
-		var dir = cmd_queue.pop_back()
+		var dir :Dir8Lib.Dir = cmd_queue.pop_back()
 		change_move_dir(dir)
 		cmd_queue.clear()
 	if pos2d_list.size() >= dest_body_len:
-		var tailpos = pos2d_list.pop_back()
+		var tailpos :Vector2i = pos2d_list.pop_back()
 		var old = field.get_at(tailpos)
 		if old is not SnakeByte.Start:
 			field.del_at(tailpos)
 			assert( old is Snake, "invalid tailpos %s %s" %[tailpos, old] )
 		else :
 			tail_enter.emit()
-	var headpos = get_next_head_pos()
+	var headpos := get_next_head_pos()
 	var headthings = field.get_at(headpos)
 	if headthings is SBApple:
 		dest_body_len += SnakeByte.SankeLenInc
@@ -61,7 +61,7 @@ func process_frame() -> void:
 	field.set_at(headpos, self)
 	$Body.set_visible_count(pos2d_list.size())
 	for i in pos2d_list.size():
-		var rate = (i as float) / pos2d_list.size()
+		var rate := (i as float) / pos2d_list.size()
 		$Body.set_inst_position(i, SnakeByte.pos2d_to_pos3d(pos2d_list[i].x,pos2d_list[i].y))
 		$Body.set_inst_color(i, lerp(Color.RED, Color.BLUE, rate))
 

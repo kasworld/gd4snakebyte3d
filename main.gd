@@ -45,7 +45,7 @@ func _ready() -> void:
 	$AxisArrow3D.set_colors().set_size(WorldSize.length()/20)
 	$GlassCabinet.init(WorldSize)
 	$GlassCabinet.get_camera_light().make_current()
-
+	$GlassCabinet.get_camera_light().get_light().visible = false
 	new_game()
 
 var stage :SnakeByte

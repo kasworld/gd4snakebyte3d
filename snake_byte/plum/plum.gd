@@ -33,7 +33,7 @@ func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> SBPlum:
 func _process(delta: float) -> void:
 	$"모양".rotate_z(delta*rotate_v)
 	$"이동모양".rotation = $"모양".rotation
-	var vt2 = pos2d - old_pos2d
+	var vt2 := pos2d - old_pos2d
 	$"이동모양".position = lerp(
 		Vector3(-vt2.x, vt2.y, 0),
 		Vector3.ZERO,
@@ -54,9 +54,9 @@ func field_get3(pos :Vector2i, d :Dir8Lib.Dir) -> Dictionary:
 		}
 
 func find_new_dir(oldpos2d :Vector2i, olddir :Dir8Lib.Dir) -> Dictionary:
-	var 기존방향3 = field_get3(oldpos2d, olddir)
-	var newdir = olddir
-	var movedir = olddir
+	var 기존방향3 := field_get3(oldpos2d, olddir)
+	var newdir := olddir
+	var movedir := olddir
 	if 기존방향3.center == null: # 진행방향이 비어 있어 통과
 		newdir = olddir
 		movedir = newdir
@@ -83,7 +83,7 @@ func find_new_dir(oldpos2d :Vector2i, olddir :Dir8Lib.Dir) -> Dictionary:
 func move2d() -> void:
 	old_pos2d = pos2d
 	old_pos_time = Time.get_unix_time_from_system()
-	var new_dict = find_new_dir(pos2d, move_dir)
+	var new_dict := find_new_dir(pos2d, move_dir)
 	if field_get(pos2d, new_dict.move) == null : # 이동 가능
 		pos2d = pos2d + Dir8Lib.Dir2Vt[new_dict.move]
 	move_dir = new_dict.dir

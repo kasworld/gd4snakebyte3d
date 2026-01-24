@@ -4,13 +4,13 @@ class_name SBWalls
 static var FieldSize := Vector2i(48,27)
 static var StartPos := Vector2i(FieldSize.x/2, FieldSize.y-1)
 static var GoalPos := Vector2i(FieldSize.x/2, 0)
-static var BounderyWalls = [
+static var BounderyWalls := [
 	["hline", 0, FieldSize.x-2, 0],
 	["vline", FieldSize.x-1, 0, FieldSize.y-2],
 	["hline", 1, FieldSize.x-1, FieldSize.y-1],
 	["vline", 0, 1, FieldSize.y-1],
 ]
-static var StageWalls = [
+static var StageWalls := [
 	[],
 	[
 		["hline", FieldSize.x/2-5, FieldSize.x/2+5, FieldSize.y/2],
@@ -38,7 +38,7 @@ func init(stage_number :int, f :PlacedThings) -> void:
 	$MultiMeshShape.multimesh.instance_count = 0
 	$MultiMeshShape.init_with_color_mesh(mesh, SBWalls.FieldSize.x*SBWalls.FieldSize.y/2)
 	exec_script(BounderyWalls)
-	var wall_script = StageWalls[stage_number % StageWalls.size()]
+	var wall_script :Array = StageWalls[stage_number % StageWalls.size()]
 	exec_script(wall_script)
 	field2wall()
 	# stop old animation
@@ -53,7 +53,7 @@ func init(stage_number :int, f :PlacedThings) -> void:
 func field2wall() -> void:
 	var wall_count := 0
 	for l in wall_list:
-		var co = SnakeByte.LightColorList.pick_random()
+		var co :Color = SnakeByte.LightColorList.pick_random()
 		for pos in l:
 			if pos == GoalPos:
 				goalwall_index = wall_count
@@ -62,18 +62,18 @@ func field2wall() -> void:
 				pos = pos + Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast]
 			else:
 				field.set_at(pos, self)
-			var pos3d = SnakeByte.pos2d_to_pos3d(pos.x, pos.y)
+			var pos3d := SnakeByte.pos2d_to_pos3d(pos.x, pos.y)
 			$MultiMeshShape.set_inst_position(wall_count, pos3d)
 			$MultiMeshShape.set_inst_color(wall_count, co)
 			wall_count += 1
 	$MultiMeshShape.set_visible_count(wall_count)
 
 func close_startpos() -> void:
-	var pos = StartPos
+	var pos := StartPos
 	field.set_at(pos, self)
 	var tmp := StartPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast]
-	var pos1 = SnakeByte.pos2d_to_pos3d(tmp.x, tmp.y)
-	var pos2 = SnakeByte.pos2d_to_pos3d(StartPos.x,StartPos.y)
+	var pos1 := SnakeByte.pos2d_to_pos3d(tmp.x, tmp.y)
+	var pos2 := SnakeByte.pos2d_to_pos3d(StartPos.x,StartPos.y)
 	animate_inst = {
 		"start_time" : Time.get_unix_time_from_system(),
 		"inst_index" : startwall_index,
@@ -83,7 +83,7 @@ func close_startpos() -> void:
 	}
 
 func open_goalpos() -> void:
-	var pos = GoalPos
+	var pos := GoalPos
 	var old = field.set_at( pos, SnakeByte.Goal.new())
 	assert(old == self, "invalid goal pos not wall %s %s" % [pos,old])
 	var pos1 := SnakeByte.pos2d_to_pos3d(GoalPos.x, GoalPos.y)
@@ -99,8 +99,8 @@ func open_goalpos() -> void:
 
 func _process(_delta: float) -> void:
 	if animate_inst.start_time != 0:
-		var rate = (Time.get_unix_time_from_system() - animate_inst.start_time) / animate_inst.ani_dur_sec
-		var pos = lerp(animate_inst.pos1, animate_inst.pos2, rate )
+		var rate :float = (Time.get_unix_time_from_system() - animate_inst.start_time) / animate_inst.ani_dur_sec
+		var pos :Vector3 = lerp(animate_inst.pos1, animate_inst.pos2, rate )
 		$MultiMeshShape.set_inst_position(animate_inst.inst_index, pos)
 		if rate >= 1 :
 			animate_inst.start_time = 0
@@ -110,7 +110,7 @@ func set_at(pos :Vector2i):
 # include x2
 func draw_hline(x1 :int, x2 :int, y :int):
 	if x1 > x2 :
-		var t = x1
+		var t := x1
 		x1 = x2
 		x2 = t
 	var rtn := []
@@ -121,7 +121,7 @@ func draw_hline(x1 :int, x2 :int, y :int):
 # include y2
 func draw_vline(x :int, y1 :int, y2 :int):
 	if y1 > y2 :
-		var t = y1
+		var t := y1
 		y1 = y2
 		y2 = t
 	var rtn := []

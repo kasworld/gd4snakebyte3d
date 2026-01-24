@@ -4,11 +4,11 @@ class_name SnakeByte
 static var cabinet_size :Vector3
 static var tile_size :Vector3
 
-static func pos2d_to_pos3d( x :int, y :int) -> Vector3:
+static func pos2d_to_pos3d( x :int, y :int, z :float = 0) -> Vector3:
 	return Vector3(
 		float(x) * tile_size.x - cabinet_size.x/2 + tile_size.x/2,
 		float(y) *tile_size.y -cabinet_size.y/2 + tile_size.y/2,
-		0.0)
+		z)
 static func pos3d_to_pos2d( pos :Vector3 ) -> Vector2i:
 	return Vector2i(
 		snappedi( (pos.x + cabinet_size.x/2 - tile_size.x/2) / tile_size.x ,1 ),
@@ -57,14 +57,17 @@ func init(sz :Vector3, gameinfo :Dictionary) -> SnakeByte:
 	cabinet_size = sz
 	tile_size = Vector3(cabinet_size.x / SBWalls.FieldSize.x, cabinet_size.y / SBWalls.FieldSize.y, cabinet_size.y / SBWalls.FieldSize.y )
 	game_info = gameinfo
-	var vp_size = get_viewport().get_visible_rect().size
+	var vp_size := get_viewport().get_visible_rect().size
 	$StageStartPanel.size = vp_size/4
 	$StageStartPanel.position = vp_size/2 - vp_size/8 + Vector2(0,vp_size.y/6)
 
 	$StageInfo.text = "stage %d" % game_info.stage_number
-	$StageInfo.position.x = 2
-	$SnakeInfo.position.x = SBWalls.FieldSize.x /3
-	$AppleInfo.position.x = SBWalls.FieldSize.x - 3
+	$StageInfo.position = pos2d_to_pos3d(2,SBWalls.FieldSize.y, tile_size.z)
+	$SnakeInfo.position = pos2d_to_pos3d(SBWalls.FieldSize.x /3,SBWalls.FieldSize.y, tile_size.z)
+	$AppleInfo.position = pos2d_to_pos3d(SBWalls.FieldSize.x - 3,SBWalls.FieldSize.y, tile_size.z)
+	$StageInfo.pixel_size = tile_size.y /24
+	$SnakeInfo.pixel_size = tile_size.y /24
+	$AppleInfo.pixel_size = tile_size.y /24
 	update_apple_info()
 	update_snake_info()
 	$FrameTimer.wait_time = SnakeByte.FrameTime
@@ -163,13 +166,13 @@ func snake_enter_complete() -> void:
 func add_plum(i:int) -> void:
 	var pos := field.find_empty_pos(10)
 	assert(pos!=Vector2i(-1,-1), "fail to find empty pos in field")
-	var pl = preload("res://snake_byte/plum/plum.tscn").instantiate().init(field, pos , Dir8Lib.DiagonalList.pick_random(), i)
+	var pl :SBPlum = preload("res://snake_byte/plum/plum.tscn").instantiate().init(field, pos , Dir8Lib.DiagonalList.pick_random(), i)
 	add_child(pl)
 	plum_list.append(pl)
 
 func add_apple() -> void:
 	apple_make_count +=1
-	var ap = preload("res://snake_byte/apple/apple.tscn").instantiate().init(field, apple_make_count)
+	var ap :SBApple = preload("res://snake_byte/apple/apple.tscn").instantiate().init(field, apple_make_count)
 	$AppleContainer.add_child(ap)
 
 func process_frame() -> void:
@@ -221,7 +224,7 @@ func demo_move() -> void:
 		diff_vt = sign(SBWalls.GoalPos - snake_head_pos2i())
 	else:
 		diff_vt = sign(get_next_apple_pos2i() - snake_head_pos2i())
-	var snake_mvvt = Dir8Lib.Dir2Vt[snake.move_dir]
+	var snake_mvvt := Dir8Lib.Dir2Vt[snake.move_dir]
 	var tryvt := []
 	if diff_vt.x == -1:
 		tryvt = [Vector2i(-1,0),Vector2i(0,1),Vector2i(0,-1),Vector2i(1,0)]
