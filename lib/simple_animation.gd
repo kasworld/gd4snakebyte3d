@@ -135,3 +135,15 @@ func handle_animation() -> void:
 			animation_ended.emit(ani.Node, ani)
 		else:
 			animation_list.push_back(ani)
+
+func force_end_animation() -> void:
+	for i in animation_list.size():
+		var ani :Dictionary = animation_list.pop_front()
+		if ani.Node == null:
+			continue
+		var rate :float = 1.0
+		if ani.has("SubField"):
+			ani.Node[ani.Field][ani.SubField] = lerp(ani.StartValue, ani.EndValue, rate)
+		else:
+			ani.Node[ani.Field] = ani.StartValue.lerp(ani.EndValue, rate)
+		animation_ended.emit(ani.Node, ani)
