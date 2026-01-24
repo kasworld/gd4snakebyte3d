@@ -18,9 +18,9 @@ func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> SBPlum:
 	field = f
 	pos2d = p2d
 	move_dir = d
-	$"모양".mesh.material.albedo_color = SnakeByte.LightColorList.pick_random()
-	$"모양".mesh.radius = SnakeByte.tile_size.x/4
-	$"모양".mesh.height = SnakeByte.tile_size.y
+	$"모양".mesh.material.albedo_color = SBStage.LightColorList.pick_random()
+	$"모양".mesh.radius = SBStage.tile_size.x/4
+	$"모양".mesh.height = SBStage.tile_size.y
 	$"모양".rotation.x = randf_range(-PI,PI)
 	$"이동모양".mesh = $"모양".mesh
 	rotate_v = randf_range(-5,5)
@@ -35,13 +35,13 @@ func _process(delta: float) -> void:
 	$"이동모양".rotation = $"모양".rotation
 	var vt2 := pos2d - old_pos2d
 	$"이동모양".position = lerp(
-		Vector3( SnakeByte.tile_size.x * -vt2.x,SnakeByte.tile_size.y * -vt2.y, 0),
+		Vector3( SBStage.tile_size.x * -vt2.x,SBStage.tile_size.y * -vt2.y, 0),
 		Vector3.ZERO,
-		(Time.get_unix_time_from_system() - old_pos_time)/SnakeByte.FrameTime,
+		(Time.get_unix_time_from_system() - old_pos_time)/SBStage.FrameTime,
 		)
 
 func get_pos3d() -> Vector3:
-	return SnakeByte.pos2d_to_pos3d(pos2d.x, pos2d.y)
+	return SBStage.pos2d_to_pos3d(pos2d.x, pos2d.y)
 
 func field_get(pos :Vector2i, d :Dir8Lib.Dir):
 	return field.get_at(pos + Dir8Lib.Dir2Vt[d] )

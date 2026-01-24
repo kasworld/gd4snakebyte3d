@@ -45,51 +45,46 @@ func _ready() -> void:
 	$AxisArrow3D.set_colors().set_size(WorldSize.length()/20)
 	$GlassCabinet.init(WorldSize)
 	$GlassCabinet.get_camera_light().make_current()
-	$GlassCabinet.get_camera_light().get_light().visible = false
-	$GlassCabinet.show_wall_box(false)
-	$GlassCabinet.lights.set_light_energy(10, BitFlag.MakeFilledFlags( $GlassCabinet.lights.get_size() ))
-	new_game()
+	snakebyte_demo($GlassCabinet)
 
-var stage :SnakeByte
+var stage :SBStage
 var game_info :Dictionary
-
+func snakebyte_demo(gc :GlassCabinet) -> void:
+	#gc.get_camera_light().get_light().visible = false
+	gc.show_wall_box(false)
+	#gc.lights.set_light_energy(10, BitFlag.MakeFilledFlags( $GlassCabinet.lights.get_size() ))
+	new_game()
+func new_game() -> void:
+	game_info = {
+		"score" : 0,
+		"snake" : SBStage.SnakeLife,
+		"stage_number" : 0,
+		"demo_mode" : true,
+	}
+	start_stage()
 func set_demo_mode(b :bool) -> void:
 	game_info.demo_mode = b
 	if game_info.demo_mode:
 		$"왼쪽패널/Label".text = "GAME OVER\nPress Space to start"
 	else:
 		$"왼쪽패널/Label".text = ""
-
-func new_game() -> void:
-	game_info = {
-		"score" : 0,
-		"snake" : SnakeByte.SnakeLife,
-		"stage_number" : 0,
-		"demo_mode" : true,
-	}
-	start_stage()
-
 func end_demo_start_game() -> void:
 	set_demo_mode(false)
 	new_game()
-
 func game_over() -> void:
 	set_demo_mode(true)
 	new_game()
-
 func start_stage() -> void:
 	if stage != null :
 		stage.queue_free()
-	stage = preload("res://snake_byte/snake_byte.tscn").instantiate()
+	stage = preload("res://snake_byte/stage.tscn").instantiate()
 	add_child(stage)
 	stage.init(WorldSize, game_info).set_demo_mode(game_info.demo_mode)
 	stage.connect("stage_cleared", stage_cleared)
 	stage.connect("snake_dead", snake_dead)
-	game_info.stage_number +=1
-
 func stage_cleared() -> void:
+	game_info.stage_number +=1
 	start_stage()
-
 func snake_dead() -> void:
 	if game_info.snake > 0:
 		stage.new_snake()

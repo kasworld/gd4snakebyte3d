@@ -33,7 +33,7 @@ func init(stage_number :int, f :PlacedThings) -> void:
 	field = f
 	wall_list = []
 	var mesh := BoxMesh.new()
-	mesh.size = SnakeByte.tile_size *0.9
+	mesh.size = SBStage.tile_size *0.9
 	mesh.material = MultiMeshShape.make_color_material()
 	$MultiMeshShape.multimesh.instance_count = 0
 	$MultiMeshShape.init_with_color_mesh(mesh, SBWalls.FieldSize.x*SBWalls.FieldSize.y/2)
@@ -53,7 +53,7 @@ func init(stage_number :int, f :PlacedThings) -> void:
 func field2wall() -> void:
 	var wall_count := 0
 	for l in wall_list:
-		var co :Color = SnakeByte.LightColorList.pick_random()
+		var co :Color = SBStage.LightColorList.pick_random()
 		for pos in l:
 			if pos == GoalPos:
 				goalwall_index = wall_count
@@ -62,7 +62,7 @@ func field2wall() -> void:
 				pos = pos + Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast]
 			else:
 				field.set_at(pos, self)
-			var pos3d := SnakeByte.pos2d_to_pos3d(pos.x, pos.y)
+			var pos3d := SBStage.pos2d_to_pos3d(pos.x, pos.y)
 			$MultiMeshShape.set_inst_position(wall_count, pos3d)
 			$MultiMeshShape.set_inst_color(wall_count, co)
 			wall_count += 1
@@ -72,8 +72,8 @@ func close_startpos() -> void:
 	var pos := StartPos
 	field.set_at(pos, self)
 	var tmp := StartPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast]
-	var pos1 := SnakeByte.pos2d_to_pos3d(tmp.x, tmp.y)
-	var pos2 := SnakeByte.pos2d_to_pos3d(StartPos.x,StartPos.y)
+	var pos1 := SBStage.pos2d_to_pos3d(tmp.x, tmp.y)
+	var pos2 := SBStage.pos2d_to_pos3d(StartPos.x,StartPos.y)
 	animate_inst = {
 		"start_time" : Time.get_unix_time_from_system(),
 		"inst_index" : startwall_index,
@@ -84,11 +84,11 @@ func close_startpos() -> void:
 
 func open_goalpos() -> void:
 	var pos := GoalPos
-	var old = field.set_at( pos, SnakeByte.Goal.new())
+	var old = field.set_at( pos, SBStage.Goal.new())
 	assert(old == self, "invalid goal pos not wall %s %s" % [pos,old])
-	var pos1 := SnakeByte.pos2d_to_pos3d(GoalPos.x, GoalPos.y)
+	var pos1 := SBStage.pos2d_to_pos3d(GoalPos.x, GoalPos.y)
 	var tmp := GoalPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.NorthWest]
-	var pos2 := SnakeByte.pos2d_to_pos3d(tmp.x, tmp.y)
+	var pos2 := SBStage.pos2d_to_pos3d(tmp.x, tmp.y)
 	animate_inst = {
 		"start_time" : Time.get_unix_time_from_system(),
 		"inst_index" : goalwall_index,

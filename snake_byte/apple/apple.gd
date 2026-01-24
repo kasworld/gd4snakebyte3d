@@ -13,9 +13,9 @@ func init(f :PlacedThings, n :int) -> SBApple:
 	number = n
 	$"번호".text = "%d" % number
 	field = f
-	$"모양".mesh.material.albedo_color = SnakeByte.LightColorList.pick_random()
-	$"모양".mesh.inner_radius = SnakeByte.tile_size.x /6
-	$"모양".mesh.outer_radius = SnakeByte.tile_size.x /2
+	$"모양".mesh.material.albedo_color = SBStage.LightColorList.pick_random()
+	$"모양".mesh.inner_radius = SBStage.tile_size.x /6
+	$"모양".mesh.outer_radius = SBStage.tile_size.x /2
 	$"모양".rotation.z = randf_range(-PI,PI)
 	rotate_v = randf_range(-5,5)
 
@@ -31,7 +31,7 @@ func get_pos2d() -> Vector2i:
 	return pos2d
 
 func get_pos3d() -> Vector3:
-	return SnakeByte.pos2d_to_pos3d(pos2d.x, pos2d.y)
+	return SBStage.pos2d_to_pos3d(pos2d.x, pos2d.y)
 
 func delete() -> void:
 	var old = field.del_at(pos2d)

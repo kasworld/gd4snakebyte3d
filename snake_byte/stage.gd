@@ -1,5 +1,5 @@
 extends Node3D
-class_name SnakeByte
+class_name SBStage
 
 static var cabinet_size :Vector3
 static var tile_size :Vector3
@@ -7,7 +7,7 @@ static var tile_size :Vector3
 static func pos2d_to_pos3d( x :int, y :int, z :float = 0) -> Vector3:
 	return Vector3(
 		float(x) * tile_size.x - cabinet_size.x/2 + tile_size.x/2,
-		float(y) *tile_size.y -cabinet_size.y/2 + tile_size.y/2,
+		float(y) * tile_size.y - cabinet_size.y/2 + tile_size.y/2,
 		z)
 static func pos3d_to_pos2d( pos :Vector3 ) -> Vector2i:
 	return Vector2i(
@@ -29,9 +29,6 @@ static var SnakeLife := 3
 static var SnakeLifeIncOnStageClear := 1
 static var ScorePerApple := 10
 
-#static func vector2i_to_vector3(from :Vector2i) -> Vector3:
-	#return Vector3(from.x,SBWalls.FieldSize.y - from.y, 0)
-
 static var LightColorList = NamedColors.filter_light_color_list()
 
 class Start:
@@ -46,14 +43,14 @@ var plum_list :Array
 var apple_make_count :int
 var apple_eat_count :int
 var apple_end_count :int
-var snake :Snake
+var snake :SBSnake
 var snake_step_after_eat :int
 var gauge :MultiMeshShape
 
 func _to_string() -> String:
-	return "SnakeByte%d %s" % [game_info]
+	return "SBStage%d %s" % [game_info]
 
-func init(sz :Vector3, gameinfo :Dictionary) -> SnakeByte:
+func init(sz :Vector3, gameinfo :Dictionary) -> SBStage:
 	cabinet_size = sz
 	tile_size = Vector3(cabinet_size.x / SBWalls.FieldSize.x, cabinet_size.y / SBWalls.FieldSize.y, cabinet_size.y / SBWalls.FieldSize.y )
 	game_info = gameinfo
@@ -70,17 +67,17 @@ func init(sz :Vector3, gameinfo :Dictionary) -> SnakeByte:
 	$AppleInfo.pixel_size = tile_size.y /24
 	update_apple_info()
 	update_snake_info()
-	$FrameTimer.wait_time = SnakeByte.FrameTime
-	apple_end_count = SnakeByte.AppleCountPerStage
+	$FrameTimer.wait_time = SBStage.FrameTime
+	apple_end_count = SBStage.AppleCountPerStage
 
 	gauge = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_bar_gauge_y(SnakeByte.EatStepOverLimit, Vector3(tile_size.x, cabinet_size.y, tile_size.z), Color.GREEN, Color.RED)
+		).init_bar_gauge_y(SBStage.EatStepOverLimit, Vector3(tile_size.x, cabinet_size.y, tile_size.z), Color.GREEN, Color.RED)
 	gauge.position = pos2d_to_pos3d(SBWalls.FieldSize.x, 0)
 	add_child(gauge)
 	new_snake()
 	return self
 
-func set_demo_mode(b :bool) -> SnakeByte:
+func set_demo_mode(b :bool) -> SBStage:
 	game_info.demo_mode = b
 	return self
 
@@ -95,7 +92,7 @@ func _on_hide_panel_timer_timeout() -> void:
 	$StageStartPanel.hide()
 	$FrameTimer.start()
 
-func new_snake() -> SnakeByte:
+func new_snake() -> SBStage:
 	if snake != null :
 		snake.queue_free()
 	for pl in plum_list:
@@ -110,7 +107,7 @@ func new_snake() -> SnakeByte:
 	field = PlacedThings.new(SBWalls.FieldSize)
 	$Walls.init(game_info.stage_number, field )
 	field.set_at( SBWalls.StartPos, Start.new())
-	for i in SnakeByte.PlumCount:
+	for i in SBStage.PlumCount:
 		add_plum(i)
 	if all_apple_eaten():
 		$Walls.open_goalpos()
@@ -143,7 +140,7 @@ func snake_eat_apple(pos :Vector2i) -> void:
 	ap.delete()
 	ap.queue_free()
 	apple_eat_count += 1
-	game_info.score += SnakeByte.ScorePerApple
+	game_info.score += SBStage.ScorePerApple
 	snake_step_after_eat = 0
 	update_apple_info()
 	update_snake_info()
@@ -184,7 +181,7 @@ func process_frame() -> void:
 		snake.process_frame()
 		#if not all_apple_eaten():
 		snake_step_after_eat += 1
-		if snake_step_after_eat >= SnakeByte.EatStepOverLimit:
+		if snake_step_after_eat >= SBStage.EatStepOverLimit:
 			handle_stepover()
 		gauge.set_visible_count(snake_step_after_eat)
 	else:
@@ -193,11 +190,11 @@ func process_frame() -> void:
 func handle_stepover() -> void:
 	snake_step_after_eat = 0
 	if not all_apple_eaten():
-		for i in SnakeByte.AppleIncOnStepOver:
+		for i in SBStage.AppleIncOnStepOver:
 			add_apple()
-		apple_end_count += SnakeByte.AppleIncOnStepOver
+		apple_end_count += SBStage.AppleIncOnStepOver
 		update_apple_info()
-	snake.dest_body_len += SnakeByte.SankeLenInc
+	snake.dest_body_len += SBStage.SankeLenInc
 
 func _on_frame_timer_timeout() -> void:
 	process_frame()

@@ -41,6 +41,7 @@ environment = SubResource("Environment_lquwl")
 [node name="GlassCabinet" parent="." instance=ExtResource("3_1bvp3")]
 
 [node name="AxisArrow3D" parent="." instance=ExtResource("5_lquwl")]
+visible = false
 
 [node name="MovingCameraLightAround" parent="." instance=ExtResource("4_lquwl")]
 
