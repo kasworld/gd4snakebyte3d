@@ -32,10 +32,12 @@ var animate_inst :Dictionary
 func init(stage_number :int, f :PlacedThings) -> void:
 	field = f
 	wall_list = []
-	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Box, 0.4)
+	#var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Box, 0.4)
+	var mesh := BoxMesh.new()
+	mesh.size = Vector3(1,1,1)
 	mesh.material = MultiMeshShape.make_color_material()
 	$MultiMeshShape.multimesh.instance_count = 0
-	$MultiMeshShape.init_with_color_mesh(mesh, SnakeByte.FieldSize.x*SnakeByte.FieldSize.y/2)
+	$MultiMeshShape.init_with_color_mesh(mesh, SBWalls.FieldSize.x*SBWalls.FieldSize.y/2)
 	exec_script(BounderyWalls)
 	var wall_script = StageWalls[stage_number % StageWalls.size()]
 	exec_script(wall_script)
@@ -61,7 +63,7 @@ func field2wall() -> void:
 				pos = pos + Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast]
 			else:
 				field.set_at(pos, self)
-			var pos3d = SnakeByte.vector2i_to_vector3(pos)
+			var pos3d = SnakeByte.pos2d_to_pos3d(pos.x, pos.y)
 			$MultiMeshShape.set_inst_position(wall_count, pos3d)
 			$MultiMeshShape.set_inst_color(wall_count, co)
 			wall_count += 1
@@ -70,8 +72,9 @@ func field2wall() -> void:
 func close_startpos() -> void:
 	var pos = StartPos
 	field.set_at(pos, self)
-	var pos1 = SnakeByte.vector2i_to_vector3(StartPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast])
-	var pos2 = SnakeByte.vector2i_to_vector3(StartPos)
+	var tmp := StartPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast]
+	var pos1 = SnakeByte.pos2d_to_pos3d(tmp.x, tmp.y)
+	var pos2 = SnakeByte.pos2d_to_pos3d(StartPos.x,StartPos.y)
 	animate_inst = {
 		"start_time" : Time.get_unix_time_from_system(),
 		"inst_index" : startwall_index,
@@ -84,8 +87,9 @@ func open_goalpos() -> void:
 	var pos = GoalPos
 	var old = field.set_at( pos, SnakeByte.Goal.new())
 	assert(old == self, "invalid goal pos not wall %s %s" % [pos,old])
-	var pos1 = SnakeByte.vector2i_to_vector3(GoalPos)
-	var pos2 = SnakeByte.vector2i_to_vector3(GoalPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.NorthWest])
+	var pos1 := SnakeByte.pos2d_to_pos3d(GoalPos.x, GoalPos.y)
+	var tmp := GoalPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.NorthWest]
+	var pos2 := SnakeByte.pos2d_to_pos3d(tmp.x, tmp.y)
 	animate_inst = {
 		"start_time" : Time.get_unix_time_from_system(),
 		"inst_index" : goalwall_index,

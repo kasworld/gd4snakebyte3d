@@ -29,7 +29,7 @@ func get_pos2d() -> Vector2i:
 	return pos2d
 
 func get_pos3d() -> Vector3:
-	return SnakeByte.vector2i_to_vector3(pos2d)
+	return SnakeByte.pos2d_to_pos3d(pos2d.x, pos2d.y)
 
 func delete() -> void:
 	var old = field.del_at(pos2d)

@@ -80,7 +80,7 @@ func start_stage() -> void:
 		stage.queue_free()
 	stage = preload("res://snake_byte/snake_byte.tscn").instantiate()
 	add_child(stage)
-	stage.init(game_info).set_demo_mode(game_info.demo_mode)
+	stage.init(WorldSize, game_info).set_demo_mode(game_info.demo_mode)
 	stage.connect("stage_cleared", stage_cleared)
 	stage.connect("snake_dead", snake_dead)
 	game_info.stage_number +=1

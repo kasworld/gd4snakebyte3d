@@ -39,7 +39,7 @@ func _process(delta: float) -> void:
 		)
 
 func get_pos3d() -> Vector3:
-	return SnakeByte.vector2i_to_vector3(pos2d)
+	return SnakeByte.pos2d_to_pos3d(pos2d.x, pos2d.y)
 
 func field_get(pos :Vector2i, d :Dir8Lib.Dir):
 	return field.get_at(pos + Dir8Lib.Dir2Vt[d] )
