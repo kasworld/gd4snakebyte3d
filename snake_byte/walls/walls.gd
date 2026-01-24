@@ -2,8 +2,8 @@ extends Node3D
 class_name SBWalls
 
 static var FieldSize := Vector2i(48,27)
-static var StartPos := Vector2i(FieldSize.x/2, FieldSize.y-1)
-static var GoalPos := Vector2i(FieldSize.x/2, 0)
+static var StartPos := Vector2i(FieldSize.x/2, 0)
+static var GoalPos := Vector2i(FieldSize.x/2, FieldSize.y-1)
 static var BounderyWalls := [
 	["hline", 0, FieldSize.x-2, 0],
 	["vline", FieldSize.x-1, 0, FieldSize.y-2],

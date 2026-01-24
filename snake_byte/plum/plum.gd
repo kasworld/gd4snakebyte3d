@@ -35,7 +35,7 @@ func _process(delta: float) -> void:
 	$"이동모양".rotation = $"모양".rotation
 	var vt2 := pos2d - old_pos2d
 	$"이동모양".position = lerp(
-		Vector3(-vt2.x, vt2.y, 0),
+		Vector3( SnakeByte.tile_size.x * -vt2.x,SnakeByte.tile_size.y * -vt2.y, 0),
 		Vector3.ZERO,
 		(Time.get_unix_time_from_system() - old_pos_time)/SnakeByte.FrameTime,
 		)

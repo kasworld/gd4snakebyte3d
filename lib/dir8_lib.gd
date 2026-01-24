@@ -30,25 +30,25 @@ static func DirTurnRight(d :Dir, i :int=2) -> Dir:
 	return ((d - i + Dir.size()) % Dir.size()) as Dir
 
 const Dir2Vt :Dictionary[Dir, Vector2i]= {
-	Dir.North : Vector2i(0,-1),
-	Dir.NorthWest : Vector2i(-1,-1),
+	Dir.North : Vector2i(0,1),
+	Dir.NorthWest : Vector2i(-1,1),
 	Dir.West : Vector2i(-1,0),
-	Dir.WestSouth : Vector2i(-1,1),
-	Dir.South : Vector2i(0, 1),
-	Dir.SouthEast : Vector2i(1, 1),
+	Dir.WestSouth : Vector2i(-1,-1),
+	Dir.South : Vector2i(0, -1),
+	Dir.SouthEast : Vector2i(1, -1),
 	Dir.East : Vector2i(1,0),
-	Dir.EastNorth : Vector2i(1,-1),
+	Dir.EastNorth : Vector2i(1,1),
 }
 
 const Vt2Dir :Dictionary[Vector2i, Dir]= {
-	 Vector2i( 0,-1) : Dir.North,
-	 Vector2i(-1,-1) : Dir.NorthWest,
+	 Vector2i( 0, 1) : Dir.North,
+	 Vector2i(-1, 1) : Dir.NorthWest,
 	 Vector2i(-1, 0) : Dir.West,
-	 Vector2i(-1, 1) : Dir.WestSouth,
-	 Vector2i( 0, 1) : Dir.South,
-	 Vector2i( 1, 1) : Dir.SouthEast,
+	 Vector2i(-1,-1) : Dir.WestSouth,
+	 Vector2i( 0,-1) : Dir.South,
+	 Vector2i( 1,-1) : Dir.SouthEast,
 	 Vector2i( 1, 0) : Dir.East,
-	 Vector2i( 1,-1) : Dir.EastNorth,
+	 Vector2i( 1, 1) : Dir.EastNorth,
 }
 
 static func dir2rad(d:Dir) -> float:
