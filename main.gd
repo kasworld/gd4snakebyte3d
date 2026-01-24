@@ -81,7 +81,7 @@ func start_stage() -> void:
 		stage.queue_free()
 	stage = preload("res://snake_byte/snake_byte.tscn").instantiate().set_demo_mode(demo_mode)
 	add_child(stage)
-	stage.init(game_info, stage_number+1, SnakeByte.StageSnakeByteWalls[stage_number % SnakeByte.StageSnakeByteWalls.size()])
+	stage.init(game_info, stage_number )
 	stage.connect("stage_cleared", stage_cleared)
 	stage.connect("snake_dead", snake_dead)
 	stage_number +=1

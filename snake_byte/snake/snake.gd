@@ -20,10 +20,10 @@ func init(f :PlacedThings) -> Snake:
 	field = f
 	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Sphere, 0.4)
 	mesh.material = MultiMeshShape.make_color_material()
-	var pos = SnakeByte.vector2i_to_vector3( Vector2i(SnakeByte.FieldWidth/2,SnakeByte.FieldHeight) )
-	$Body.init_with_color_mesh(mesh, SnakeByte.FieldWidth*SnakeByte.FieldHeight/2, 1.0,  pos)
+	var pos = SnakeByte.vector2i_to_vector3( Vector2i(SBWalls.FieldSize.x/2,SBWalls.FieldSize.y) )
+	$Body.init_with_color_mesh(mesh, SBWalls.FieldSize.x*SBWalls.FieldSize.y/2, 1.0,  pos)
 	dest_body_len = SnakeByte.SnakeLenStart
-	pos2d_list.append(SnakeByte.StartPos)
+	pos2d_list.append(SBWalls.StartPos)
 	is_alive = true
 	cmd_queue = []
 	return self

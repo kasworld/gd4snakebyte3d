@@ -1,21 +1,44 @@
 extends Node3D
 class_name SBWalls
 
+static var FieldSize := Vector2i(48,27)
+static var StartPos := Vector2i(FieldSize.x/2, FieldSize.y-1)
+static var GoalPos := Vector2i(FieldSize.x/2, 0)
+static var BounderyWalls = [
+	["hline", 0, FieldSize.x-2, 0],
+	["vline", FieldSize.x-1, 0, FieldSize.y-2],
+	["hline", 1, FieldSize.x-1, FieldSize.y-1],
+	["vline", 0, 1, FieldSize.y-1],
+]
+static var StageWalls = [
+	[],
+	[
+		["hline", FieldSize.x/2-5, FieldSize.x/2+5, FieldSize.y/2],
+	],
+	[
+		["hline", 5, FieldSize.x/2-2, FieldSize.y/2],
+		["hline", FieldSize.x/2+2, FieldSize.x-1-5, FieldSize.y/2],
+		["vline", FieldSize.x/2, 5, FieldSize.y/2-2],
+		["vline", FieldSize.x/2, FieldSize.y/2+2, FieldSize.y-1-5],
+	],
+]
+
 var field :PlacedThings
 var wall_list :Array
 var startwall_index :int
 var goalwall_index :int
 var animate_inst :Dictionary
 
-func init(f :PlacedThings, add_SnakeByteWalls :Array) -> void:
+func init(stage_number :int, f :PlacedThings) -> void:
 	field = f
 	wall_list = []
 	var mesh = ShapeLib.new_mesh_by_type(ShapeLib.Shape.Box, 0.4)
 	mesh.material = MultiMeshShape.make_color_material()
 	$MultiMeshShape.multimesh.instance_count = 0
-	$MultiMeshShape.init_with_color_mesh(mesh, SnakeByte.FieldWidth*SnakeByte.FieldHeight/2)
-	exec_script(SnakeByte.BounderySnakeByteWalls)
-	exec_script(add_SnakeByteWalls)
+	$MultiMeshShape.init_with_color_mesh(mesh, SnakeByte.FieldSize.x*SnakeByte.FieldSize.y/2)
+	exec_script(BounderyWalls)
+	var wall_script = StageWalls[stage_number % StageWalls.size()]
+	exec_script(wall_script)
 	field2wall()
 	# stop old animation
 	animate_inst = {
@@ -31,9 +54,9 @@ func field2wall() -> void:
 	for l in wall_list:
 		var co = SnakeByte.LightColorList.pick_random()
 		for pos in l:
-			if pos == SnakeByte.GoalPos:
+			if pos == GoalPos:
 				goalwall_index = wall_count
-			if pos == SnakeByte.StartPos:
+			if pos == StartPos:
 				startwall_index = wall_count
 				pos = pos + Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast]
 			else:
@@ -45,10 +68,10 @@ func field2wall() -> void:
 	$MultiMeshShape.set_visible_count(wall_count)
 
 func close_startpos() -> void:
-	var pos = SnakeByte.StartPos
+	var pos = StartPos
 	field.set_at(pos, self)
-	var pos1 = SnakeByte.vector2i_to_vector3(SnakeByte.StartPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast])
-	var pos2 = SnakeByte.vector2i_to_vector3(SnakeByte.StartPos)
+	var pos1 = SnakeByte.vector2i_to_vector3(StartPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast])
+	var pos2 = SnakeByte.vector2i_to_vector3(StartPos)
 	animate_inst = {
 		"start_time" : Time.get_unix_time_from_system(),
 		"inst_index" : startwall_index,
@@ -58,11 +81,11 @@ func close_startpos() -> void:
 	}
 
 func open_goalpos() -> void:
-	var pos = SnakeByte.GoalPos
+	var pos = GoalPos
 	var old = field.set_at( pos, SnakeByte.Goal.new())
 	assert(old == self, "invalid goal pos not wall %s %s" % [pos,old])
-	var pos1 = SnakeByte.vector2i_to_vector3(SnakeByte.GoalPos)
-	var pos2 = SnakeByte.vector2i_to_vector3(SnakeByte.GoalPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.NorthWest])
+	var pos1 = SnakeByte.vector2i_to_vector3(GoalPos)
+	var pos2 = SnakeByte.vector2i_to_vector3(GoalPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.NorthWest])
 	animate_inst = {
 		"start_time" : Time.get_unix_time_from_system(),
 		"inst_index" : goalwall_index,

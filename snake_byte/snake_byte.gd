@@ -1,44 +1,21 @@
 extends Node3D
 class_name SnakeByte
 
-const FieldWidth :int = 48
-const FieldHeight :int = 27
-const FieldSize := Vector2i(FieldWidth,FieldHeight)
+const FieldSize := Vector2i(48,27)
 const FrameTime := 0.2 # second
 const SnakeLenStart := 12
 const SankeLenInc := 12
 const PlumCount := 2
 const AppleCountPerStage := 10
 const AppleIncOnStepOver := 3
-const EatStepOverLimit := FieldWidth + FieldHeight
+const EatStepOverLimit := FieldSize.x + FieldSize.y
 const SnakeLife := 3
 const SnakeLifeIncOnStageClear := 1
 const ScorePerApple := 10
 
 static func vector2i_to_vector3(from :Vector2i) -> Vector3:
-	return Vector3(from.x,FieldHeight - from.y, 0)
+	return Vector3(from.x,FieldSize.y - from.y, 0)
 
-const StartPos := Vector2i(FieldWidth/2, FieldHeight-1)
-const GoalPos := Vector2i(FieldWidth/2, 0)
-
-static var BounderySnakeByteWalls = [
-	["hline", 0, FieldWidth-2, 0],
-	["vline", FieldWidth-1, 0, FieldHeight-2],
-	["hline", 1, FieldWidth-1, FieldHeight-1],
-	["vline", 0, 1, FieldHeight-1],
-]
-static var StageSnakeByteWalls = [
-	[],
-	[
-		["hline", FieldWidth/2-5, FieldWidth/2+5, FieldHeight/2],
-	],
-	[
-		["hline", 5, FieldWidth/2-2, FieldHeight/2],
-		["hline", FieldWidth/2+2, FieldWidth-1-5, FieldHeight/2],
-		["vline", FieldWidth/2, 5, FieldHeight/2-2],
-		["vline", FieldWidth/2, FieldHeight/2+2, FieldHeight-1-5],
-	],
-]
 
 static var LightColorList = NamedColors.filter_light_color_list()
 
@@ -53,11 +30,10 @@ class Goal:
 
 var field :PlacedThings
 var plum_list :Array
-var number :int
+var stage_number :int
 var apple_make_count :int
 var apple_eat_count :int
 var apple_end_count :int
-var wall_script :Array
 var snake :Snake
 var snake_step_after_eat :int
 var gauge :MultiMeshShape
@@ -65,27 +41,26 @@ var game_info :Dictionary
 var demo_mode :bool
 
 func _to_string() -> String:
-	return "SnakeByte%d %s" % [number, game_info]
+	return "SnakeByte%d %s" % [stage_number, game_info]
 
-func init(gameinfo :Dictionary, n :int, w_script :Array) -> SnakeByte:
-	number = n
-	wall_script = w_script
+func init(gameinfo :Dictionary, stage_n :int) -> SnakeByte:
+	stage_number = stage_n
 	game_info = gameinfo
 	var vp_size = get_viewport().get_visible_rect().size
 	$StageStartPanel.size = vp_size/4
 	$StageStartPanel.position = vp_size/2 - vp_size/8 + Vector2(0,vp_size.y/6)
 
-	$StageInfo.text = "stage %d" % number
+	$StageInfo.text = "stage %d" % stage_number
 	$StageInfo.position.x = 2
-	$SnakeInfo.position.x = SnakeByte.FieldWidth /3
-	$AppleInfo.position.x = SnakeByte.FieldWidth - 3
+	$SnakeInfo.position.x = SnakeByte.FieldSize.x /3
+	$AppleInfo.position.x = SnakeByte.FieldSize.x - 3
 	update_apple_info()
 	update_snake_info()
 	$FrameTimer.wait_time = SnakeByte.FrameTime
 	apple_end_count = SnakeByte.AppleCountPerStage
 	gauge = preload("res://multi_mesh_shape/multi_mesh_shape.tscn").instantiate(
-		).init_bar_gauge_y(SnakeByte.EatStepOverLimit, Vector3(1, SnakeByte.FieldHeight, 1), Color.GREEN, Color.RED)
-	gauge.position = SnakeByte.vector2i_to_vector3(Vector2i(SnakeByte.FieldWidth,SnakeByte.FieldHeight-1))
+		).init_bar_gauge_y(SnakeByte.EatStepOverLimit, Vector3(1, SnakeByte.FieldSize.y, 1), Color.GREEN, Color.RED)
+	gauge.position = SnakeByte.vector2i_to_vector3(Vector2i(SnakeByte.FieldSize.x,SnakeByte.FieldSize.y-1))
 	add_child(gauge)
 	new_snake()
 	return self
@@ -96,7 +71,7 @@ func set_demo_mode(b :bool) -> SnakeByte:
 
 func show_start_panel() -> void:
 	$FrameTimer.stop()
-	$StageStartPanel/Label.text = "stage %d" % [ number ]
+	$StageStartPanel/Label.text = "stage %d" % [ stage_number ]
 	$StageStartPanel.visible =  true
 	$HidePanelTimer.start(1)
 
@@ -118,8 +93,8 @@ func new_snake() -> SnakeByte:
 	snake_step_after_eat = 0
 	apple_make_count = apple_eat_count
 	field = PlacedThings.new(SnakeByte.FieldSize)
-	$Walls.init(field, wall_script)
-	field.set_at( SnakeByte.StartPos, Start.new())
+	$Walls.init(stage_number, field )
+	field.set_at( SBWalls.StartPos, Start.new())
 	for i in SnakeByte.PlumCount:
 		add_plum(i)
 	if all_apple_eaten():
@@ -229,7 +204,7 @@ func demo_move() -> void:
 		return
 	var diff_vt :Vector2i
 	if all_apple_eaten():
-		diff_vt = sign(SnakeByte.GoalPos - snake_head_pos2i())
+		diff_vt = sign(SBWalls.GoalPos - snake_head_pos2i())
 	else:
 		diff_vt = sign(get_next_apple_pos2i() - snake_head_pos2i())
 	var snake_mvvt = Dir8Lib.Dir2Vt[snake.move_dir]
