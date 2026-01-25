@@ -1,9 +1,9 @@
 extends SBObj
 class_name SBApple
 
+var field :PlacedThings
 var number :int
 var pos2d :Vector2i
-var field :PlacedThings
 var rotate_v :float
 
 func _to_string() -> String:

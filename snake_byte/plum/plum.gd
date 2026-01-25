@@ -1,21 +1,24 @@
 extends SBObj
 class_name SBPlum
 
+var field :PlacedThings
+var astar_grid :AStarGrid2D
+
 var number :int
 var pos2d :Vector2i
 var old_pos2d :Vector2i
 var old_pos_time :float
 var move_dir :Dir8Lib.Dir
-var field :PlacedThings
 var rotate_v :float
 
 func _to_string() -> String:
 	return "SBPlum%d (%d,%d) %s" % [number, pos2d.x,pos2d.y, move_dir]
 
-func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> SBPlum:
+func init(field_a :PlacedThings, astar_grid_a :AStarGrid2D, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> SBPlum:
+	field = field_a
+	astar_grid = astar_grid_a
 	number = n
 	$"번호".text = "%d" % number
-	field = f
 	pos2d = p2d
 	move_dir = d
 	$"모양".mesh.material.albedo_color = NamedColors.random_color()
@@ -25,8 +28,9 @@ func init(f :PlacedThings, p2d :Vector2i, d :Dir8Lib.Dir, n :int) -> SBPlum:
 	$"이동모양".mesh = $"모양".mesh
 	rotate_v = randf_range(-5,5)
 
-	var old = field.set_at(p2d, self)
+	var old = field.set_at(pos2d, self)
 	assert(old == null, "%s pos not empty %s" % [self, old])
+	astar_grid.set_point_solid(pos2d)
 	position = get_pos3d()
 	return self
 
@@ -88,4 +92,6 @@ func move2d() -> void:
 		pos2d = pos2d + Dir8Lib.Dir2Vt[new_dict.move]
 	move_dir = new_dict.dir
 	field.move(old_pos2d,pos2d)
+	astar_grid.set_point_solid(old_pos2d,false)
+	astar_grid.set_point_solid(pos2d)
 	position = get_pos3d()

@@ -24,13 +24,15 @@ static var StageWalls := [
 ]
 
 var field :PlacedThings
-var wall_list :Array
+var astar_grid :AStarGrid2D
+var wall_list :Array # [ [Vector2i] ]
 var startwall_index :int
 var goalwall_index :int
 var animate_inst :Dictionary
 
-func init(stage_number :int, f :PlacedThings) -> void:
-	field = f
+func init(stage_number :int, field_a :PlacedThings, astar_grid_a :AStarGrid2D) -> void:
+	field = field_a
+	astar_grid = astar_grid_a
 	wall_list = []
 	var mesh := BoxMesh.new()
 	mesh.size = SBStage.tile_size *0.9
@@ -40,7 +42,7 @@ func init(stage_number :int, f :PlacedThings) -> void:
 	exec_script(BounderyWalls)
 	var wall_script :Array = StageWalls[stage_number % StageWalls.size()]
 	exec_script(wall_script)
-	field2wall()
+	wall_list_to_MMS()
 	# stop old animation
 	animate_inst = {
 		"start_time" : 0,
@@ -50,27 +52,30 @@ func init(stage_number :int, f :PlacedThings) -> void:
 		"pos2" :Vector3.ZERO,
 	}
 
-func field2wall() -> void:
-	var wall_count := 0
+func wall_list_to_MMS() -> void:
+	var inst_index := 0
 	for l in wall_list:
 		var co :Color = NamedColors.random_color()
 		for pos in l:
 			if pos == GoalPos:
-				goalwall_index = wall_count
+				goalwall_index = inst_index
 			if pos == StartPos:
-				startwall_index = wall_count
+				startwall_index = inst_index
 				pos = pos + Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast]
 			else:
 				field.set_at(pos, self)
+				astar_grid.set_point_solid(pos)
 			var pos3d := SBStage.pos2d_to_pos3d(pos.x, pos.y)
-			$MultiMeshShape.set_inst_position(wall_count, pos3d)
-			$MultiMeshShape.set_inst_color(wall_count, co)
-			wall_count += 1
-	$MultiMeshShape.set_visible_count(wall_count)
+			$MultiMeshShape.set_inst_position(inst_index, pos3d)
+			$MultiMeshShape.set_inst_color(inst_index, co)
+			inst_index += 1
+	$MultiMeshShape.set_visible_count(inst_index)
 
 func close_startpos() -> void:
 	var pos := StartPos
 	field.set_at(pos, self)
+	astar_grid.set_point_solid(pos)
+
 	var tmp := StartPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast]
 	var pos1 := SBStage.pos2d_to_pos3d(tmp.x, tmp.y)
 	var pos2 := SBStage.pos2d_to_pos3d(StartPos.x,StartPos.y)
@@ -85,6 +90,8 @@ func close_startpos() -> void:
 func open_goalpos() -> void:
 	var pos := GoalPos
 	var old = field.set_at( pos, SBGoal.new())
+	astar_grid.set_point_solid(pos, false)
+
 	assert(old == self, "invalid goal pos not wall %s %s" % [pos,old])
 	var pos1 := SBStage.pos2d_to_pos3d(GoalPos.x, GoalPos.y)
 	var tmp := GoalPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.NorthWest]

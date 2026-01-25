@@ -7,6 +7,8 @@ signal tail_enter()
 signal reach_goal()
 
 var field :PlacedThings
+var astar_grid :AStarGrid2D
+
 var pos2d_list :Array[Vector2i]
 var move_dir :Dir8Lib.Dir
 var dest_body_len :int
@@ -16,8 +18,10 @@ var cmd_queue :Array
 func _to_string() -> String:
 	return "SBSnake alive:%s movedir:%s %s" % [is_alive,move_dir,pos2d_list]
 
-func init(f :PlacedThings) -> SBSnake:
-	field = f
+func init(field_a :PlacedThings, astar_grid_a :AStarGrid2D) -> SBSnake:
+	field = field_a
+	astar_grid = astar_grid_a
+
 	var mesh := SphereMesh.new()
 	mesh.radius = SBStage.tile_size.x /2
 	mesh.height = SBStage.tile_size.y
@@ -43,6 +47,7 @@ func process_frame() -> void:
 		if old is not SBStart:
 			field.del_at(tailpos)
 			assert( old is SBSnake, "invalid tailpos %s %s" %[tailpos, old] )
+			astar_grid.set_point_solid(tailpos, false)
 		else :
 			tail_enter.emit()
 	var headpos := get_next_head_pos()
@@ -59,6 +64,7 @@ func process_frame() -> void:
 		return
 	pos2d_list.push_front(headpos)
 	field.set_at(headpos, self)
+	astar_grid.set_point_solid(headpos)
 	$Body.set_visible_count(pos2d_list.size())
 	for i in pos2d_list.size():
 		$Body.set_inst_position(i, SBStage.pos2d_to_pos3d(pos2d_list[i].x,pos2d_list[i].y))

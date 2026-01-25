@@ -29,14 +29,10 @@ static var SnakeLife := 3
 static var SnakeLifeIncOnStageClear := 1
 static var ScorePerApple := 10
 
-#class Start:
-	#pass
-#class Goal:
-	#pass
-
 var game_info :Dictionary
-
 var field :PlacedThings
+var astar_grid :AStarGrid2D
+
 var plum_list :Array
 var apple_make_count :int
 var apple_eat_count :int
@@ -103,7 +99,13 @@ func new_snake() -> SBStage:
 	snake_step_after_eat = 0
 	apple_make_count = apple_eat_count
 	field = PlacedThings.new(SBWalls.FieldSize)
-	$Walls.init(game_info.stage_number, field )
+	astar_grid = AStarGrid2D.new()
+	astar_grid.region = Rect2i( Vector2i(0,0), SBWalls.FieldSize)
+	astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+	astar_grid.default_estimate_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+	astar_grid.update()
+	$Walls.init(game_info.stage_number, field , astar_grid)
 	field.set_at( SBWalls.StartPos, SBStart.new())
 	for i in SBStage.PlumCount:
 		add_plum(i)
@@ -119,7 +121,7 @@ func new_snake() -> SBStage:
 	snake.connect("snake_dead", snake_die)
 	snake.connect("tail_enter", snake_enter_complete)
 	snake.connect("reach_goal", snake_reach_goal)
-	snake.init(field)
+	snake.init(field, astar_grid)
 	return self
 
 func snake_die() -> void:
@@ -161,7 +163,8 @@ func snake_enter_complete() -> void:
 func add_plum(i:int) -> void:
 	var pos := field.find_empty_pos(10)
 	assert(pos!=Vector2i(-1,-1), "fail to find empty pos in field")
-	var pl :SBPlum = preload("res://snake_byte/plum/plum.tscn").instantiate().init(field, pos , Dir8Lib.DiagonalList.pick_random(), i)
+	var pl :SBPlum = preload("res://snake_byte/plum/plum.tscn").instantiate(
+		).init(field, astar_grid, pos , Dir8Lib.DiagonalList.pick_random(), i)
 	add_child(pl)
 	plum_list.append(pl)
 
