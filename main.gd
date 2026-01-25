@@ -54,6 +54,12 @@ func snakebyte_demo(gc :GlassCabinet) -> void:
 	gc.show_wall_box(false)
 	#gc.lights.set_light_energy(10, BitFlag.MakeFilledFlags( $GlassCabinet.lights.get_size() ))
 	new_snakebytegame()
+func update_label() -> void:
+	if game_info.demo_mode:
+		$"왼쪽패널/Label".text = "GAME OVER\nPress Space to start"
+	else:
+		$"왼쪽패널/Label".text = ""
+
 func new_snakebytegame() -> void:
 	game_info = {
 		"score" : 0,
@@ -61,19 +67,8 @@ func new_snakebytegame() -> void:
 		"stage_number" : 0,
 		"demo_mode" : true,
 	}
+	update_label()
 	start_stage()
-func set_demo_mode(b :bool) -> void:
-	game_info.demo_mode = b
-	if game_info.demo_mode:
-		$"왼쪽패널/Label".text = "GAME OVER\nPress Space to start"
-	else:
-		$"왼쪽패널/Label".text = ""
-func end_demo_start_game() -> void:
-	set_demo_mode(false)
-	new_snakebytegame()
-func game_over() -> void:
-	set_demo_mode(true)
-	new_snakebytegame()
 func start_stage() -> void:
 	if stage != null :
 		stage.queue_free()
@@ -88,7 +83,11 @@ func snake_dead() -> void:
 	if game_info.snake > 0:
 		stage.new_snake()
 	else:
-		game_over()
+		game_info.demo_mode = true
+		new_snakebytegame()
+func end_demo_start_game() -> void:
+	game_info.demo_mode = false
+	new_snakebytegame()
 
 func _process(_delta: float) -> void:
 	var now := Time.get_unix_time_from_system()
