@@ -61,9 +61,8 @@ func process_frame() -> void:
 	field.set_at(headpos, self)
 	$Body.set_visible_count(pos2d_list.size())
 	for i in pos2d_list.size():
-		var rate := (i as float) / pos2d_list.size()
 		$Body.set_inst_position(i, SBStage.pos2d_to_pos3d(pos2d_list[i].x,pos2d_list[i].y))
-		$Body.set_inst_color(i, lerp(Color.RED, Color.BLUE, rate))
+	$Body.set_gradient_color_all(Color.RED, Color.BLUE)
 
 func get_next_head_pos() -> Vector2i:
 	return pos2d_list[0] + Dir8Lib.Dir2Vt[move_dir]
