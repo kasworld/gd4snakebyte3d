@@ -56,9 +56,6 @@ func init(sz :Vector3, gameinfo :Dictionary) -> SBStage:
 	cabinet_size = sz
 	tile_size = Vector3(cabinet_size.x / SBWalls.FieldSize.x, cabinet_size.y / SBWalls.FieldSize.y, cabinet_size.y / SBWalls.FieldSize.y )
 	game_info = gameinfo
-	var vp_size := get_viewport().get_visible_rect().size
-	$StageStartPanel.size = vp_size/4
-	$StageStartPanel.position = vp_size/2 - vp_size/8 + Vector2(0,vp_size.y/6)
 
 	$StageInfo.text = "stage %d" % game_info.stage_number
 	$StageInfo.position = pos2d_to_pos3d(2,SBWalls.FieldSize.y, tile_size.z)
@@ -83,17 +80,6 @@ func set_demo_mode(b :bool) -> SBStage:
 	game_info.demo_mode = b
 	return self
 
-func show_start_panel() -> void:
-	$FrameTimer.stop()
-	$StageStartPanel/Label.text = "stage %d" % [ game_info.stage_number ]
-	$StageStartPanel.visible =  true
-	$HidePanelTimer.start(1)
-
-func _on_hide_panel_timer_timeout() -> void:
-	$HidePanelTimer.stop()
-	$StageStartPanel.hide()
-	$FrameTimer.start()
-
 func new_snake() -> SBStage:
 	if snake != null :
 		snake.queue_free()
@@ -103,7 +89,6 @@ func new_snake() -> SBStage:
 	for n in $AppleContainer.get_children():
 		n.queue_free()
 
-	show_start_panel()
 	snake_step_after_eat = 0
 	apple_make_count = apple_eat_count
 	field = PlacedThings.new(SBWalls.FieldSize)

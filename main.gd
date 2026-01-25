@@ -77,9 +77,8 @@ func game_over() -> void:
 func start_stage() -> void:
 	if stage != null :
 		stage.queue_free()
-	stage = preload("res://snake_byte/stage.tscn").instantiate()
+	stage = preload("res://snake_byte/stage.tscn").instantiate().init(WorldSize, game_info)
 	add_child(stage)
-	stage.init(WorldSize, game_info).set_demo_mode(game_info.demo_mode)
 	stage.connect("stage_cleared", stage_cleared)
 	stage.connect("snake_dead", snake_dead)
 func stage_cleared() -> void:
