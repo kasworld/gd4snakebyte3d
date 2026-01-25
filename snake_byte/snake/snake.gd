@@ -1,4 +1,4 @@
-extends Node3D
+extends SBObj
 class_name SBSnake
 
 signal snake_dead()
@@ -40,7 +40,7 @@ func process_frame() -> void:
 	if pos2d_list.size() >= dest_body_len:
 		var tailpos :Vector2i = pos2d_list.pop_back()
 		var old = field.get_at(tailpos)
-		if old is not SBStage.Start:
+		if old is not SBStart:
 			field.del_at(tailpos)
 			assert( old is SBSnake, "invalid tailpos %s %s" %[tailpos, old] )
 		else :
@@ -50,7 +50,7 @@ func process_frame() -> void:
 	if headthings is SBApple:
 		dest_body_len += SBStage.SankeLenInc
 		eat_apple.emit(headpos)
-	elif headthings is SBStage.Goal:
+	elif headthings is SBGoal:
 		reach_goal.emit()
 		return
 	elif headthings != null:

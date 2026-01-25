@@ -1,4 +1,4 @@
-extends Node3D
+extends SBObj
 class_name SBApple
 
 var number :int

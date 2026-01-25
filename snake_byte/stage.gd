@@ -29,10 +29,10 @@ static var SnakeLife := 3
 static var SnakeLifeIncOnStageClear := 1
 static var ScorePerApple := 10
 
-class Start:
-	pass
-class Goal:
-	pass
+#class Start:
+	#pass
+#class Goal:
+	#pass
 
 var game_info :Dictionary
 
@@ -104,7 +104,7 @@ func new_snake() -> SBStage:
 	apple_make_count = apple_eat_count
 	field = PlacedThings.new(SBWalls.FieldSize)
 	$Walls.init(game_info.stage_number, field )
-	field.set_at( SBWalls.StartPos, Start.new())
+	field.set_at( SBWalls.StartPos, SBStart.new())
 	for i in SBStage.PlumCount:
 		add_plum(i)
 	if all_apple_eaten():
@@ -236,6 +236,6 @@ func demo_move() -> void:
 		if vt == -snake_mvvt:
 			continue
 		var fieldobj = field.get_at(snake_head_pos2i()+vt)
-		if  fieldobj == null or (not all_apple_eaten() and fieldobj is SBApple) or (all_apple_eaten() and fieldobj is Goal) :
+		if  fieldobj == null or (not all_apple_eaten() and fieldobj is SBApple) or (all_apple_eaten() and fieldobj is SBGoal) :
 			snake.cmd_queue.append(Dir8Lib.Vt2Dir[vt])
 			break

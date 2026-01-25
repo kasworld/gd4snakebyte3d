@@ -1,4 +1,4 @@
-extends Node3D
+extends SBObj
 class_name SBWalls
 
 static var FieldSize := Vector2i(48,27)
@@ -84,7 +84,7 @@ func close_startpos() -> void:
 
 func open_goalpos() -> void:
 	var pos := GoalPos
-	var old = field.set_at( pos, SBStage.Goal.new())
+	var old = field.set_at( pos, SBGoal.new())
 	assert(old == self, "invalid goal pos not wall %s %s" % [pos,old])
 	var pos1 := SBStage.pos2d_to_pos3d(GoalPos.x, GoalPos.y)
 	var tmp := GoalPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.NorthWest]
