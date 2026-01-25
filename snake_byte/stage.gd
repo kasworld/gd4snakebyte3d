@@ -32,6 +32,14 @@ static var ScorePerApple := 10
 var game_info :Dictionary
 var field :PlacedThings
 var astar_grid :AStarGrid2D
+func init_astar_grid() -> void:
+	astar_grid = AStarGrid2D.new()
+	astar_grid.region = Rect2i( Vector2i(0,0), SBWalls.FieldSize)
+	astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
+	astar_grid.default_estimate_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
+	astar_grid.update()
+
 
 var plum_list :Array
 var apple_make_count :int
@@ -99,12 +107,7 @@ func new_snake() -> SBStage:
 	snake_step_after_eat = 0
 	apple_make_count = apple_eat_count
 	field = PlacedThings.new(SBWalls.FieldSize)
-	astar_grid = AStarGrid2D.new()
-	astar_grid.region = Rect2i( Vector2i(0,0), SBWalls.FieldSize)
-	astar_grid.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_NEVER
-	astar_grid.default_estimate_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
-	astar_grid.default_compute_heuristic = AStarGrid2D.HEURISTIC_MANHATTAN
-	astar_grid.update()
+	init_astar_grid()
 	$Walls.init(game_info.stage_number, field , astar_grid)
 	field.set_at( SBWalls.StartPos, SBStart.new())
 	for i in SBStage.PlumCount:
