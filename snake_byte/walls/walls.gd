@@ -35,7 +35,7 @@ func init(stage_number :int, field_a :PlacedThings, astar_grid_a :AStarGrid2D) -
 	astar_grid = astar_grid_a
 	wall_list = []
 	var mesh := BoxMesh.new()
-	mesh.size = SBStage.tile_size *0.9
+	mesh.size = SnakeByte.tile_size *0.9
 	mesh.material = MultiMeshShape.make_color_material()
 	$MultiMeshShape.multimesh.instance_count = 0
 	$MultiMeshShape.init_with_color_mesh(mesh, SBWalls.FieldSize.x*SBWalls.FieldSize.y/2)
@@ -65,7 +65,7 @@ func wall_list_to_MMS() -> void:
 			else:
 				field.set_at(pos, self)
 				astar_grid.set_point_solid(pos)
-			var pos3d := SBStage.pos2d_to_pos3d(pos.x, pos.y)
+			var pos3d := SnakeByte.pos2d_to_pos3d(pos.x, pos.y)
 			$MultiMeshShape.set_inst_position(inst_index, pos3d)
 			$MultiMeshShape.set_inst_color(inst_index, co)
 			inst_index += 1
@@ -77,8 +77,8 @@ func close_startpos() -> void:
 	astar_grid.set_point_solid(pos)
 
 	var tmp := StartPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.SouthEast]
-	var pos1 := SBStage.pos2d_to_pos3d(tmp.x, tmp.y)
-	var pos2 := SBStage.pos2d_to_pos3d(StartPos.x,StartPos.y)
+	var pos1 := SnakeByte.pos2d_to_pos3d(tmp.x, tmp.y)
+	var pos2 := SnakeByte.pos2d_to_pos3d(StartPos.x,StartPos.y)
 	animate_inst = {
 		"start_time" : Time.get_unix_time_from_system(),
 		"inst_index" : startwall_index,
@@ -93,9 +93,9 @@ func open_goalpos() -> void:
 	astar_grid.set_point_solid(pos, false)
 
 	assert(old == self, "invalid goal pos not wall %s %s" % [pos,old])
-	var pos1 := SBStage.pos2d_to_pos3d(GoalPos.x, GoalPos.y)
+	var pos1 := SnakeByte.pos2d_to_pos3d(GoalPos.x, GoalPos.y)
 	var tmp := GoalPos+Dir8Lib.Dir2Vt[Dir8Lib.Dir.NorthWest]
-	var pos2 := SBStage.pos2d_to_pos3d(tmp.x, tmp.y)
+	var pos2 := SnakeByte.pos2d_to_pos3d(tmp.x, tmp.y)
 	animate_inst = {
 		"start_time" : Time.get_unix_time_from_system(),
 		"inst_index" : goalwall_index,

@@ -23,12 +23,12 @@ func init(field_a :PlacedThings, astar_grid_a :AStarGrid2D) -> SBSnake:
 	astar_grid = astar_grid_a
 
 	var mesh := SphereMesh.new()
-	mesh.radius = SBStage.tile_size.x /2
-	mesh.height = SBStage.tile_size.y
+	mesh.radius = SnakeByte.tile_size.x /2
+	mesh.height = SnakeByte.tile_size.y
 	mesh.material = MultiMeshShape.make_color_material()
-	var pos := SBStage.pos2d_to_pos3d( SBWalls.FieldSize.x/2,SBWalls.FieldSize.y)
+	var pos := SnakeByte.pos2d_to_pos3d( SBWalls.FieldSize.x/2,SBWalls.FieldSize.y)
 	$Body.init_with_color_mesh(mesh, SBWalls.FieldSize.x*SBWalls.FieldSize.y/2, 1.0,  pos)
-	dest_body_len = SBStage.SnakeLenStart
+	dest_body_len = SnakeByte.SnakeLenStart
 	pos2d_list.append(SBWalls.StartPos)
 	is_alive = true
 	cmd_queue = []
@@ -53,7 +53,7 @@ func process_frame() -> void:
 	var headpos := get_next_head_pos()
 	var headthings = field.get_at(headpos)
 	if headthings is SBApple:
-		dest_body_len += SBStage.SankeLenInc
+		dest_body_len += SnakeByte.SankeLenInc
 		eat_apple.emit(headpos)
 	elif headthings is SBGoal:
 		reach_goal.emit()
@@ -67,7 +67,7 @@ func process_frame() -> void:
 	astar_grid.set_point_solid(headpos)
 	$Body.set_visible_count(pos2d_list.size())
 	for i in pos2d_list.size():
-		$Body.set_inst_position(i, SBStage.pos2d_to_pos3d(pos2d_list[i].x,pos2d_list[i].y))
+		$Body.set_inst_position(i, SnakeByte.pos2d_to_pos3d(pos2d_list[i].x,pos2d_list[i].y))
 	$Body.set_gradient_color_all(Color.RED, Color.BLUE)
 
 func get_next_head_pos() -> Vector2i:

@@ -47,47 +47,39 @@ func _ready() -> void:
 	$GlassCabinet.get_camera_light().make_current()
 	snakebyte_demo($GlassCabinet)
 
-var stage :SBStage
+var snake_byte_game :SnakeByte
 var game_info :Dictionary
 func snakebyte_demo(gc :GlassCabinet) -> void:
 	#gc.get_camera_light().get_light().visible = false
 	gc.show_wall_box(false)
 	#gc.lights.set_light_energy(10, BitFlag.MakeFilledFlags( $GlassCabinet.lights.get_size() ))
-	new_snakebytegame()
-func update_label() -> void:
+	snake_byte_game = preload("res://snake_byte/snake_byte.tscn").instantiate(
+		).init(gc.cabinet_size)
+	gc.add_child(snake_byte_game)
+	snake_byte_game.game_ended.connect(game_ended)
+	snake_byte_game.score_changed.connect(score_changed)
+	new_snakebytegame(true)
+
+func new_snakebytegame(demo_mode :bool) -> void:
+	game_info = {
+		"score" : 0,
+		"snake" : SnakeByte.SnakeLife,
+		"stage_number" : 0,
+		"demo_mode" : demo_mode,
+	}
 	if game_info.demo_mode:
 		$"왼쪽패널/Label".text = "GAME OVER\nPress Space to start"
 	else:
 		$"왼쪽패널/Label".text = ""
+	snake_byte_game.new_game(game_info)
 
-func new_snakebytegame() -> void:
-	game_info = {
-		"score" : 0,
-		"snake" : SBStage.SnakeLife,
-		"stage_number" : 0,
-		"demo_mode" : true,
-	}
-	update_label()
-	start_stage()
-func start_stage() -> void:
-	if stage != null :
-		stage.queue_free()
-	stage = preload("res://snake_byte/stage.tscn").instantiate().init(WorldSize, game_info)
-	add_child(stage)
-	stage.connect("stage_cleared", stage_cleared)
-	stage.connect("snake_dead", snake_dead)
-func stage_cleared() -> void:
-	game_info.stage_number +=1
-	start_stage()
-func snake_dead() -> void:
-	if game_info.snake > 0:
-		stage.new_snake()
-	else:
-		game_info.demo_mode = true
-		new_snakebytegame()
+func score_changed(score :float) -> void:
+	pass
+
+func game_ended(game :SnakeByte) -> void:
+	new_snakebytegame(true)
 func end_demo_start_game() -> void:
-	game_info.demo_mode = false
-	new_snakebytegame()
+	new_snakebytegame(false)
 
 func _process(_delta: float) -> void:
 	var now := Time.get_unix_time_from_system()
