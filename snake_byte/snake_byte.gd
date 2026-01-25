@@ -71,11 +71,11 @@ func init(sz :Vector3) -> SnakeByte:
 
 func new_game(gameinfo :Dictionary) -> void:
 	game_info = gameinfo
+	apple_end_count = SnakeByte.AppleCountPerStage
 	start_stage()
 
 func start_stage() -> void:
 	update_info()
-	apple_end_count = SnakeByte.AppleCountPerStage
 	field = PlacedThings.new(SBWalls.FieldSize)
 	astar_grid = AStarGrid2D.new()
 	astar_grid.region = Rect2i( Vector2i(0,0), SBWalls.FieldSize)
@@ -88,23 +88,24 @@ func start_stage() -> void:
 	new_snake()
 
 func new_snake() -> SnakeByte:
-	if snake != null :
-		snake.queue_free()
 	for pl in plum_list:
 		pl.queue_free()
 	plum_list = []
-	for n in $AppleContainer.get_children():
-		n.queue_free()
-
-	snake_step_after_eat = 0
-	apple_make_count = apple_eat_count
 	for i in SnakeByte.PlumCount:
 		add_plum(i)
-	if all_apple_eaten():
+
+	for n in $AppleContainer.get_children():
+		n.queue_free()
+	snake_step_after_eat = 0
+	apple_make_count = apple_eat_count
+	if is_all_apple_eaten():
 		$Walls.open_goalpos()
 	else:
 		add_apple()
 	update_info()
+
+	if snake != null :
+		snake.queue_free()
 	snake = preload("res://snake_byte/snake/snake.tscn").instantiate()
 	add_child(snake)
 	snake.connect("eat_apple", snake_eat_apple)
@@ -136,15 +137,14 @@ func snake_eat_apple(pos :Vector2i) -> void:
 	score_changed.emit(game_info.score)
 	snake_step_after_eat = 0
 	update_info()
-	if all_apple_eaten():
+	if is_all_apple_eaten():
 		$Walls.open_goalpos()
 		return
 	if $AppleContainer.get_child_count() <= 1:
 		add_apple()
 
-func all_apple_eaten() -> bool:
+func is_all_apple_eaten() -> bool:
 	return apple_eat_count >= apple_end_count
-
 
 func snake_enter_complete() -> void:
 	$Walls.close_startpos()
@@ -169,7 +169,7 @@ func process_frame() -> void:
 		if game_info.demo_mode:
 			demo_move()
 		snake.process_frame()
-		#if not all_apple_eaten():
+		#if not is_all_apple_eaten():
 		snake_step_after_eat += 1
 		if snake_step_after_eat >= SnakeByte.EatStepOverLimit:
 			handle_stepover()
@@ -179,7 +179,7 @@ func process_frame() -> void:
 
 func handle_stepover() -> void:
 	snake_step_after_eat = 0
-	if not all_apple_eaten():
+	if not is_all_apple_eaten():
 		for i in SnakeByte.AppleIncOnStepOver:
 			add_apple()
 		apple_end_count += SnakeByte.AppleIncOnStepOver
@@ -207,7 +207,7 @@ func demo_move() -> void:
 	if not is_snake_alive():
 		return
 	var diff_vt :Vector2i
-	if all_apple_eaten():
+	if is_all_apple_eaten():
 		diff_vt = sign(SBWalls.GoalPos - snake_head_pos2i())
 	else:
 		diff_vt = sign(get_next_apple_pos2i() - snake_head_pos2i())
@@ -228,6 +228,6 @@ func demo_move() -> void:
 		if vt == -snake_mvvt:
 			continue
 		var fieldobj = field.get_at(snake_head_pos2i()+vt)
-		if  fieldobj == null or (not all_apple_eaten() and fieldobj is SBApple) or (all_apple_eaten() and fieldobj is SBGoal) :
+		if  fieldobj == null or (not is_all_apple_eaten() and fieldobj is SBApple) or (is_all_apple_eaten() and fieldobj is SBGoal) :
 			snake.cmd_queue.append(Dir8Lib.Vt2Dir[vt])
 			break
