@@ -51,21 +51,26 @@ var gauge :MultiMeshShape
 
 func _to_string() -> String:
 	return "SBStage%d %s" % [game_info]
+func update_info() -> void:
+	$AppleInfo.text = "apple %d/%d" % [apple_eat_count, apple_end_count]
+	$SnakeInfo.text = "score:%d snake:%d" % [game_info.score, game_info.snake]
+	var demomode := ""
+	if game_info.demo_mode:
+		demomode = "demo game"
+	$StageInfo.text = "stage %d %s" % [game_info.stage_number, demomode]
 
 func init(sz :Vector3, gameinfo :Dictionary) -> SBStage:
 	cabinet_size = sz
 	tile_size = Vector3(cabinet_size.x / SBWalls.FieldSize.x, cabinet_size.y / SBWalls.FieldSize.y, cabinet_size.y / SBWalls.FieldSize.y )
 	game_info = gameinfo
 
-	$StageInfo.text = "stage %d" % game_info.stage_number
-	$StageInfo.position = pos2d_to_pos3d(2,SBWalls.FieldSize.y, tile_size.z)
-	$SnakeInfo.position = pos2d_to_pos3d(SBWalls.FieldSize.x /3,SBWalls.FieldSize.y, tile_size.z)
-	$AppleInfo.position = pos2d_to_pos3d(SBWalls.FieldSize.x - 3,SBWalls.FieldSize.y, tile_size.z)
+	$StageInfo.position = pos2d_to_pos3d(0, SBWalls.FieldSize.y, tile_size.z)
+	$SnakeInfo.position = pos2d_to_pos3d(SBWalls.FieldSize.x / 2, SBWalls.FieldSize.y, tile_size.z)
+	$AppleInfo.position = pos2d_to_pos3d(SBWalls.FieldSize.x -1, SBWalls.FieldSize.y, tile_size.z)
 	$StageInfo.pixel_size = tile_size.y /24
 	$SnakeInfo.pixel_size = tile_size.y /24
 	$AppleInfo.pixel_size = tile_size.y /24
-	update_apple_info()
-	update_snake_info()
+	update_info()
 	$FrameTimer.wait_time = SBStage.FrameTime
 	apple_end_count = SBStage.AppleCountPerStage
 
@@ -74,10 +79,6 @@ func init(sz :Vector3, gameinfo :Dictionary) -> SBStage:
 	gauge.position = pos2d_to_pos3d(SBWalls.FieldSize.x, 0)
 	add_child(gauge)
 	new_snake()
-	return self
-
-func set_demo_mode(b :bool) -> SBStage:
-	game_info.demo_mode = b
 	return self
 
 func new_snake() -> SBStage:
@@ -101,8 +102,7 @@ func new_snake() -> SBStage:
 		$Walls.open_goalpos()
 	else:
 		add_apple()
-	update_apple_info()
-	update_snake_info()
+	update_info()
 	snake = preload("res://snake_byte/snake/snake.tscn").instantiate()
 	add_child(snake)
 	snake.connect("eat_apple", snake_eat_apple)
@@ -116,12 +116,6 @@ func snake_die() -> void:
 	game_info.snake -= 1
 	snake_dead.emit()
 
-func update_apple_info() -> void:
-	$AppleInfo.text = "apple %d/%d" % [apple_eat_count, apple_end_count]
-
-func update_snake_info() -> void:
-	$SnakeInfo.text = "score:%d snake:%d" % [game_info.score, game_info.snake]
-
 func snake_eat_apple(pos :Vector2i) -> void:
 	var ap = field.get_at(pos)
 	assert(ap is SBApple, "eat not apple %s %s" %[ ap, pos])
@@ -130,8 +124,7 @@ func snake_eat_apple(pos :Vector2i) -> void:
 	apple_eat_count += 1
 	game_info.score += SBStage.ScorePerApple
 	snake_step_after_eat = 0
-	update_apple_info()
-	update_snake_info()
+	update_info()
 	if all_apple_eaten():
 		$Walls.open_goalpos()
 		return
@@ -182,7 +175,7 @@ func handle_stepover() -> void:
 		for i in SBStage.AppleIncOnStepOver:
 			add_apple()
 		apple_end_count += SBStage.AppleIncOnStepOver
-		update_apple_info()
+		update_info()
 	snake.dest_body_len += SBStage.SankeLenInc
 
 func _on_frame_timer_timeout() -> void:

@@ -53,8 +53,8 @@ func snakebyte_demo(gc :GlassCabinet) -> void:
 	#gc.get_camera_light().get_light().visible = false
 	gc.show_wall_box(false)
 	#gc.lights.set_light_energy(10, BitFlag.MakeFilledFlags( $GlassCabinet.lights.get_size() ))
-	new_game()
-func new_game() -> void:
+	new_snakebytegame()
+func new_snakebytegame() -> void:
 	game_info = {
 		"score" : 0,
 		"snake" : SBStage.SnakeLife,
@@ -70,10 +70,10 @@ func set_demo_mode(b :bool) -> void:
 		$"왼쪽패널/Label".text = ""
 func end_demo_start_game() -> void:
 	set_demo_mode(false)
-	new_game()
+	new_snakebytegame()
 func game_over() -> void:
 	set_demo_mode(true)
-	new_game()
+	new_snakebytegame()
 func start_stage() -> void:
 	if stage != null :
 		stage.queue_free()
