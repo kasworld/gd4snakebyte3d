@@ -53,7 +53,7 @@ func init(stage_number :int, f :PlacedThings) -> void:
 func field2wall() -> void:
 	var wall_count := 0
 	for l in wall_list:
-		var co :Color = SBStage.LightColorList.pick_random()
+		var co :Color = NamedColors.random_color()
 		for pos in l:
 			if pos == GoalPos:
 				goalwall_index = wall_count

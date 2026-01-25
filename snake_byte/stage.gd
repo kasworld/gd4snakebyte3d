@@ -29,8 +29,6 @@ static var SnakeLife := 3
 static var SnakeLifeIncOnStageClear := 1
 static var ScorePerApple := 10
 
-static var LightColorList = NamedColors.filter_light_color_list()
-
 class Start:
 	pass
 class Goal:

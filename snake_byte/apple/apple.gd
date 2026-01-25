@@ -13,7 +13,7 @@ func init(f :PlacedThings, n :int) -> SBApple:
 	number = n
 	$"번호".text = "%d" % number
 	field = f
-	$"모양".mesh.material.albedo_color = SBStage.LightColorList.pick_random()
+	$"모양".mesh.material.albedo_color = NamedColors.random_color()
 	$"모양".mesh.inner_radius = SBStage.tile_size.x /6
 	$"모양".mesh.outer_radius = SBStage.tile_size.x /2
 	$"모양".rotation.z = randf_range(-PI,PI)
