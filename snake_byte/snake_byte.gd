@@ -33,8 +33,7 @@ var game_info :Dictionary
 var field :PlacedThings
 var astar_grid :AStarGrid2D
 
-var plum_list :Array
-var apple_make_count :int
+var apple_made_count :int
 var apple_eat_count :int
 var apple_end_count :int
 var snake :SBSnake
@@ -71,11 +70,16 @@ func init(sz :Vector3) -> SnakeByte:
 
 func new_game(gameinfo :Dictionary) -> void:
 	game_info = gameinfo
-	apple_end_count = SnakeByte.AppleCountPerStage
 	start_stage()
 
 func start_stage() -> void:
+	apple_eat_count = 0
+	apple_made_count = 0
+	apple_end_count = SnakeByte.AppleCountPerStage
 	update_info()
+	new_snake()
+
+func new_snake() -> SnakeByte:
 	field = PlacedThings.new(SBWalls.FieldSize)
 	astar_grid = AStarGrid2D.new()
 	astar_grid.region = Rect2i( Vector2i(0,0), SBWalls.FieldSize)
@@ -85,19 +89,16 @@ func start_stage() -> void:
 	astar_grid.update()
 	$Walls.init(game_info.stage_number, field , astar_grid)
 	field.set_at( SBWalls.StartPos, SBStart.new())
-	new_snake()
 
-func new_snake() -> SnakeByte:
-	for pl in plum_list:
+	for pl in $PlumContainer.get_children():
 		pl.queue_free()
-	plum_list = []
 	for i in SnakeByte.PlumCount:
 		add_plum(i)
 
 	for n in $AppleContainer.get_children():
 		n.queue_free()
 	snake_step_after_eat = 0
-	apple_make_count = apple_eat_count
+	apple_made_count = apple_eat_count
 	if is_all_apple_eaten():
 		$Walls.open_goalpos()
 	else:
@@ -115,10 +116,22 @@ func new_snake() -> SnakeByte:
 	snake.init(field, astar_grid)
 	return self
 
+func add_plum(i:int) -> void:
+	var pos := field.find_empty_pos(10)
+	assert(pos!=Vector2i(-1,-1), "fail to find empty pos in field")
+	var pl :SBPlum = preload("res://snake_byte/plum/plum.tscn").instantiate(
+		).init(field, astar_grid, pos , Dir8Lib.DiagonalList.pick_random(), i)
+	$PlumContainer.add_child(pl)
+
+func add_apple() -> void:
+	apple_made_count +=1
+	var ap :SBApple = preload("res://snake_byte/apple/apple.tscn").instantiate().init(field, apple_made_count)
+	$AppleContainer.add_child(ap)
+
 func snake_die() -> void:
 	game_info.snake -= 1
 	if game_info.snake > 0:
-		new_snake()
+		new_snake.call_deferred()
 	else:
 		game_ended.emit(self)
 
@@ -149,21 +162,9 @@ func is_all_apple_eaten() -> bool:
 func snake_enter_complete() -> void:
 	$Walls.close_startpos()
 
-func add_plum(i:int) -> void:
-	var pos := field.find_empty_pos(10)
-	assert(pos!=Vector2i(-1,-1), "fail to find empty pos in field")
-	var pl :SBPlum = preload("res://snake_byte/plum/plum.tscn").instantiate(
-		).init(field, astar_grid, pos , Dir8Lib.DiagonalList.pick_random(), i)
-	add_child(pl)
-	plum_list.append(pl)
-
-func add_apple() -> void:
-	apple_make_count +=1
-	var ap :SBApple = preload("res://snake_byte/apple/apple.tscn").instantiate().init(field, apple_make_count)
-	$AppleContainer.add_child(ap)
 
 func process_frame() -> void:
-	for p in plum_list:
+	for p in $PlumContainer.get_children():
 		p.move2d()
 	if is_snake_alive():
 		if game_info.demo_mode:
