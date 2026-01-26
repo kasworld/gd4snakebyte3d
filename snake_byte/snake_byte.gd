@@ -168,7 +168,7 @@ func process_frame() -> void:
 		p.move2d()
 	if is_snake_alive():
 		if game_info.demo_mode:
-			demo_move()
+			demo_move_pathfinding()
 		snake.process_frame()
 		#if not is_all_apple_eaten():
 		snake_step_after_eat += 1
@@ -204,31 +204,13 @@ func snake_next_pos2i() -> Vector2i:
 func can_turn(from :Dir8Lib.Dir, to :Dir8Lib.Dir) -> bool:
 	return from != Dir8Lib.DirOpposite(to)
 
-func demo_move() -> void:
+func demo_move_pathfinding() -> void:
 	if not is_snake_alive():
 		return
-	var diff_vt :Vector2i
+	var id_path :Array[Vector2i]
 	if is_all_apple_eaten():
-		diff_vt = sign(SBWalls.GoalPos - snake_head_pos2i())
-	else:
-		diff_vt = sign(get_next_apple_pos2i() - snake_head_pos2i())
-	var snake_mvvt := Dir8Lib.Dir2Vt[snake.move_dir]
-	var tryvt := []
-	if diff_vt.x == -1:
-		tryvt = [Vector2i(-1,0),Vector2i(0,1),Vector2i(0,-1),Vector2i(1,0)]
-	elif diff_vt.x == 1:
-		tryvt = [Vector2i(1,0),Vector2i(0,1),Vector2i(0,-1),Vector2i(-1,0)]
-	elif diff_vt.y == -1:
-		tryvt = [Vector2i(0,-1),Vector2i(1,0),Vector2i(-1,0),Vector2i(0,1)]
-	elif diff_vt.y == 1:
-		tryvt = [Vector2i(0,1),Vector2i(1,0),Vector2i(-1,0),Vector2i(0,-1)]
+		id_path = astar_grid.get_id_path(snake_head_pos2i() , SBWalls.GoalPos, true)
 	else :
-		print_debug("not reach code %s" % [diff_vt])
-
-	for vt in tryvt:
-		if vt == -snake_mvvt:
-			continue
-		var fieldobj = field.get_at(snake_head_pos2i()+vt)
-		if  fieldobj == null or (not is_all_apple_eaten() and fieldobj is SBApple) or (is_all_apple_eaten() and fieldobj is SBGoal) :
-			snake.cmd_queue.append(Dir8Lib.Vt2Dir[vt])
-			break
+		id_path = astar_grid.get_id_path(snake_head_pos2i() , get_next_apple_pos2i(), true)
+	var vt :Vector2i = sign(id_path[1] - snake_head_pos2i())
+	snake.cmd_queue.append(Dir8Lib.Vt2Dir[vt])
